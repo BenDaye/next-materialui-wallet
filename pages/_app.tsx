@@ -1,35 +1,34 @@
-import '@fontsource/roboto'
-import React from 'react'
-import Head from 'next/head'
-import { AppProps } from 'next/app'
-import { ThemeProvider } from '@material-ui/core/styles'
-import CssBaseline from '@material-ui/core/CssBaseline'
-import theme from '@theme'
-import DefaultLayout from '@components/DefaultLayout'
-import MainLayout from '@components/MainLayout'
+import '@fontsource/roboto';
+import React, { Fragment, useEffect } from 'react';
+import Head from 'next/head';
+import { AppProps } from 'next/app';
+import { ThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+import theme from '@theme';
+import {
+  Error,
+  Layout,
+  ApiProvider,
+  ChainProvider,
+  BlockAuthorsProvider,
+  EventsProvider,
+  AccountsProvider,
+  AddressesProvider,
+} from '@components/index';
 
 export default function MyApp(props: AppProps) {
-  const { Component, pageProps, router } = props
+  const { Component, pageProps } = props;
 
-  const mainRouters: String[] = ['/wallet', '/market', '/explorer', '/settings']
-
-  const [isMainRouter, setIsMainRouter] = React.useState(false)
-
-  React.useEffect(() => {
+  useEffect(() => {
     // Remove the server-side injected CSS.
-    const jssStyles = document.querySelector('#jss-server-side')
+    const jssStyles = document.querySelector('#jss-server-side');
     if (jssStyles) {
-      jssStyles.parentElement!.removeChild(jssStyles)
+      jssStyles.parentElement!.removeChild(jssStyles);
     }
-  }, [])
-
-  React.useEffect(() => {
-    console.log(router)
-    setIsMainRouter(mainRouters.includes(router.route))
-  }, [router])
+  }, []);
 
   return (
-    <React.Fragment>
+    <Fragment>
       <Head>
         <title>Next Material-UI Wallet</title>
         <meta
@@ -40,16 +39,24 @@ export default function MyApp(props: AppProps) {
       <ThemeProvider theme={theme}>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        {isMainRouter ? (
-          <MainLayout>
-            <Component {...pageProps} />
-          </MainLayout>
-        ) : (
-          <DefaultLayout>
-            <Component {...pageProps} />
-          </DefaultLayout>
-        )}
+        <Error>
+          <ApiProvider>
+            <ChainProvider>
+              <BlockAuthorsProvider>
+                <EventsProvider>
+                  <AccountsProvider>
+                    <AddressesProvider>
+                      <Layout>
+                        <Component {...pageProps} />
+                      </Layout>
+                    </AddressesProvider>
+                  </AccountsProvider>
+                </EventsProvider>
+              </BlockAuthorsProvider>
+            </ChainProvider>
+          </ApiProvider>
+        </Error>
       </ThemeProvider>
-    </React.Fragment>
-  )
+    </Fragment>
+  );
 }

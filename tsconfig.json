@@ -1,11 +1,7 @@
 {
   "compilerOptions": {
     "target": "es5",
-    "lib": [
-      "dom",
-      "dom.iterable",
-      "esnext"
-    ],
+    "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
@@ -17,26 +13,29 @@
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
+    "importHelpers": true,
+    "downlevelIteration": true,
     "baseUrl": ".",
     "paths": {
       "@components/*": ["src/components/*"],
+      "@utils/*": ["src/utils/*"],
       "@styles/*": ["styles/*"],
-      "@theme": ["src/theme"]
+      "@theme": ["src/theme"],
+      "@constants": ["src/constants"]
     },
     "types": [
-      "@polkadot/types",
-      "@polkadot/api-derive/types",
-      "@polkadot/keyring/types",
       "@types/node",
-      "@types/react"
+      "@types/react",
+      "@polkadot/types",
+      "@polkadot/types/primitive",
+      "@polkadot/types/types",
+      "@polkadot/types/interfaces/runtime",
+      "@polkadot/types/interfaces/chain",
+      "@polkadot/types/interfaces/system",
+      "@polkadot/api-derive/chain/types",
+      "@polkadot/api-derive/types"
     ]
   },
-  "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx"
-  ],
-  "exclude": [
-    "node_modules"
-  ]
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules"]
 }
