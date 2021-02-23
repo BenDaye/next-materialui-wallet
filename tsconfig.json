@@ -5,6 +5,7 @@
     "allowJs": true,
     "skipLibCheck": true,
     "strict": false,
+    "allowSyntheticDefaultImports": true,
     "forceConsistentCasingInFileNames": true,
     "noEmit": true,
     "esModuleInterop": true,
@@ -15,6 +16,9 @@
     "jsx": "preserve",
     "importHelpers": true,
     "downlevelIteration": true,
+    "noImplicitAny": true,
+    "noImplicitThis": true,
+    "strictNullChecks": true,
     "baseUrl": ".",
     "paths": {
       "@components/*": ["src/components/*"],
@@ -23,18 +27,7 @@
       "@theme": ["src/theme"],
       "@constants": ["src/constants"]
     },
-    "types": [
-      "@types/node",
-      "@types/react",
-      "@polkadot/types",
-      "@polkadot/types/primitive",
-      "@polkadot/types/types",
-      "@polkadot/types/interfaces/runtime",
-      "@polkadot/types/interfaces/chain",
-      "@polkadot/types/interfaces/system",
-      "@polkadot/api-derive/chain/types",
-      "@polkadot/api-derive/types"
-    ]
+    "types": ["@types/node", "@types/react", "@polkadot/types"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

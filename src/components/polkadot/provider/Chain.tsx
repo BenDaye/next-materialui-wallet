@@ -106,7 +106,7 @@ export const ChainContext: Context<ChainProps> = createContext<ChainProps>(
 
 function ChainProvider({ children, store }: Props): ReactElement<Props> {
   const { api, isApiReady, isDevelopment } = useApi();
-  const [state, setState] = useState<ChainProps>();
+  const [state, setState] = useState<ChainProps>(({} as unknown) as ChainProps);
 
   useEffect((): void => {
     if (isApiReady) init(api, isDevelopment, store).then(setState);

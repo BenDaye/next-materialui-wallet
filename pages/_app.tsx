@@ -2,9 +2,8 @@ import '@fontsource/roboto';
 import React, { Fragment, useEffect } from 'react';
 import Head from 'next/head';
 import { AppProps } from 'next/app';
-import { ThemeProvider } from '@material-ui/core/styles';
 import CssBaseline from '@material-ui/core/CssBaseline';
-import theme from '@theme';
+import ThemeProvider from '@theme';
 import {
   Error,
   Layout,
@@ -36,7 +35,7 @@ export default function MyApp(props: AppProps) {
           content="minimum-scale=1, initial-scale=1, width=device-width"
         />
       </Head>
-      <ThemeProvider theme={theme}>
+      <ThemeProvider>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
         <Error>

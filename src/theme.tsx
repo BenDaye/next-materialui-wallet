@@ -1,23 +1,39 @@
 import type '@material-ui/lab/themeAugmentation';
-import { createMuiTheme } from '@material-ui/core/styles'
-import red from '@material-ui/core/colors/red'
+import useMediaQuery from '@material-ui/core/useMediaQuery';
+import { createMuiTheme, ThemeProvider as TP } from '@material-ui/core/styles';
+import { Children } from './components';
+import { memo, ReactElement, useMemo } from 'react';
+import { orange, grey, blue } from '@material-ui/core/colors';
 
-// Create a theme instance.
-const theme = createMuiTheme({
-  palette: {
-    primary: {
-      main: '#556cd6',
-    },
-    secondary: {
-      main: '#19857b',
-    },
-    error: {
-      main: red.A400,
-    },
-    background: {
-      default: '#fff',
-    },
-  },
-})
+function ThemeProvider({ children }: Children): ReactElement<Children> {
+  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
 
-export default theme
+  const theme = useMemo(
+    () =>
+      createMuiTheme({
+        palette: {
+          type: prefersDarkMode ? 'dark' : 'light',
+          primary: {
+            main: prefersDarkMode ? grey[900] : blue[500]
+          },
+          secondary: {
+            main: prefersDarkMode ? orange[500] : grey[50]
+          },
+        },
+        overrides: {
+          MuiBottomNavigationAction: {
+            "root": {
+              "&$selected": {
+                "color": prefersDarkMode ? orange[500] : blue[500]
+              }
+            }
+          }
+        }
+      }),
+    [prefersDarkMode]
+  );
+
+  return <TP theme={theme}>{children}</TP>;
+}
+
+export default memo(ThemeProvider);

@@ -14,6 +14,7 @@ import React, {
 import registry from '@utils/type-registry';
 import { ApiState, ApiProps, ChainState } from './types';
 import { useError } from '@components/Error';
+import { Backdrop, CircularProgress } from '@material-ui/core';
 
 interface Props {
   children: ReactNode;
@@ -106,8 +107,12 @@ function ApiProvider({
     setIsApiInitialized(true);
   }, []);
 
-  if (!value.isApiInitialized) {
-    return null;
+  if (!value.isApiReady) {
+    return (
+      <Backdrop open={true}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
   }
 
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
