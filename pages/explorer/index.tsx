@@ -1,9 +1,14 @@
-import { ChainExplorer } from '@components/explorer';
+import {
+  BlockExplorer,
+  ChainExplorer,
+  EventExplorer,
+} from '@components/explorer';
+import SwipeableViews from 'react-swipeable-views';
 import { AppBar, Box, Tab, Tabs, TextField, Toolbar } from '@material-ui/core';
-import React, { useState } from 'react';
+import React, { ChangeEvent, useState } from 'react';
 
 export default function Explorer() {
-  const [currentTab, setCurrentTab] = useState<string>('chain');
+  const [currentTabIndex, setCurrentTabIndex] = useState<number>(1);
   return (
     <>
       <AppBar position="sticky">
@@ -21,18 +26,33 @@ export default function Explorer() {
         </Toolbar>
         <Box flexGrow={1}>
           <Tabs
-            value={currentTab}
-            onChange={(e, v) => setCurrentTab(v)}
+            value={currentTabIndex}
+            onChange={(e: ChangeEvent<{}>, v: number) => setCurrentTabIndex(v)}
             variant="fullWidth"
             aria-label="Explorer Navigation Tabs"
           >
-            <Tab value="chain" label="信息" wrapped />
-            <Tab value="block" label="区块" wrapped />
-            <Tab value="events" label="事件" wrapped />
+            <Tab value={0} label="信息" wrapped />
+            <Tab value={1} label="区块" wrapped />
+            <Tab value={2} label="事件" wrapped />
           </Tabs>
         </Box>
       </AppBar>
-      <ChainExplorer />
+      <Box flexGrow={1}>
+        <SwipeableViews
+          index={currentTabIndex}
+          onChangeIndex={(v: number) => setCurrentTabIndex(v)}
+        >
+          <Box hidden={currentTabIndex !== 0}>
+            <ChainExplorer />
+          </Box>
+          <Box hidden={currentTabIndex !== 1}>
+            <BlockExplorer />
+          </Box>
+          <Box hidden={currentTabIndex !== 2}>
+            <EventExplorer />
+          </Box>
+        </SwipeableViews>
+      </Box>
     </>
   );
 }

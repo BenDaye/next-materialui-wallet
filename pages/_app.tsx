@@ -1,4 +1,5 @@
 import '@fontsource/roboto';
+import '@styles/globals.css';
 import React, { Fragment, useEffect } from 'react';
 import Head from 'next/head';
 import { AppProps } from 'next/app';
@@ -13,7 +14,7 @@ import {
   EventsProvider,
   AccountsProvider,
   AddressesProvider,
-} from '@components/index';
+} from '@components';
 
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props;

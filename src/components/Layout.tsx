@@ -8,6 +8,7 @@ import RestoreIcon from '@material-ui/icons/Restore';
 import FavoriteIcon from '@material-ui/icons/Favorite';
 import LocationOnIcon from '@material-ui/icons/LocationOn';
 import React, {
+  ChangeEvent,
   memo,
   ReactElement,
   ReactNode,
@@ -28,7 +29,7 @@ function Layout({ children }: Children): ReactElement<Children> | null {
 
   const [isMainRouter, setIsMainRouter] = useState(false);
   const [nav, setNav] = useState('/wallet');
-  const handleChangeNav = (e, v) => {
+  const handleChangeNav = (e: ChangeEvent<{}>, v: string) => {
     router.push(v);
   };
 
@@ -44,7 +45,15 @@ function Layout({ children }: Children): ReactElement<Children> | null {
       flexWrap="nowrap"
       className={styles.root}
     >
-      <Box flexGrow={1}>{children}</Box>
+      <Box
+        display="flex"
+        flexDirection="column"
+        flexWrap="nowrap"
+        flexGrow={1}
+        className={styles.content}
+      >
+        {children}
+      </Box>
       {isMainRouter && (
         <Box flexShrink={0}>
           <BottomNavigation value={nav} onChange={handleChangeNav}>
