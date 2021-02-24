@@ -1,12 +1,9 @@
 import { HeaderExtended } from '@polkadot/api-derive';
 import { useBlockAuthors } from '@components/polkadot';
 import { Box, Container } from '@material-ui/core';
-import React, { memo, ReactElement, ReactNode } from 'react';
+import React, { memo, ReactElement } from 'react';
 import { Block } from '.';
-
-interface Children {
-  children?: ReactNode;
-}
+import { Children } from '@components/types';
 
 function BlockExplorerProvider({ children }: Children): ReactElement<Children> {
   const { lastHeaders } = useBlockAuthors();
@@ -15,7 +12,7 @@ function BlockExplorerProvider({ children }: Children): ReactElement<Children> {
       <Container>
         {lastHeaders.map((header: HeaderExtended) => (
           <Box marginY={1} key={header.number.toNumber()}>
-            <Block header={header} />
+            <Block header={header} showMoreIcon isLink />
           </Box>
         ))}
       </Container>

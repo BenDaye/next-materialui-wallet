@@ -1,5 +1,4 @@
 import { Children } from '@components/types';
-import type { BlockNumber, EventRecord } from '@polkadot/types/interfaces';
 import {
   Context,
   createContext,
@@ -13,17 +12,7 @@ import { useApi } from './Api';
 import { stringToU8a } from '@polkadot/util';
 import { xxhashAsHex } from '@polkadot/util-crypto';
 import { useError } from '@components/Error';
-
-export interface IndexedEvent {
-  indexes: number[];
-  record: EventRecord;
-}
-
-export interface KeyedEvent extends IndexedEvent {
-  blockHash?: string;
-  blockNumber?: BlockNumber;
-  key: string;
-}
+import { IndexedEvent, KeyedEvent } from './types';
 
 type Events = KeyedEvent[];
 

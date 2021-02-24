@@ -6,6 +6,8 @@ import BestNumber from './BestNumber';
 import TotalIssuance from './TotalIssuance';
 import Common from './Common';
 import Block from './Block';
+import BlockByHash from './BlockByHash';
+import BlockByNumber from './BlockByNumber';
 
 export {
   ChainExplorer,
@@ -16,4 +18,6 @@ export {
   TotalIssuance,
   Common,
   Block,
+  BlockByHash,
+  BlockByNumber,
 };

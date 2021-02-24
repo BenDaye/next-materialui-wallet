@@ -1,11 +1,23 @@
-import { memo, ReactElement, ReactNode } from 'react';
+import { Children } from '@components/types';
+import { memo, ReactElement } from 'react';
+import { Response } from '../../../pages/explorer/index';
 
-interface Children {
-  children?: ReactNode;
+interface EventExplorerProps extends Children {
+  data?: Response;
 }
 
-function EventExplorerProvider({ children }: Children): ReactElement<Children> {
-  return <div>{children}</div>;
+function EventExplorerProvider({
+  children,
+  data,
+}: EventExplorerProps): ReactElement<EventExplorerProps> {
+  return (
+    <>
+      <div>
+        <code>{JSON.stringify(data)}</code>
+      </div>
+      {children}
+    </>
+  );
 }
 
 export default memo(EventExplorerProvider);

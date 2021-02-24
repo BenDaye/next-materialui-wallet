@@ -4,60 +4,63 @@ import {
   CardHeader,
   Divider,
   IconButton,
+  Link,
   Typography,
 } from '@material-ui/core';
 import MoreVertIcon from '@material-ui/icons/MoreVert';
 import { formatNumber } from '@polkadot/util';
 import { HeaderExtended } from '@polkadot/api-derive';
 import React, { memo, ReactElement, ReactNode } from 'react';
-
-interface Children {
-  children?: ReactNode;
+import { useRouter } from 'next/router';
+import CardContentItemValue from './CardContentItemValue';
+import { Children } from '@components/types';
+interface BlockProps extends Children {
   header: HeaderExtended;
+  showMoreIcon?: boolean;
+  isLink?: boolean;
+  contentExtended?: ReactNode;
 }
 
-function BlockProvider({ children, header }: Children): ReactElement<Children> {
-  const { number, parentHash, extrinsicsRoot, stateRoot } = header;
+function BlockProvider({
+  children,
+  header,
+  showMoreIcon = false,
+  isLink = false,
+  contentExtended,
+}: BlockProps): ReactElement<BlockProps> {
+  const router = useRouter();
+  const { number, parentHash, extrinsicsRoot, stateRoot, hash } = header;
+  const handleClick = () => {
+    isLink && router.push(`/block/${header.hash.toHex()}`);
+  };
   return (
     <>
-      <Card>
+      <Card onClick={handleClick}>
         <CardHeader
-          title={formatNumber(number.toNumber())}
+          title={
+            <Link color="secondary">{formatNumber(number.toNumber())}</Link>
+          }
           action={
-            <IconButton aria-label="more" size="medium">
-              <MoreVertIcon />
-            </IconButton>
+            showMoreIcon && (
+              <IconButton aria-label="more" size="medium">
+                <MoreVertIcon />
+              </IconButton>
+            )
           }
         />
         <Divider variant="middle" />
         <CardContent>
+          <Typography variant="subtitle2">哈希</Typography>
+          <CardContentItemValue value={hash.toHex()} />
           <Typography variant="subtitle2">父亲/母亲</Typography>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            gutterBottom
-            className="text-overflow-ellipsis_one_line"
-          >
-            {parentHash.toString()}
-          </Typography>
+          <CardContentItemValue
+            value={parentHash.isEmpty ? '-' : parentHash.toHex()}
+          />
           <Typography variant="subtitle2">事件哈希</Typography>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            gutterBottom
-            className="text-overflow-ellipsis_one_line"
-          >
-            {extrinsicsRoot.toString()}
-          </Typography>
+          <CardContentItemValue value={extrinsicsRoot.toHex()} />
           <Typography variant="subtitle2">状态哈希</Typography>
-          <Typography
-            variant="body2"
-            color="textSecondary"
-            gutterBottom
-            className="text-overflow-ellipsis_one_line"
-          >
-            {stateRoot.toString()}
-          </Typography>
+          <CardContentItemValue value={stateRoot.toHex()} />
+          {contentExtended}
         </CardContent>
       </Card>
       {children}

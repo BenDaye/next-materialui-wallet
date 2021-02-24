@@ -6,8 +6,33 @@ import {
 import SwipeableViews from 'react-swipeable-views';
 import { AppBar, Box, Tab, Tabs, TextField, Toolbar } from '@material-ui/core';
 import React, { ChangeEvent, useState } from 'react';
+import { GetStaticProps } from 'next';
 
-export default function Explorer() {
+// TODO: 优化请求(分页...)
+interface Result {
+  count: number;
+  doc: Record<string, any>[];
+}
+export interface Response {
+  success: boolean;
+  result?: Result | any;
+}
+
+interface Props {
+  data: Response;
+}
+
+export const getStaticProps: GetStaticProps = async () => {
+  const res = await fetch('http://221.122.102.163:4000/extrinsics');
+  const data: Response = await res.json();
+  return {
+    props: {
+      data,
+    }, // will be passed to the page component as props
+  };
+};
+
+export default function Explorer({ data }: Props) {
   const [currentTabIndex, setCurrentTabIndex] = useState<number>(1);
   return (
     <>
@@ -49,7 +74,7 @@ export default function Explorer() {
             <BlockExplorer />
           </Box>
           <Box hidden={currentTabIndex !== 2}>
-            <EventExplorer />
+            <EventExplorer data={data} />
           </Box>
         </SwipeableViews>
       </Box>

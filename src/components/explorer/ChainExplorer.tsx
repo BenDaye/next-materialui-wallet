@@ -1,11 +1,8 @@
 import { useChain } from '@components/polkadot';
+import { Children } from '@components/types';
 import { Box, Container, Typography } from '@material-ui/core';
-import React, { memo, ReactElement, ReactNode } from 'react';
+import React, { memo, ReactElement } from 'react';
 import { BestFinalized, BestNumber, Common, TotalIssuance } from './index';
-
-interface Children {
-  children?: ReactNode;
-}
 
 function ChainExplorerProvider({ children }: Children): ReactElement<Children> {
   const {
