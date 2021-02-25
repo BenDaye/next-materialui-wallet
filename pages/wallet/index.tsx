@@ -16,20 +16,19 @@ import {
   Paper,
   Toolbar,
   Typography,
-} from '@material-ui/core'
-import MenuIcon from '@material-ui/icons/Menu'
-import FolderIcon from '@material-ui/icons/Folder'
-import Identicon from '@polkadot/react-identicon'
-import React from 'react'
+} from '@material-ui/core';
+import MenuIcon from '@material-ui/icons/Menu';
+import FolderIcon from '@material-ui/icons/Folder';
+import Identicon from '@polkadot/react-identicon';
+import React from 'react';
+import AccountPicker from '@components/wallet/AccountPicker';
 
 export default function Wallet() {
   return (
     <>
       <AppBar position="sticky">
         <Toolbar>
-          <IconButton edge="start" color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
+          <AccountPicker />
           <Box flexGrow={1}>
             <Typography variant="h6" align="center">
               钱包
@@ -101,5 +100,5 @@ export default function Wallet() {
         </Box>
       </Container>
     </>
-  )
+  );
 }

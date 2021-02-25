@@ -3,31 +3,56 @@ import { keyring } from '@polkadot/ui-keyring';
 import {
   Context,
   createContext,
+  Dispatch,
   memo,
   ReactElement,
+  SetStateAction,
+  useCallback,
   useContext,
   useEffect,
+  useMemo,
   useState,
 } from 'react';
 import { useIsMountedRef } from '../hook/useIsMountedRef';
 
-interface UseAccounts {
+interface UseAccountsState {
   accounts: string[];
   hasAccount: boolean;
   isAccount: (address: string) => boolean;
 }
 
-export const AccountsContext: Context<UseAccounts> = createContext<UseAccounts>(
-  ({} as unknown) as UseAccounts
+interface UseAccountsContext extends UseAccountsState {
+  currentAccount: string | null;
+  setCurrentAccount: Dispatch<SetStateAction<string | null>>;
+}
+
+export const AccountsContext: Context<UseAccountsContext> = createContext<UseAccountsContext>(
+  ({} as unknown) as UseAccountsContext
 );
 
 function AccountsProvider({ children }: Children): ReactElement<Children> {
   const mountedRef = useIsMountedRef();
-  const [state, setState] = useState<UseAccounts>({
+  const [
+    { accounts, hasAccount, isAccount },
+    setState,
+  ] = useState<UseAccountsState>({
     accounts: [],
     hasAccount: false,
     isAccount: () => false,
   });
+
+  const [currentAccount, setCurrentAccount] = useState<string | null>(null);
+
+  const value = useMemo<UseAccountsContext>(
+    () => ({
+      accounts,
+      hasAccount,
+      isAccount,
+      currentAccount,
+      setCurrentAccount,
+    }),
+    [accounts, hasAccount, currentAccount, mountedRef]
+  );
 
   useEffect((): (() => void) => {
     const subscription = keyring.accounts.subject.subscribe((value): void => {
@@ -46,8 +71,17 @@ function AccountsProvider({ children }: Children): ReactElement<Children> {
     };
   }, [mountedRef]);
 
+  useEffect(() => {
+    if (!hasAccount || (currentAccount && !isAccount(currentAccount))) {
+      setCurrentAccount(null);
+    }
+    if (hasAccount && !currentAccount) {
+      setCurrentAccount(accounts[0]);
+    }
+  }, [mountedRef, accounts, hasAccount, currentAccount]);
+
   return (
-    <AccountsContext.Provider value={state}>
+    <AccountsContext.Provider value={value}>
       {children}
     </AccountsContext.Provider>
   );
@@ -55,4 +89,5 @@ function AccountsProvider({ children }: Children): ReactElement<Children> {
 
 export default memo(AccountsProvider);
 
-export const useAccounts = (): UseAccounts => useContext(AccountsContext);
+export const useAccounts = (): UseAccountsContext =>
+  useContext(AccountsContext);
