@@ -36,7 +36,7 @@ export default function Explorer({ data }: Props) {
   const [currentTabIndex, setCurrentTabIndex] = useState<number>(1);
   return (
     <>
-      <AppBar position="sticky">
+      <AppBar position="fixed">
         <Toolbar>
           <Box flexGrow={1}>
             <TextField
@@ -62,6 +62,8 @@ export default function Explorer({ data }: Props) {
           </Tabs>
         </Box>
       </AppBar>
+      <Toolbar />
+      <Toolbar />
       <Box flexGrow={1}>
         <SwipeableViews
           index={currentTabIndex}

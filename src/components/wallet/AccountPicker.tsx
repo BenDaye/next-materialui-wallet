@@ -30,7 +30,7 @@ function AccountPicker({
       </IconButton>
       <Drawer anchor="bottom" open={open} onClose={() => setOpen(false)}>
         <Box width={1}>
-          <AppBar position="sticky">
+          <AppBar position="static">
             <Toolbar>
               <Box flexGrow={1}>
                 <Typography variant="subtitle2">选择账户</Typography>

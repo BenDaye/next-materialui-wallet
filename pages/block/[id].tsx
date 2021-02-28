@@ -32,7 +32,7 @@ function Block() {
 
   return (
     <>
-      <AppBar position="sticky">
+      <AppBar position="fixed">
         <Toolbar>
           <IconButton edge="start" onClick={() => router.back()}>
             <ArrowBackIosIcon />
@@ -40,6 +40,7 @@ function Block() {
           <Typography>区块详情</Typography>
         </Toolbar>
       </AppBar>
+      <Toolbar />
       <Box flexGrow={1}>
         {blockHash ? (
           <BlockByHash blockHash={blockHash} />

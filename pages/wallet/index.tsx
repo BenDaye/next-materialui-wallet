@@ -20,13 +20,40 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import FolderIcon from '@material-ui/icons/Folder';
 import Identicon from '@polkadot/react-identicon';
-import React from 'react';
+import React, { useEffect, useMemo } from 'react';
 import AccountPicker from '@components/wallet/AccountPicker';
+import AccountListItem from '@components/wallet/AccountListItem';
+import { useAccounts } from '@components';
+import { SortedAccount } from '@components/wallet/type';
+import keyring from '@polkadot/ui-keyring';
+import AccountEmpty from '@components/wallet/AccountEmpty';
+import BalanceList from '@components/wallet/BalanceList';
+
+function sortAccount(address: string): SortedAccount | undefined {
+  const account = keyring.getAccount(address);
+  return (
+    account && {
+      account,
+      isDevelopment: !!account.meta.isTesting,
+      shortAddress:
+        account.address.length > 13
+          ? `${account.address.slice(0, 6)}...${account.address.slice(-6)}`
+          : account.address,
+    }
+  );
+}
 
 export default function Wallet() {
+  const { hasAccount, currentAccount } = useAccounts();
+
+  const account = useMemo(
+    () => hasAccount && currentAccount && sortAccount(currentAccount),
+    [hasAccount, currentAccount]
+  );
+
   return (
     <>
-      <AppBar position="sticky">
+      <AppBar position="fixed">
         <Toolbar>
           <AccountPicker />
           <Box flexGrow={1}>
@@ -39,64 +66,18 @@ export default function Wallet() {
           </IconButton>
         </Toolbar>
       </AppBar>
+      <Toolbar />
       <Container>
         <Box display="flex" flexDirection="column" marginTop={1}>
-          <Card>
-            <CardContent>
-              <List dense disablePadding>
-                <ListItem dense disableGutters>
-                  <ListItemAvatar>
-                    <Identicon
-                      value="5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY"
-                      size={40}
-                    />
-                  </ListItemAvatar>
-                  <ListItemText primary="TEST" secondary="Development" />
-                </ListItem>
-                <ListItem dense disableGutters>
-                  <ListItemIcon>
-                    <FolderIcon />
-                  </ListItemIcon>
-                  <ListItemText secondary="5GrwvaEF5zXb26Fz9rcQpDWS57CtERHpNehXCPcNoHGKutQY" />
-                </ListItem>
-              </List>
-            </CardContent>
-          </Card>
+          {account ? (
+            <AccountListItem account={account} showAddress />
+          ) : (
+            <AccountEmpty />
+          )}
           <Box marginTop={2}>
             <Typography variant="h6">资产</Typography>
           </Box>
-          <Box marginTop={1}>
-            <Box marginBottom={1}>
-              <Paper>
-                <List disablePadding>
-                  <ListItem>
-                    <ListItemIcon>
-                      <FolderIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="UECC" />
-                    <ListItemSecondaryAction>
-                      <Typography>1.00</Typography>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                </List>
-              </Paper>
-            </Box>
-            <Box marginBottom={1}>
-              <Paper>
-                <List disablePadding>
-                  <ListItem>
-                    <ListItemIcon>
-                      <FolderIcon />
-                    </ListItemIcon>
-                    <ListItemText primary="UECC" />
-                    <ListItemSecondaryAction>
-                      <Typography>1.00</Typography>
-                    </ListItemSecondaryAction>
-                  </ListItem>
-                </List>
-              </Paper>
-            </Box>
-          </Box>
+          <BalanceList />
         </Box>
       </Container>
     </>

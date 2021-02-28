@@ -56,7 +56,12 @@ function AccountList({
           <Box className="width-fill-available">
             {sortedAccounts.map((account: SortedAccount, index: number) => (
               <Box my={1} key={`account-card:${index}`}>
-                <AccountListItem account={account} />
+                <AccountListItem
+                  account={account}
+                  showAddress
+                  showBalance
+                  showSelect
+                />
               </Box>
             ))}
           </Box>

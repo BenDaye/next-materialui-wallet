@@ -1,8 +1,10 @@
 import { useRouter } from 'next/router';
 import {
+  AppBar,
   BottomNavigation,
   BottomNavigationAction,
   Box,
+  Toolbar,
 } from '@material-ui/core';
 import RestoreIcon from '@material-ui/icons/Restore';
 import FavoriteIcon from '@material-ui/icons/Favorite';
@@ -53,9 +55,10 @@ function Layout({ children }: Children): ReactElement<Children> | null {
         className={styles.content}
       >
         {children}
+        {isMainRouter && <Toolbar />}
       </Box>
       {isMainRouter && (
-        <Box flexShrink={0}>
+        <AppBar position="fixed" className={styles.bottomNavigation}>
           <BottomNavigation value={nav} onChange={handleChangeNav}>
             <BottomNavigationAction
               label="钱包"
@@ -78,7 +81,7 @@ function Layout({ children }: Children): ReactElement<Children> | null {
               icon={<LocationOnIcon />}
             />
           </BottomNavigation>
-        </Box>
+        </AppBar>
       )}
     </Box>
   );
