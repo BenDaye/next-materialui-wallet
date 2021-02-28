@@ -33,7 +33,7 @@ export const getStaticProps: GetStaticProps = async () => {
 };
 
 export default function Explorer({ data }: Props) {
-  const [currentTabIndex, setCurrentTabIndex] = useState<number>(1);
+  const [currentTabIndex, setCurrentTabIndex] = useState<number>(0);
   return (
     <>
       <AppBar position="fixed">

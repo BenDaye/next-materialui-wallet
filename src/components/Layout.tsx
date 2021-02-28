@@ -6,9 +6,10 @@ import {
   Box,
   Toolbar,
 } from '@material-ui/core';
-import RestoreIcon from '@material-ui/icons/Restore';
-import FavoriteIcon from '@material-ui/icons/Favorite';
-import LocationOnIcon from '@material-ui/icons/LocationOn';
+import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
+import ShowChartIcon from '@material-ui/icons/ShowChart';
+import ExploreIcon from '@material-ui/icons/Explore';
+import SettingsIcon from '@material-ui/icons/Settings';
 import React, {
   ChangeEvent,
   memo,
@@ -63,22 +64,22 @@ function Layout({ children }: Children): ReactElement<Children> | null {
             <BottomNavigationAction
               label="钱包"
               value="/wallet"
-              icon={<RestoreIcon />}
+              icon={<AccountBalanceWalletIcon />}
             />
             <BottomNavigationAction
-              label="市场"
+              label="行情"
               value="/market"
-              icon={<FavoriteIcon />}
+              icon={<ShowChartIcon />}
             />
             <BottomNavigationAction
               label="浏览"
               value="/explorer"
-              icon={<LocationOnIcon />}
+              icon={<ExploreIcon />}
             />
             <BottomNavigationAction
               label="设置"
               value="/settings"
-              icon={<LocationOnIcon />}
+              icon={<SettingsIcon />}
             />
           </BottomNavigation>
         </AppBar>
