@@ -1,33 +1,22 @@
 import {
   AppBar,
-  Avatar,
   Box,
-  Card,
-  CardContent,
   Container,
-  Divider,
   IconButton,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemIcon,
-  ListItemSecondaryAction,
-  ListItemText,
-  Paper,
   Toolbar,
   Typography,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
-import FolderIcon from '@material-ui/icons/Folder';
-import Identicon from '@polkadot/react-identicon';
-import React, { useEffect, useMemo } from 'react';
-import AccountPicker from '@components/wallet/AccountPicker';
-import AccountListItem from '@components/wallet/AccountListItem';
-import { useAccounts } from '@components';
-import { SortedAccount } from '@components/wallet/type';
+import React, { useMemo } from 'react';
+import {
+  AccountEmpty,
+  AccountListItem,
+  AccountPicker,
+  BalanceList,
+  SortedAccount,
+  useAccounts,
+} from '@components';
 import keyring from '@polkadot/ui-keyring';
-import AccountEmpty from '@components/wallet/AccountEmpty';
-import BalanceList from '@components/wallet/BalanceList';
 
 function sortAccount(address: string): SortedAccount | undefined {
   const account = keyring.getAccount(address);

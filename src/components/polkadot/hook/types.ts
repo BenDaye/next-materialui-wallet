@@ -2,16 +2,31 @@
 // SPDX-License-Identifier: Apache-2.0
 
 import type { SubmittableExtrinsic } from '@polkadot/api/types';
-import type { DeriveAccountFlags, DeriveAccountRegistration } from '@polkadot/api-derive/types';
-import type { AccountId, Balance, BlockNumber, Call, Exposure, Hash, RewardDestination, SessionIndex, StakingLedger, ValidatorPrefs } from '@polkadot/types/interfaces';
+import type {
+  DeriveAccountFlags,
+  DeriveAccountRegistration,
+} from '@polkadot/api-derive/types';
+import type {
+  AccountId,
+  Balance,
+  BlockNumber,
+  Call,
+  Exposure,
+  Hash,
+  RewardDestination,
+  SessionIndex,
+  StakingLedger,
+  ValidatorPrefs,
+} from '@polkadot/types/interfaces';
 import type { IExtrinsic } from '@polkadot/types/types';
 import type { KeyringJson$Meta } from '@polkadot/ui-keyring/types';
+import type { Codec } from '@polkadot/types/types';
 
 export type CallParam = any;
 
 export type CallParams = [] | CallParam[];
 
-export interface CallOptions <T> {
+export interface CallOptions<T> {
   defaultValue?: T;
   paramMap?: (params: any) => CallParams;
   transform?: (value: any) => T;
@@ -19,9 +34,17 @@ export interface CallOptions <T> {
   withParamsTransform?: boolean;
 }
 
-export type TxDef = [string, any[] | ((...params: any[]) => SubmittableExtrinsic<'promise'>)];
+export type TxDef = [
+  string,
+  any[] | ((...params: any[]) => SubmittableExtrinsic<'promise'>)
+];
 
-export type TxDefs = SubmittableExtrinsic<'promise'> | IExtrinsic | Call | TxDef | null;
+export type TxDefs =
+  | SubmittableExtrinsic<'promise'>
+  | IExtrinsic
+  | Call
+  | TxDef
+  | null;
 
 export type TxSource<T extends TxDefs> = [T, boolean];
 
@@ -141,4 +164,23 @@ export interface StakerState {
   stakingLedger?: StakingLedger;
   stashId: string;
   validatorPrefs?: ValidatorPrefs;
+}
+
+export interface PotentialAsset {
+  account: string;
+  assetId: string;
+  decimals: number;
+  key: string;
+  symbol: string;
+  type: string;
+  _id: string;
+}
+
+export interface PotentialBalancesResponse {
+  success: boolean;
+  result: PotentialAsset[];
+}
+
+export interface PotentialBalance extends PotentialAsset {
+  balance: Codec;
 }
