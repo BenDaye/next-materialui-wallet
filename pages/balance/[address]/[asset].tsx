@@ -27,7 +27,7 @@ import type { DeriveBalancesAll } from '@polkadot/api-derive/types';
 import { formatBalance } from '@polkadot/util';
 import styles from '@styles/Layout.module.css';
 
-export function BalancePage() {
+export default function BalancePage() {
   const router = useRouter();
   const {
     query: { address, asset: assetId },

@@ -12,7 +12,7 @@ import React, { memo, useEffect, useState } from 'react';
 import { isHex } from '@polkadot/util';
 import { BlockByHash, BlockByNumber } from '@components/explorer';
 
-export function Block() {
+export default function Block() {
   const router = useRouter();
   const { setError } = useError();
   const [blockNumber, setBlockNumber] = useState<number>(0);
