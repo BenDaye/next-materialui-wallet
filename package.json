@@ -5,7 +5,11 @@
   "scripts": {
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
-    "start": "next start"
+    "start": "next start -p 80",
+    "build:pkg": "docker build -f pkg.Dockerfile -t registry.cn-shenzhen.aliyuncs.com/zingy9217/next-materialui-wallet-pkg:latest .",
+    "push:pkg": "dockposer push registry.cn-shenzhen.aliyuncs.com/zingy9217/next-materialui-wallet-pkg:latest",
+    "build:docker": "dockposer build registry.cn-shenzhen.aliyuncs.com/zingy9217/next-materialui-wallet:{NPM_PACKAGE_VERSION}",
+    "push": "dockposer push registry.cn-shenzhen.aliyuncs.com/zingy9217/next-materialui-wallet:{NPM_PACKAGE_VERSION}"
   },
   "dependencies": {
     "@fontsource/roboto": "^4.2.1",
@@ -28,6 +32,7 @@
     "@types/react-swipeable-views": "^0.13.0",
     "@typescript-eslint/eslint-plugin": "^4.15.1",
     "@typescript-eslint/parser": "^4.15.1",
+    "dockposer": "^0.1.6",
     "eslint": "^7.20.0",
     "eslint-config-prettier": "^7.2.0",
     "eslint-plugin-prettier": "^3.3.1",
