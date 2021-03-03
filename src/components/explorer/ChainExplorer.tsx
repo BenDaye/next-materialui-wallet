@@ -1,4 +1,4 @@
-import { useChain } from '@components/polkadot';
+import { useChain } from '@components/polkadot/hook';
 import { Children } from '@components/types';
 import { Box, Container, Typography } from '@material-ui/core';
 import React, { memo, ReactElement } from 'react';

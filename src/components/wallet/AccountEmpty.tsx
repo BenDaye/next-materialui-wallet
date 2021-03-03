@@ -7,7 +7,7 @@ import {
   Divider,
   Typography,
 } from '@material-ui/core';
-import { useChain } from '@components/polkadot';
+import { useChain } from '@components/polkadot/hook';
 
 interface AccountEmptyProps extends Children {}
 

@@ -1,4 +1,4 @@
-import { KeyedEvent } from '@components/polkadot';
+import { KeyedEvent } from '@components/polkadot/context';
 import { Children } from '@components/types';
 import React, { memo, ReactElement } from 'react';
 import Event from './Event';

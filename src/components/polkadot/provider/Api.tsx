@@ -1,20 +1,18 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
 import { isTestChain } from '@polkadot/util';
 import React, {
-  Context,
-  createContext,
   memo,
   ReactElement,
   ReactNode,
-  useContext,
   useEffect,
   useMemo,
   useState,
 } from 'react';
 import registry from '@utils/type-registry';
-import { ApiState, ApiProps, ChainState } from './types';
-import { useError } from '@components/Error';
-import { Backdrop, CircularProgress } from '@material-ui/core';
+import { ApiState, ApiProps, ChainState } from '@components/polkadot/context';
+import { Backdrop, Box, CircularProgress, Typography } from '@material-ui/core';
+import { ApiContext } from '../context';
+import { useError } from '@components/error';
 
 interface Props {
   children: ReactNode;
@@ -50,10 +48,6 @@ async function init(api: ApiPromise): Promise<ApiState> {
     isDevelopment,
   };
 }
-
-export const ApiContext: Context<ApiProps> = createContext(
-  ({} as unknown) as ApiProps
-);
 
 function ApiProvider({
   children,
@@ -110,7 +104,7 @@ function ApiProvider({
   if (!value.isApiReady) {
     return (
       <Backdrop open={true}>
-        <CircularProgress color="inherit" />
+        <CircularProgress color="secondary" />
       </Backdrop>
     );
   }
@@ -119,5 +113,3 @@ function ApiProvider({
 }
 
 export default memo(ApiProvider);
-
-export const useApi = (): ApiProps => useContext(ApiContext);

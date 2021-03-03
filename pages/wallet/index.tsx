@@ -8,15 +8,15 @@ import {
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
 import React, { useMemo } from 'react';
+import keyring from '@polkadot/ui-keyring';
+import { SortedAccount } from '@components/polkadot/context';
+import { useAccounts } from '@components/polkadot/hook';
 import {
   AccountEmpty,
   AccountListItem,
   AccountPicker,
   BalanceList,
-  SortedAccount,
-  useAccounts,
-} from '@components';
-import keyring from '@polkadot/ui-keyring';
+} from '@components/wallet';
 
 function sortAccount(address: string): SortedAccount | undefined {
   const account = keyring.getAccount(address);
@@ -63,8 +63,10 @@ export default function Wallet() {
           ) : (
             <AccountEmpty />
           )}
-          <Box marginTop={2}>
-            <Typography variant="h6">资产</Typography>
+          <Box mt={2}>
+            <Typography variant="h6" gutterBottom>
+              资产
+            </Typography>
           </Box>
           <BalanceList />
         </Box>

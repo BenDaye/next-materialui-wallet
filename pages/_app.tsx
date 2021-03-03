@@ -6,15 +6,18 @@ import { AppProps } from 'next/app';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import ThemeProvider from '@theme';
 import {
-  Error,
-  Layout,
   ApiProvider,
   ChainProvider,
   BlockAuthorsProvider,
   EventsProvider,
   AccountsProvider,
   AddressesProvider,
-} from '@components';
+  BalancesProvider,
+} from '@components/polkadot/provider';
+import { SnackbarProvider } from 'notistack';
+import { Slide } from '@material-ui/core';
+import { ErrorProvider } from '@components/error';
+import Layout from '@components/Layout';
 
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props;
@@ -39,23 +42,31 @@ export default function MyApp(props: AppProps) {
       <ThemeProvider>
         {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
         <CssBaseline />
-        <Error>
-          <ApiProvider>
-            <ChainProvider>
-              <BlockAuthorsProvider>
-                <EventsProvider>
-                  <AccountsProvider>
-                    <AddressesProvider>
-                      <Layout>
-                        <Component {...pageProps} />
-                      </Layout>
-                    </AddressesProvider>
-                  </AccountsProvider>
-                </EventsProvider>
-              </BlockAuthorsProvider>
-            </ChainProvider>
-          </ApiProvider>
-        </Error>
+        <SnackbarProvider
+          maxSnack={3}
+          anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+          TransitionComponent={Slide}
+        >
+          <ErrorProvider>
+            <ApiProvider>
+              <ChainProvider>
+                <AccountsProvider>
+                  <AddressesProvider>
+                    <BalancesProvider>
+                      <BlockAuthorsProvider>
+                        <EventsProvider>
+                          <Layout>
+                            <Component {...pageProps} />
+                          </Layout>
+                        </EventsProvider>
+                      </BlockAuthorsProvider>
+                    </BalancesProvider>
+                  </AddressesProvider>
+                </AccountsProvider>
+              </ChainProvider>
+            </ApiProvider>
+          </ErrorProvider>
+        </SnackbarProvider>
       </ThemeProvider>
     </Fragment>
   );

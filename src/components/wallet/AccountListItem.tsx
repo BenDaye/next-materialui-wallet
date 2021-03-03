@@ -1,5 +1,5 @@
 import React, { memo, ReactElement } from 'react';
-import { Children } from '@components/types';
+import type { Children } from '@components/types';
 import {
   Box,
   Card,
@@ -11,12 +11,17 @@ import {
   Typography,
 } from '@material-ui/core';
 import Identicon from '@polkadot/react-identicon';
-import { SortedAccount } from './type';
-import { useAccounts, useApi, useCall, useChain } from '@components/polkadot';
+import {
+  useAccounts,
+  useApi,
+  useCall,
+  useChain,
+} from '@components/polkadot/hook';
 import type { DeriveBalancesAll } from '@polkadot/api-derive/types';
 import { formatBalance } from '@polkadot/util';
 import MenuIcon from '@material-ui/icons/Menu';
 import { useTheme } from '@material-ui/core/styles';
+import { SortedAccount } from '@components/polkadot/context';
 
 interface AccountListItemProps extends Children {
   account: SortedAccount;
@@ -44,6 +49,7 @@ function AccountListItem({
     address,
   ]);
   const theme = useTheme();
+  // TODO: showQrcode
 
   return (
     <>
@@ -56,6 +62,7 @@ function AccountListItem({
               }
             : {}
         }
+        onClick={() => showSelect && setCurrentAccount(address)}
       >
         <CardHeader
           avatar={<Identicon value={account.account.address} size={32} />}
@@ -69,7 +76,7 @@ function AccountListItem({
             showSelect && (
               <Checkbox
                 checked={currentAccount === address}
-                onChange={() => setCurrentAccount(address)}
+                // onChange={() => setCurrentAccount(address)}
                 disabled={currentAccount === address}
                 inputProps={{ 'aria-label': 'primary checkbox' }}
               />

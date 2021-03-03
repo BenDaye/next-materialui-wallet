@@ -1,12 +1,3 @@
-import {
-  PotentialBalance,
-  TransferList,
-  useApi,
-  useCall,
-  useChain,
-  useError,
-  usePotentialBalances,
-} from '@components';
 import { useRouter } from 'next/router';
 import React, { ChangeEvent, memo, useEffect, useMemo, useState } from 'react';
 import {
@@ -26,6 +17,17 @@ import TransformIcon from '@material-ui/icons/Transform';
 import type { DeriveBalancesAll } from '@polkadot/api-derive/types';
 import { formatBalance } from '@polkadot/util';
 import styles from '@styles/Layout.module.css';
+import {
+  Urc10Balance,
+  useAccounts,
+  useApi,
+  useCall,
+  useChain,
+  usePotentialBalances,
+} from '@components/polkadot/hook';
+import { useError } from '@components/error';
+import { BalanceProps } from '@components/polkadot/context';
+import { TransferList } from '@components/balance';
 
 export default function BalancePage() {
   const router = useRouter();
@@ -34,16 +36,14 @@ export default function BalancePage() {
   } = router;
   const { api } = useApi();
   const { setError } = useError();
-  const { tokenSymbol } = useChain();
+  const { tokenSymbol, tokenDecimals } = useChain();
   const [currentTabIndex, setCurrentTabIndex] = useState<number>(0);
-  // const [{ owner, counterparty, direction }, setTransferListProps] = useState({
-  //   owner: null,
-  //   counterparty: null,
-  //   direction: null,
-  // });
-  const defaultBalances = useCall<DeriveBalancesAll>(api.derive.balances.all, [
-    address,
-  ]);
+  const {
+    currentAccount,
+    isAccount,
+    hasAccount,
+    sortedAccounts,
+  } = useAccounts();
 
   useEffect(() => {
     if (!address) {
@@ -52,38 +52,76 @@ export default function BalancePage() {
     }
   }, [address, assetId]);
 
-  const potentialBalances: PotentialBalance[] =
-    typeof address === 'string' ? usePotentialBalances({ address }) : [];
+  const title = useMemo(() => {
+    const _address = typeof address === 'string' ? address : null;
+    if (!_address) return '/';
+    if (!isAccount(_address)) {
+      return _address.length > 13
+        ? `${_address.slice(0, 6)}...${_address.slice(-6)}`
+        : _address;
+    }
+    const theAccount = sortedAccounts.find(
+      (ac) => ac.account.address === _address
+    );
+    return theAccount?.account.meta?.name || '/';
+  }, [hasAccount, isAccount, sortedAccounts, address]);
+
+  const showBottomNavigation = useMemo(
+    () => typeof address === 'string' && isAccount(address),
+    [hasAccount, isAccount, sortedAccounts, address]
+  );
+
+  const defaultAssetBalance = useCall<DeriveBalancesAll>(
+    api.derive.balances.all,
+    [address]
+  );
+  const potentialAssetsBalance: Urc10Balance[] =
+    typeof address === 'string' ? usePotentialBalances(address) : [];
 
   const isPotentialAsset: boolean = useMemo(() => {
-    return potentialBalances.some((asset) => asset.assetId === assetId);
-  }, [assetId, potentialBalances]);
+    return potentialAssetsBalance.some((asset) => asset.assetId === assetId);
+  }, [assetId, potentialAssetsBalance]);
 
-  const symbol: string = useMemo(() => {
-    return isPotentialAsset
-      ? potentialBalances.find((asset) => asset.assetId === assetId)?.symbol
-      : tokenSymbol;
-  }, [isPotentialAsset, tokenSymbol]);
-
-  const balance: string = useMemo(() => {
-    if (isPotentialAsset) {
-      const potentialBalance = potentialBalances.find(
-        (asset) => asset.assetId === assetId
-      );
-
-      return potentialBalance
-        ? formatBalance(potentialBalance.balance.toString(), {
-            withUnit: false,
+  const thisBalance: BalanceProps | undefined = useMemo(() => {
+    if (!isPotentialAsset) {
+      return {
+        symbol: tokenSymbol && tokenSymbol[0],
+        decimals: tokenDecimals && tokenDecimals[0] && Number(tokenDecimals[0]),
+        isDefault: true,
+        balanceFormat:
+          defaultAssetBalance &&
+          defaultAssetBalance.availableBalance &&
+          formatBalance(defaultAssetBalance.availableBalance, {
             withSiFull: true,
-            decimals: potentialBalance?.decimals,
-          })
-        : '-';
+            withUnit: true,
+          }),
+      };
     }
-    return formatBalance(defaultBalances?.availableBalance, {
-      withUnit: false,
-      withSiFull: true,
-    });
-  }, [isPotentialAsset, defaultBalances]);
+    const _po = potentialAssetsBalance.find((pb) => pb.assetId === assetId);
+    return (
+      _po && {
+        assetId: _po.assetId,
+        symbol: _po.symbol,
+        decimals: _po.decimals,
+        isDefault: false,
+        balance: _po.balance,
+        balanceFormat:
+          _po.balance &&
+          formatBalance(_po.balance.toString(), {
+            withSiFull: true,
+            withUnit: _po.symbol,
+            decimals: _po.decimals,
+          }),
+      }
+    );
+  }, [
+    currentAccount,
+    isPotentialAsset,
+    potentialAssetsBalance,
+    defaultAssetBalance,
+    address,
+    assetId,
+  ]);
 
   const { owner, counterparty, direction } = useMemo(() => {
     const owner = typeof address === 'string' ? address : '';
@@ -95,7 +133,7 @@ export default function BalancePage() {
       default:
         return { owner, counterparty: null, direction: null };
     }
-  }, [address, symbol, currentTabIndex]);
+  }, [address, thisBalance, currentTabIndex]);
 
   return (
     <>
@@ -105,7 +143,7 @@ export default function BalancePage() {
             <ArrowBackIosIcon />
           </IconButton>
           <Box flexGrow={1}>
-            <Typography align="center">{symbol}</Typography>
+            <Typography align="center">{title}</Typography>
           </Box>
           <IconButton edge="end">
             <DescriptionIcon />
@@ -114,7 +152,7 @@ export default function BalancePage() {
         <Toolbar>
           <Box flexGrow={1}>
             <Typography variant="h6" align="center">
-              {balance}
+              {thisBalance?.balanceFormat || '/'}
             </Typography>
           </Box>
         </Toolbar>
@@ -154,44 +192,51 @@ export default function BalancePage() {
       <Toolbar />
       <Toolbar />
       <Toolbar />
-      <TransferList
-        symbol={symbol}
-        owner={owner}
-        counterparty={counterparty}
-        direction={direction}
-      />
-      <Toolbar />
-      <AppBar position="fixed" className={styles.bottomNavigation}>
-        <Toolbar>
-          <Box
-            display="flex"
-            alignItems="center"
-            flexWrap="nowrap"
-            flexGrow={1}
-          >
-            <Box flexGrow={1} mr={1}>
-              <Button
-                variant="contained"
-                color="secondary"
-                fullWidth
-                startIcon={<AccountBalanceWalletIcon />}
+      {thisBalance && (
+        <TransferList
+          symbol={thisBalance.symbol?.toString()}
+          owner={owner}
+          counterparty={counterparty}
+          direction={direction}
+        />
+      )}
+      {showBottomNavigation && (
+        <>
+          <Toolbar />
+          <AppBar position="fixed" className={styles.bottomNavigation}>
+            <Toolbar>
+              <Box
+                display="flex"
+                alignItems="center"
+                flexWrap="nowrap"
+                flexGrow={1}
               >
-                收款
-              </Button>
-            </Box>
-            <Box flexGrow={1} ml={1}>
-              <Button
-                variant="contained"
-                color="secondary"
-                fullWidth
-                startIcon={<TransformIcon />}
-              >
-                转账
-              </Button>
-            </Box>
-          </Box>
-        </Toolbar>
-      </AppBar>
+                <Box flexGrow={1} mr={1}>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    fullWidth
+                    startIcon={<AccountBalanceWalletIcon />}
+                  >
+                    收款
+                  </Button>
+                </Box>
+                <Box flexGrow={1} ml={1}>
+                  <Button
+                    variant="contained"
+                    color="secondary"
+                    fullWidth
+                    startIcon={<TransformIcon />}
+                    onClick={() => router.push('/transfer')}
+                  >
+                    转账
+                  </Button>
+                </Box>
+              </Box>
+            </Toolbar>
+          </AppBar>
+        </>
+      )}
     </>
   );
 }

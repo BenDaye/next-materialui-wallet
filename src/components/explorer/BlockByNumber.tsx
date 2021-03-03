@@ -1,9 +1,9 @@
-import { useError } from '@components/Error';
-import { useApi, useIsMountedRef } from '@components/polkadot';
+import { useApi, useIsMountedRef } from '@components/polkadot/hook';
 import { Backdrop, CircularProgress } from '@material-ui/core';
 import React, { memo, ReactElement, useEffect, useState } from 'react';
 import type { Hash } from '@polkadot/types/interfaces';
 import BlockByHash from './BlockByHash';
+import { useError } from '@components/error';
 
 interface BlockByNumberProps {
   blockNumber: number;

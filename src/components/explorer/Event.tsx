@@ -6,7 +6,7 @@ import {
   AccordionSummary,
   Typography,
 } from '@material-ui/core';
-import { KeyedEvent } from '@components/polkadot';
+import { KeyedEvent } from '@components/polkadot/context';
 import { Children } from '@components/types';
 
 interface EventProps extends Children {

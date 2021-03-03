@@ -1,15 +1,18 @@
-import { useError } from '@components/Error';
 import { useEffect, useState } from 'react';
 import useFetch from 'use-http';
-import { useApi } from '../provider';
 import {
   PotentialAsset,
   PotentialBalance,
   PotentialBalancesResponse,
+  Urc10Asset,
+  Urc10AssetResponse,
+  Urc10Balance,
 } from './types';
 import type { Codec } from '@polkadot/types/types';
 import { createTypeUnsafe } from '@polkadot/types';
 import QueryString from 'query-string';
+import { useError } from '@components/error';
+import { useApi } from './useApi';
 
 export function useHttp() {
   const hook = useFetch('http://221.122.102.163:4000');
@@ -31,7 +34,27 @@ interface PotentialBalanceParams extends PotentialAssetsParams {
   assetId: string;
 }
 
-export function usePotentialAssets({ address }: PotentialAssetsParams) {
+export function usePotentialAssets(): Urc10Asset[] {
+  const { get, response } = useHttp();
+  const [assets, setAssets] = useState<Urc10Asset[]>([]);
+
+  useEffect(() => {
+    getAssets();
+  }, []);
+
+  async function getAssets() {
+    const { success, result }: Urc10AssetResponse = await get(`/urc10_assets`);
+    if (response.ok && success) {
+      setAssets(result.docs);
+    }
+  }
+
+  return assets;
+}
+
+export function usePotentialAssetsByAddress({
+  address,
+}: PotentialAssetsParams) {
   const { get, response } = useHttp();
   const [assets, setAssets] = useState<PotentialAsset[]>([]);
 
@@ -51,14 +74,47 @@ export function usePotentialAssets({ address }: PotentialAssetsParams) {
   return assets;
 }
 
-export function usePotentialBalances({ address }: PotentialAssetsParams) {
+export function usePotentialBalances(address: string | null) {
   const { api, isApiReady } = useApi();
-  const potentialAssets = usePotentialAssets({ address });
+  const potentialAssets = usePotentialAssets();
+  const [balances, setBalances] = useState<Urc10Balance[]>([]);
+
+  useEffect(() => {
+    isApiReady && address && getBalances();
+  }, [potentialAssets, isApiReady, address]);
+
+  async function getBalances() {
+    const keys = potentialAssets.map((asset) =>
+      createTypeUnsafe(api.registry, '(Hash, AccountId)', [
+        [asset.assetId, address],
+      ])
+    );
+
+    const result: Codec[] = await Promise.all(
+      keys.map((key) => api.query['urc10Module'].balances(key.toHex()))
+    );
+
+    setBalances(
+      potentialAssets.map((asset, index) => ({
+        ...asset,
+        balance: result[index],
+      }))
+    );
+  }
+
+  return balances;
+}
+
+export function usePotentialBalancesByAddress({
+  address,
+}: PotentialAssetsParams) {
+  const { api, isApiReady } = useApi();
+  const potentialAssets = usePotentialAssetsByAddress({ address });
   const [balances, setBalances] = useState<PotentialBalance[]>([]);
 
   useEffect(() => {
     isApiReady && getBalances();
-  }, [potentialAssets, isApiReady]);
+  }, [potentialAssets, isApiReady, address]);
 
   async function getBalances() {
     const keys = potentialAssets.map((asset) =>

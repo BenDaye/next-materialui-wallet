@@ -1,5 +1,5 @@
 import { HeaderExtended } from '@polkadot/api-derive';
-import { useBlockAuthors } from '@components/polkadot';
+import { useBlockAuthors } from '@components/polkadot/hook';
 import { Box, Container } from '@material-ui/core';
 import React, { memo, ReactElement } from 'react';
 import { Block } from '.';

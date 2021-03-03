@@ -184,3 +184,26 @@ export interface PotentialBalancesResponse {
 export interface PotentialBalance extends PotentialAsset {
   balance: Codec;
 }
+
+export interface Urc10Asset {
+  assetId: string;
+  decimals: number;
+  owner: string;
+  symbol: string;
+  timestamp: number;
+  _id: string;
+}
+
+export interface Urc10AssetResponseResult {
+  count: number;
+  docs: Urc10Asset[];
+}
+
+export interface Urc10AssetResponse {
+  success: boolean;
+  result: Urc10AssetResponseResult;
+}
+
+export interface Urc10Balance extends Urc10Asset {
+  balance: Codec;
+}

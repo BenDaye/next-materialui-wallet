@@ -1,57 +1,38 @@
+import {
+  AccountsContext,
+  AccountsProps,
+  AccountsState,
+} from '@components/polkadot/context';
+import { useIsMountedRef } from '@components/polkadot/hook';
 import { Children } from '@components/types';
 import { keyring } from '@polkadot/ui-keyring';
-import {
-  Context,
-  createContext,
-  Dispatch,
-  memo,
-  ReactElement,
-  SetStateAction,
-  useCallback,
-  useContext,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
-import { useIsMountedRef } from '../hook/useIsMountedRef';
-
-interface UseAccountsState {
-  accounts: string[];
-  hasAccount: boolean;
-  isAccount: (address: string) => boolean;
-}
-
-interface UseAccountsContext extends UseAccountsState {
-  currentAccount: string | null;
-  setCurrentAccount: Dispatch<SetStateAction<string | null>>;
-}
-
-export const AccountsContext: Context<UseAccountsContext> = createContext<UseAccountsContext>(
-  ({} as unknown) as UseAccountsContext
-);
+import { memo, ReactElement, useEffect, useMemo, useState } from 'react';
+import { sortAccounts } from './utils';
 
 function AccountsProvider({ children }: Children): ReactElement<Children> {
   const mountedRef = useIsMountedRef();
   const [
-    { accounts, hasAccount, isAccount },
+    { accounts, hasAccount, isAccount, sortedAccounts },
     setState,
-  ] = useState<UseAccountsState>({
+  ] = useState<AccountsState>({
     accounts: [],
     hasAccount: false,
     isAccount: () => false,
+    sortedAccounts: [],
   });
 
   const [currentAccount, setCurrentAccount] = useState<string | null>(null);
 
-  const value = useMemo<UseAccountsContext>(
+  const value = useMemo<AccountsProps>(
     () => ({
       accounts,
       hasAccount,
       isAccount,
       currentAccount,
       setCurrentAccount,
+      sortedAccounts,
     }),
-    [accounts, hasAccount, currentAccount, mountedRef]
+    [accounts, hasAccount, currentAccount, mountedRef, sortedAccounts]
   );
 
   useEffect((): (() => void) => {
@@ -61,8 +42,9 @@ function AccountsProvider({ children }: Children): ReactElement<Children> {
         const hasAccount = accounts.length !== 0;
         const isAccount = (address: string): boolean =>
           accounts.includes(address);
+        const sortedAccounts = sortAccounts(accounts);
 
-        setState({ accounts, hasAccount, isAccount });
+        setState({ accounts, hasAccount, isAccount, sortedAccounts });
       }
     });
 
@@ -88,6 +70,3 @@ function AccountsProvider({ children }: Children): ReactElement<Children> {
 }
 
 export default memo(AccountsProvider);
-
-export const useAccounts = (): UseAccountsContext =>
-  useContext(AccountsContext);

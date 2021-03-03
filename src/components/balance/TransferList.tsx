@@ -1,6 +1,6 @@
 import React, { Fragment, memo, ReactElement } from 'react';
 import { Children } from '@components/types';
-import { useTransfers } from '@components/polkadot';
+import { useTransfers } from '@components/polkadot/hook';
 import {
   Divider,
   List,
@@ -38,40 +38,46 @@ function TransferList({
   const theme = useTheme();
   return (
     <>
-      <List>
-        {transfers?.map((transfer, i, ts) => (
-          <Fragment key={`transfer: ${transfer._id}`}>
-            <ListItem>
-              <ListItemAvatar>
-                <Identicon value={transfer.counterparty} size={32} />
-              </ListItemAvatar>
-              <ListItemText
-                primary={shortAddress(transfer.counterparty)}
-                primaryTypographyProps={{ variant: 'subtitle2' }}
-                secondary={`区块: ${formatNumber(transfer.blockNumber)}`}
-                secondaryTypographyProps={{ variant: 'caption' }}
-              ></ListItemText>
-              <ListItemSecondaryAction>
-                <Typography
-                  style={{
-                    color:
-                      transfer.direction === 2
-                        ? theme.palette.success.main
-                        : theme.palette.error.main,
-                  }}
-                >
-                  {transfer.direction === 2 ? '+' : '-'}
-                  {formatBalance(transfer.amount, {
-                    withSiFull: true,
-                    withUnit: false,
-                  })}
-                </Typography>
-              </ListItemSecondaryAction>
-            </ListItem>
-            {i < ts.length - 1 && <Divider variant="inset" component="li" />}
-          </Fragment>
-        ))}
-      </List>
+      {symbol && transfers?.length ? (
+        <List>
+          {transfers.map((transfer, i, ts) => (
+            <Fragment key={`transfer: ${transfer._id}`}>
+              <ListItem>
+                <ListItemAvatar>
+                  <Identicon value={transfer.counterparty} size={32} />
+                </ListItemAvatar>
+                <ListItemText
+                  primary={shortAddress(transfer.counterparty)}
+                  primaryTypographyProps={{ variant: 'subtitle2' }}
+                  secondary={`区块: ${formatNumber(transfer.blockNumber)}`}
+                  secondaryTypographyProps={{ variant: 'caption' }}
+                ></ListItemText>
+                <ListItemSecondaryAction>
+                  <Typography
+                    style={{
+                      color:
+                        transfer.direction === 2
+                          ? theme.palette.success.main
+                          : theme.palette.error.main,
+                    }}
+                  >
+                    {transfer.direction === 2 ? '+' : '-'}
+                    {formatBalance(transfer.amount, {
+                      withSiFull: true,
+                      withUnit: false,
+                    })}
+                  </Typography>
+                </ListItemSecondaryAction>
+              </ListItem>
+              {i < ts.length - 1 && <Divider variant="inset" component="li" />}
+            </Fragment>
+          ))}
+        </List>
+      ) : (
+        <Typography variant="body2" align="center" color="textSecondary">
+          暂无数据
+        </Typography>
+      )}
       {children}
     </>
   );

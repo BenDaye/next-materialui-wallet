@@ -3,12 +3,13 @@ import type { EventRecord, SignedBlock } from '@polkadot/types/interfaces';
 import { Box, Container, Typography } from '@material-ui/core';
 import { HeaderExtended } from '@polkadot/api-derive';
 import React, { memo, ReactElement, useEffect, useState } from 'react';
-import { useError } from '@components/Error';
-import { KeyedEvent, useApi, useIsMountedRef } from '@components/polkadot';
+import { useApi, useIsMountedRef } from '@components/polkadot/hook';
 import Block from './Block';
 import CardContentItemValue from './CardContentItemValue';
 import Events from './Events';
 import Extrinsics from './Extrinsics';
+import { useError } from '@components/error';
+import { KeyedEvent } from '@components/polkadot/context';
 
 interface BlockByHashProps {
   blockHash: string;

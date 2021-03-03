@@ -1,4 +1,4 @@
-import { useError } from '@components';
+import { useError } from '@components/error';
 import {
   AppBar,
   Box,
