@@ -14,7 +14,7 @@ import {
 import Identicon from '@polkadot/react-identicon';
 import { formatNumber, formatBalance } from '@polkadot/util';
 
-export interface TransferListProps extends Children {
+interface TransferListProps extends Children {
   owner?: string | null;
   symbol?: string | null;
   counterparty?: string | null;

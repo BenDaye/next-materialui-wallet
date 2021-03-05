@@ -5,6 +5,7 @@ import BlockAuthorsProvider from './BlockAuthors';
 import BalancesProvider from './Balances';
 import ChainProvider from './Chain';
 import EventsProvider from './Events';
+import QueueProvider from './Queue';
 
 export {
   ApiProvider,
@@ -14,6 +15,7 @@ export {
   ChainProvider,
   EventsProvider,
   BalancesProvider,
+  QueueProvider,
 };
 
 export * from './utils';

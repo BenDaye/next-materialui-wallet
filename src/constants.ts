@@ -1,4 +1,4 @@
-import registry from '@utils/type-registry';
+import registry from '@utils/typeRegistry';
 
 export const DEFAULT_DECIMALS = registry.createType('u32', 12);
 

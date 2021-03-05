@@ -14,7 +14,7 @@ import {
 import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import CropFreeIcon from '@material-ui/icons/CropFree';
 import { useRouter } from 'next/router';
-import React, { useEffect, useMemo } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { formatBalance } from '@polkadot/util';
 import {
@@ -25,13 +25,18 @@ import {
   useIsMountedRef,
 } from '@components/polkadot/hook';
 import { BalanceProps } from '@components/polkadot/context';
+import { SubmittableExtrinsic } from '@polkadot/api/types';
+import { assert, isFunction } from '@polkadot/util';
+import { useQueue } from '@components/polkadot/hook/useQueue';
+import { useSnackbar } from 'notistack';
+import { SubmittableResult } from '@polkadot/api';
 
 interface TransferFormProps {
   senderId: string;
   recipientId: string;
   symbol: string;
   amount: number;
-  keepAlive: boolean;
+  keepAlive?: boolean;
   isAll?: boolean;
 }
 
@@ -42,6 +47,9 @@ export default function TransferPage() {
   const { tokenSymbol } = useChain();
   const { currentAccount, sortedAccounts, setCurrentAccount } = useAccounts();
   const { balances } = useBalances();
+  const { queueExtrinsic } = useQueue();
+  const { enqueueSnackbar } = useSnackbar();
+  const [isSending, setIsSending] = useState<boolean>(false);
 
   const {
     register,
@@ -50,8 +58,6 @@ export default function TransferPage() {
     errors,
     clearErrors,
   } = useForm<TransferFormProps>();
-
-  const onSubmit = (data: TransferFormProps) => console.log(data);
 
   useEffect(() => {
     const senderId = watch('senderId', currentAccount || undefined);
@@ -94,28 +100,86 @@ export default function TransferPage() {
     return formatBalance(amount, {
       withSiFull: true,
       decimals: _decimals,
+      withUnit,
     });
   }, [mountedRef, watch('amount')]);
 
-  const canSubmit: boolean = useMemo(() => {
-    if (
-      !(
-        watch('amount') &&
-        watch('senderId') &&
-        watch('recipientId') &&
-        watch('symbol')
-      )
-    )
-      return false;
-    return true;
-  }, [
-    mountedRef,
-    watch('amount'),
-    watch('senderId'),
-    watch('recipientId'),
-    watch('symbol'),
-    balances,
-  ]);
+  const canSubmit: boolean = useMemo(
+    () =>
+      !!watch('amount') &&
+      !!watch('senderId') &&
+      !!watch('recipientId') &&
+      !!watch('symbol') &&
+      !isSending,
+    [
+      mountedRef,
+      watch('amount'),
+      watch('senderId'),
+      watch('recipientId'),
+      watch('symbol'),
+      balances,
+      isSending,
+    ]
+  );
+
+  const _onFailed = useCallback(
+    (result: SubmittableResult | null) => {
+      mountedRef.current && setIsSending(false);
+    },
+    [mountedRef, setIsSending]
+  );
+
+  const _onSuccess = useCallback(
+    (result: SubmittableResult | null) => {
+      mountedRef.current && setIsSending(false);
+    },
+    [mountedRef, setIsSending]
+  );
+
+  const _onStart = useCallback(() => {
+    mountedRef.current && setIsSending(true);
+  }, [mountedRef, setIsSending]);
+
+  const _onUpdate = useCallback(() => {
+    console.log('update');
+  }, [mountedRef]);
+
+  const onSubmit = useCallback(
+    (data: TransferFormProps) => {
+      let extrinsics: SubmittableExtrinsic<'promise'>[] | undefined;
+
+      if (isDefaultAssetBalance) {
+        extrinsics = [
+          data.keepAlive
+            ? api.tx.balances.transferKeepAlive(data.recipientId, data.amount)
+            : api.tx.balances.transfer(data.recipientId, data.amount),
+        ];
+      } else {
+        extrinsics = [
+          api.tx['urc10Module'].transfer(
+            theAssetBalance?.assetId,
+            data.recipientId,
+            data.amount
+          ),
+        ];
+      }
+
+      assert(extrinsics?.length, 'Expected generated extrinsic');
+
+      extrinsics.forEach((extrinsic) => {
+        queueExtrinsic({
+          accountId: data.senderId,
+          extrinsic,
+          isUnsigned: false,
+          txFailedCb: _onFailed,
+          txStartCb: _onStart,
+          txSuccessCb: _onSuccess,
+          txUpdateCb: _onUpdate,
+        });
+      });
+    },
+    [watch(), isDefaultAssetBalance]
+  );
 
   return (
     <>
@@ -245,20 +309,22 @@ export default function TransferPage() {
               margin="normal"
             />
           )}
-          <Box display="flex" justifyContent="flex-end">
-            <FormControlLabel
-              label="保持账户活跃"
-              labelPlacement="start"
-              control={
-                <Switch
-                  name="keepAlive"
-                  defaultChecked
-                  inputRef={register}
-                  color="secondary"
-                />
-              }
-            />
-          </Box>
+          {isDefaultAssetBalance && (
+            <Box display="flex" justifyContent="flex-end">
+              <FormControlLabel
+                label="保持账户活跃"
+                labelPlacement="start"
+                control={
+                  <Switch
+                    name="keepAlive"
+                    defaultChecked
+                    inputRef={register}
+                    color="secondary"
+                  />
+                }
+              />
+            </Box>
+          )}
           {!watch('keepAlive', true) && (
             <Box display="flex" justifyContent="flex-end">
               <FormControlLabel

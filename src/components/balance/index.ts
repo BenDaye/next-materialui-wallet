@@ -1,3 +1,4 @@
 import TransferList from './TransferList';
+import SignDialog from './SignDialog';
 
-export { TransferList };
+export { TransferList, SignDialog };

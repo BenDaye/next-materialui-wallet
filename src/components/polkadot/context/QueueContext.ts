@@ -59,6 +59,22 @@ export type QueueTxStatus =
   | 'sent'
   | 'blocked';
 
+export const STATUS_COMPLETE: QueueTxStatus[] = [
+  // status from subscription
+  'finalitytimeout',
+  'finalized',
+  'inblock',
+  'usurped',
+  'dropped',
+  'invalid',
+  // normal completion
+  'cancelled',
+  'error',
+  'sent',
+];
+
+export const AVAIL_STATUS = ['queued', 'qr', 'signing'];
+
 export type SignerCallback = (id: number, result: SignerResult | null) => void;
 
 export type TxCallback = (status: SubmittableResult) => void;

@@ -8,7 +8,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import registry from '@utils/type-registry';
+import registry from '@utils/typeRegistry';
 import { ApiState, ApiProps, ChainState } from '@components/polkadot/context';
 import { Backdrop, Box, CircularProgress, Typography } from '@material-ui/core';
 import { ApiContext } from '../context';

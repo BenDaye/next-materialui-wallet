@@ -5,7 +5,7 @@ import {
   ChainProps,
   SortedAccount,
 } from '@components/polkadot/context';
-import registry from '@utils/type-registry';
+import registry from '@utils/typeRegistry';
 import { DEFAULT_DECIMALS, DEFAULT_SS58, DEFAULT_AUX } from '@constants';
 import { formatBalance, formatNumber } from '@polkadot/util';
 import { deriveMapCache, setDeriveCache } from '@polkadot/api-derive/util';
