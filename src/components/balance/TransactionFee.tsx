@@ -7,16 +7,16 @@ import { formatBalance, isFunction } from '@polkadot/util';
 import { TextField } from '@material-ui/core';
 import { useError } from '@components/error';
 
-interface FeeProps extends Children {
+interface TransactionFeeProps extends Children {
   accountId?: string | null;
   extrinsic?: SubmittableExtrinsic | null;
 }
 
-function Fee({
+function TransactionFee({
   children,
   accountId,
   extrinsic,
-}: FeeProps): ReactElement<FeeProps> | null {
+}: TransactionFeeProps): ReactElement<TransactionFeeProps> | null {
   const { api } = useApi();
   const mountedRef = useIsMountedRef();
   const { setError } = useError();
@@ -62,4 +62,4 @@ function Fee({
   );
 }
 
-export default memo(Fee);
+export default memo(TransactionFee);

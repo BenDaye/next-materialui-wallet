@@ -2,10 +2,10 @@ import React, { memo, ReactElement, useMemo } from 'react';
 import type { Children } from '@components/types';
 import { useApi } from '@components/polkadot/hook';
 import { QueueTx } from '@components/polkadot/context';
-import Fee from './Fee';
 import { Box, List, ListItem, ListItemText } from '@material-ui/core';
 import { formatMeta } from '@utils/formatMeta';
 import TransactionParams from './TransactionParams';
+import { TransactionFee } from '.';
 
 interface TransactionProps extends Children {
   currentItem: QueueTx;
@@ -61,7 +61,7 @@ function Transaction({
           </ListItem>
         </List>
         <TransactionParams extrinsic={extrinsic} />
-        <Fee accountId={accountId} extrinsic={extrinsic} />
+        <TransactionFee accountId={accountId} extrinsic={extrinsic} />
       </Box>
       {children}
     </>

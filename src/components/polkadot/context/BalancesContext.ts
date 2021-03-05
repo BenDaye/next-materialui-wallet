@@ -2,7 +2,7 @@ import { Context, createContext } from 'react';
 import type { Balance } from '@polkadot/types/interfaces/runtime/types';
 import type { Codec } from '@polkadot/types/types';
 import type { DeriveBalancesAll } from '@polkadot/api-derive/types';
-import type { Urc10Balance } from '@components';
+import type { Urc10Balance } from '@components/polkadot/hook';
 
 export interface BalancesProps {
   balances: BalanceProps[];

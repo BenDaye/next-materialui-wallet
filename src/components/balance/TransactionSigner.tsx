@@ -31,18 +31,18 @@ import {
 } from '@material-ui/core';
 import Identicon from '@polkadot/react-identicon';
 
-interface SignerProps extends Children {
+interface TransactionSignerProps extends Children {
   currentItem: QueueTx;
   requestAddress: string;
   onChange: (address: AddressProxy) => void;
 }
 
-function Signer({
+function TransactionSigner({
   children,
   requestAddress,
   currentItem,
   onChange,
-}: SignerProps): ReactElement<SignerProps> {
+}: TransactionSignerProps): ReactElement<TransactionSignerProps> {
   const { api } = useApi();
   const mountedRef = useIsMountedRef();
   const { register, handleSubmit, watch, errors } = useForm();
@@ -165,4 +165,4 @@ function Signer({
   );
 }
 
-export default memo(Signer);
+export default memo(TransactionSigner);

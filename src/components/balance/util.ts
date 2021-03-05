@@ -35,6 +35,8 @@ export const NO_FLAGS = {
 
 const lockCountdown: Record<string, number> = {};
 
+export const NOOP = () => undefined;
+
 export const UNLOCK_MINS = 15;
 
 const LOCK_DELAY = UNLOCK_MINS * 60 * 1000;

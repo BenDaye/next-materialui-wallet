@@ -32,17 +32,14 @@ import {
   IconButton,
   Box,
 } from '@material-ui/core';
-import Transaction from './Transaction';
 import ButtonWithLoading from '@components/common/ButtonWithLoading';
 import { AddressProxy, ItemState } from './types';
-import Signer from './Signer';
-import { AccountSigner, NO_FLAGS, unlockAccount } from './util';
+import { AccountSigner, NOOP, NO_FLAGS, unlockAccount } from './util';
 import { useError } from '@components/error';
 import keyring from '@polkadot/ui-keyring';
+import { TransactionContent, TransactionSigner } from '.';
 
-interface SignDialogProps extends Children {}
-
-const NOOP = () => undefined;
+interface TransactionDialogProps extends Children {}
 
 async function submitRpc(
   api: ApiPromise,
@@ -121,9 +118,9 @@ function extractCurrent(txqueue: QueueTx[]): ItemState {
   };
 }
 
-function SignDialog({
+function TransactionDialog({
   children,
-}: SignDialogProps): ReactElement<SignDialogProps> {
+}: TransactionDialogProps): ReactElement<TransactionDialogProps> {
   const { api } = useApi();
   const { setError } = useError();
   const { queueSetTxStatus, txqueue } = useQueue();
@@ -305,9 +302,9 @@ function SignDialog({
           </Toolbar>
         </AppBar>
         <DialogContent>
-          {currentItem && <Transaction currentItem={currentItem} />}
+          {currentItem && <TransactionContent currentItem={currentItem} />}
           {currentItem && requestAddress && (
-            <Signer
+            <TransactionSigner
               currentItem={currentItem}
               requestAddress={requestAddress}
               onChange={setSenderInfo}
@@ -319,4 +316,4 @@ function SignDialog({
   );
 }
 
-export default memo(SignDialog);
+export default memo(TransactionDialog);

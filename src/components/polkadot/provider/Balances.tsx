@@ -19,11 +19,11 @@ import { formatBalance } from '@polkadot/util';
 
 function BalancesProvider({ children }: Children): ReactElement<Children> {
   const mountedRef = useIsMountedRef();
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
   const { tokenDecimals, tokenSymbol } = useChain();
   const { currentAccount } = useAccounts();
   const defaultAssetBalance = useCall<DeriveBalancesAll>(
-    api.derive.balances.all,
+    isApiReady && api.derive.balances.all,
     [currentAccount]
   );
 

@@ -1,23 +1,10 @@
-import ChainExplorer from './ChainExplorer';
-import BlockExplorer from './BlockExplorer';
-import EventExplorer from './EventExplorer';
-import BestFinalized from './BestFinalized';
-import BestNumber from './BestNumber';
-import TotalIssuance from './TotalIssuance';
-import Common from './Common';
-import Block from './Block';
-import BlockByHash from './BlockByHash';
-import BlockByNumber from './BlockByNumber';
-
-export {
-  ChainExplorer,
-  BlockExplorer,
-  EventExplorer,
-  BestFinalized,
-  BestNumber,
-  TotalIssuance,
-  Common,
-  Block,
-  BlockByHash,
-  BlockByNumber,
-};
+export { default as ChainExplorer } from './ChainExplorer';
+export { default as BlockExplorer } from './BlockExplorer';
+export { default as EventExplorer } from './EventExplorer';
+export { default as BestFinalized } from './BestFinalized';
+export { default as BestNumber } from './BestNumber';
+export { default as TotalIssuance } from './TotalIssuance';
+export { default as Common } from './Common';
+export { default as Block } from './Block';
+export { default as BlockByHash } from './BlockByHash';
+export { default as BlockByNumber } from './BlockByNumber';
