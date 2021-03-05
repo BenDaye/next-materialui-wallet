@@ -19,7 +19,7 @@ import {
   QueueTxStatus,
 } from '@components/polkadot/context';
 import { assert, isFunction } from '@polkadot/util';
-import { format as loggerFormat } from '@polkadot/util/logger';
+import { loggerFormat } from '@polkadot/util/logger';
 import type { DefinitionRpcExt } from '@polkadot/types/types';
 import {
   Button,

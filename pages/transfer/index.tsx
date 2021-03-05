@@ -30,6 +30,7 @@ import { assert, isFunction } from '@polkadot/util';
 import { useQueue } from '@components/polkadot/hook/useQueue';
 import { useSnackbar } from 'notistack';
 import { SubmittableResult } from '@polkadot/api';
+import ButtonWithLoading from '@components/common/ButtonWithLoading';
 
 interface TransferFormProps {
   senderId: string;
@@ -337,16 +338,18 @@ export default function TransferPage() {
             </Box>
           )}
           <Box mt={4}>
-            <Button
-              variant="contained"
-              color="secondary"
-              fullWidth
-              size="large"
-              type="submit"
-              disabled={!canSubmit}
-            >
-              提交
-            </Button>
+            <ButtonWithLoading loading={isSending}>
+              <Button
+                variant="contained"
+                color="secondary"
+                fullWidth
+                size="large"
+                type="submit"
+                disabled={!canSubmit}
+              >
+                提交
+              </Button>
+            </ButtonWithLoading>
           </Box>
         </form>
       </Container>
