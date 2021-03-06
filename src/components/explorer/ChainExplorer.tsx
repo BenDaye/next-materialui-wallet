@@ -1,16 +1,17 @@
 import { useChain } from '@components/polkadot/hook';
 import { Children } from '@components/types';
-import { Box, Container, Typography } from '@material-ui/core';
+import { Box, Container, TextField, Typography } from '@material-ui/core';
+import { Skeleton } from '@material-ui/lab';
 import React, { memo, ReactElement } from 'react';
 import { BestFinalized, BestNumber, Common, TotalIssuance } from './index';
 
 function ChainExplorerProvider({ children }: Children): ReactElement<Children> {
   const {
-    systemName = '',
-    ss58Format = -1,
-    tokenDecimals = '',
-    tokenSymbol = '',
-    genesisHash = '',
+    systemName,
+    ss58Format,
+    tokenDecimals,
+    tokenSymbol,
+    genesisHash,
   } = useChain();
   return (
     <>
@@ -28,9 +29,13 @@ function ChainExplorerProvider({ children }: Children): ReactElement<Children> {
         <Box marginTop={2}>
           <Typography variant="subtitle2">注册信息</Typography>
           <Common id="genesis_hash" label="创世哈希" value={genesisHash} />
-          <Common id="token_symbol" label="默认单位" value={tokenSymbol} />
+          <Common id="token_symbol" label="默认单位" value={tokenSymbol[0]} />
           <Common id="ss58format" label="地址前缀" value={ss58Format} />
-          <Common id="token_decimals" label="数量精度" value={tokenDecimals} />
+          <Common
+            id="token_decimals"
+            label="数字精度"
+            value={tokenDecimals[0]}
+          />
         </Box>
       </Container>
       {children}

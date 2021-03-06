@@ -4,7 +4,15 @@ import {
   EventExplorer,
 } from '@components/explorer';
 import SwipeableViews from 'react-swipeable-views';
-import { AppBar, Box, Tab, Tabs, TextField, Toolbar } from '@material-ui/core';
+import {
+  AppBar,
+  Box,
+  NoSsr,
+  Tab,
+  Tabs,
+  TextField,
+  Toolbar,
+} from '@material-ui/core';
 import React, { ChangeEvent, useState } from 'react';
 import { GetStaticProps } from 'next';
 
@@ -39,14 +47,16 @@ export default function Explorer({ data }: Props) {
       <AppBar position="fixed">
         <Toolbar>
           <Box flexGrow={1}>
-            <TextField
-              id="query_block"
-              placeholder="查询区块(哈希或高度)"
-              variant="filled"
-              color="secondary"
-              fullWidth
-              margin="dense"
-            />
+            <NoSsr>
+              <TextField
+                id="query_block"
+                placeholder="查询区块(哈希或高度)"
+                variant="filled"
+                color="secondary"
+                fullWidth
+                margin="dense"
+              />
+            </NoSsr>
           </Box>
         </Toolbar>
         <Box flexGrow={1}>

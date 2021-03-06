@@ -1,5 +1,4 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import { isTestChain } from '@polkadot/util';
 import React, {
   memo,
   ReactElement,
@@ -9,50 +8,23 @@ import React, {
   useState,
 } from 'react';
 import registry from '@utils/typeRegistry';
-import { ApiState, ApiProps, ChainState } from '@components/polkadot/context';
+import type { ApiState, ApiProps } from '@components/polkadot/context';
 import { Backdrop, Box, CircularProgress, Typography } from '@material-ui/core';
 import { ApiContext } from '../context';
 import { useError } from '@components/error';
+import { getApiState } from './utils';
 
-interface Props {
+interface ApiProviderProps {
   children: ReactNode;
   url?: string;
 }
 
 let api: ApiPromise;
 
-async function getChainState(api: ApiPromise): Promise<ChainState> {
-  const [systemChain, systemChainType] = await Promise.all([
-    api.rpc.system.chain(),
-    api.rpc.system.chainType
-      ? api.rpc.system.chainType()
-      : Promise.resolve(registry.createType('ChainType', 'Live')),
-  ]);
-
-  return {
-    systemChain: (systemChain || '<unknown>').toString(),
-    systemChainType,
-  };
-}
-
-async function init(api: ApiPromise): Promise<ApiState> {
-  const { systemChain, systemChainType } = await getChainState(api);
-
-  const isDevelopment =
-    systemChainType.isDevelopment ||
-    systemChainType.isLocal ||
-    isTestChain(systemChain);
-
-  return {
-    isApiReady: true,
-    isDevelopment,
-  };
-}
-
 function ApiProvider({
   children,
   url = 'ws://221.122.102.163:9944',
-}: Props): ReactElement<Props> | null {
+}: ApiProviderProps): ReactElement<ApiProviderProps> | null {
   const [state, setState] = useState<ApiState>({
     isApiReady: false,
     isDevelopment: true,
@@ -60,7 +32,6 @@ function ApiProvider({
   const [isApiConnected, setIsApiConnected] = useState<boolean>(false);
   const [isApiInitialized, setIsApiInitialized] = useState<boolean>(false);
   const [apiError, setApiError] = useState<null | string>(null);
-
   const { setError } = useError();
 
   const value = useMemo<ApiProps>(
@@ -68,7 +39,23 @@ function ApiProvider({
     [apiError, isApiConnected, isApiInitialized, state]
   );
 
-  useEffect((): void => {
+  const handleConnected = () => setIsApiConnected(true);
+  const handleDisconnected = () => setIsApiConnected(false);
+  const handleConnectError = (error: Error) => {
+    setError(error);
+    setApiError(error.message);
+  };
+
+  const handleConnectReady = () => {
+    getApiState(api)
+      .then(setState)
+      .catch((err: Error) => {
+        setError(err);
+        setApiError(err.message);
+      });
+  };
+
+  useEffect(() => {
     const provider = new WsProvider(url);
     const types = {
       Address: 'AccountId',
@@ -83,31 +70,29 @@ function ApiProvider({
 
     api = new ApiPromise({ provider, types });
 
-    api.on('connected', () => setIsApiConnected(true));
-    api.on('disconnected', () => setIsApiConnected(false));
-    api.on('error', (err: Error) => {
-      setError(err);
-      setApiError(err.message);
-    });
-    api.on('ready', () => {
-      init(api)
-        .then(setState)
-        .catch((err: Error) => {
-          setError(err);
-          setApiError(err.message);
-        });
-    });
+    api.on('connected', handleConnected);
+    api.on('disconnected', handleDisconnected);
+    api.on('error', handleConnectError);
+    api.on('ready', handleConnectReady);
 
     setIsApiInitialized(true);
+    return () => {
+      if (api) {
+        api.off('connected', handleConnected);
+        api.off('disconnected', handleDisconnected);
+        api.off('error', handleConnectError);
+        api.off('ready', handleConnectReady);
+      }
+    };
   }, []);
 
-  if (!value.isApiReady) {
-    return (
-      <Backdrop open={true}>
-        <CircularProgress color="secondary" />
-      </Backdrop>
-    );
-  }
+  // if (!value.isApiReady) {
+  //   return (
+  //     <Backdrop open={true}>
+  //       <CircularProgress color="secondary" />
+  //     </Backdrop>
+  //   );
+  // }
 
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
 }

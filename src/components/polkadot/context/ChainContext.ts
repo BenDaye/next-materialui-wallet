@@ -1,19 +1,18 @@
 import { Context, createContext } from 'react';
-import type { ChainProperties, ChainType } from '@polkadot/types/interfaces';
+import type { ChainProperties } from '@polkadot/types/interfaces';
 
-export interface ChainState {
-  systemChain: string;
-  systemChainType: ChainType;
-}
-
-export interface ChainProps {
+export interface ChainSystemInfo {
   properties: ChainProperties;
   systemName: string;
   systemVersion: string;
-  ss58Format?: number;
-  tokenDecimals?: any;
-  tokenSymbol?: any;
-  genesisHash?: string;
+}
+
+export interface ChainProps extends ChainSystemInfo {
+  ss58Format: number;
+  tokenDecimals: number[];
+  tokenSymbol: string[];
+  genesisHash: string;
+  isChainReady: boolean;
 }
 
 export const ChainContext: Context<ChainProps> = createContext<ChainProps>(

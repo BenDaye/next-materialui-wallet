@@ -1,5 +1,6 @@
 import '@fontsource/roboto';
 import '@styles/globals.css';
+import 'animate.css';
 import React, { Fragment, useEffect } from 'react';
 import Head from 'next/head';
 import { AppProps } from 'next/app';

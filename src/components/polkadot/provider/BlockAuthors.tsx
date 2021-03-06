@@ -1,7 +1,7 @@
 import type { Children } from '@components/types';
 import { memo, ReactElement, useEffect, useState } from 'react';
 import type { EraRewardPoints } from '@polkadot/types/interfaces';
-import { formatNumber } from '@polkadot/util';
+import { formatNumber, isFunction } from '@polkadot/util';
 import { VoidFn } from '@polkadot/api/types';
 import {
   Authors,
@@ -20,7 +20,9 @@ const eraPoints: Record<string, string> = {};
 function BlockAuthorsProvider({ children }: Children): ReactElement<Children> {
   const { api, isApiReady } = useApi();
   const queryPoints = useCall<EraRewardPoints>(
-    isApiReady && api.derive.staking?.currentPoints
+    isApiReady &&
+      isFunction(api.derive.staking?.currentPoints) &&
+      api.derive.staking?.currentPoints
   );
   const [state, setState] = useState<Authors>({
     byAuthor,
@@ -33,6 +35,8 @@ function BlockAuthorsProvider({ children }: Children): ReactElement<Children> {
   const { setError } = useError();
 
   useEffect(() => {
+    if (!isApiReady) return;
+
     let unsubscribeValidator: VoidFn | null;
     let unsubscribeNewHeads: VoidFn | null;
 
@@ -48,7 +52,7 @@ function BlockAuthorsProvider({ children }: Children): ReactElement<Children> {
       unsubscribeValidator && unsubscribeValidator();
       unsubscribeNewHeads && unsubscribeNewHeads();
     };
-  }, [api]);
+  }, [api, isApiReady]);
 
   useEffect((): void => {
     if (queryPoints) {

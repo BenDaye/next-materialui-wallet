@@ -14,13 +14,15 @@ import { useApi } from '@components/polkadot/hook';
 const MAX_EVENTS = 50;
 
 function EventsProvider({ children }: Children): ReactElement<Children> {
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
   const [state, setState] = useState<EventsProps>([]);
   const { setError } = useError();
 
   const value = useMemo(() => state, [state]);
 
   useEffect(() => {
+    if (!isApiReady) return;
+
     let prevBlockHash: string | null = null;
     let prevEventHash: string | null = null;
     // TODO: unsubscribe
@@ -100,7 +102,7 @@ function EventsProvider({ children }: Children): ReactElement<Children> {
         }
       })
       .catch(setError);
-  }, [api]);
+  }, [api, isApiReady]);
 
   return (
     <EventsContext.Provider value={value}>{children}</EventsContext.Provider>

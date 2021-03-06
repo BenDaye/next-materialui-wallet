@@ -15,7 +15,7 @@ import {
 import type { Children } from '@components/types';
 import { memo, ReactElement, useMemo } from 'react';
 import type { DeriveBalancesAll } from '@polkadot/api-derive/types';
-import { formatBalance } from '@polkadot/util';
+import { formatBalance, isFunction } from '@polkadot/util';
 
 function BalancesProvider({ children }: Children): ReactElement<Children> {
   const mountedRef = useIsMountedRef();
@@ -23,7 +23,9 @@ function BalancesProvider({ children }: Children): ReactElement<Children> {
   const { tokenDecimals, tokenSymbol } = useChain();
   const { currentAccount } = useAccounts();
   const defaultAssetBalance = useCall<DeriveBalancesAll>(
-    isApiReady && api.derive.balances.all,
+    isApiReady &&
+      isFunction(api.derive.balances.all) &&
+      api.derive.balances.all,
     [currentAccount]
   );
 
@@ -34,7 +36,7 @@ function BalancesProvider({ children }: Children): ReactElement<Children> {
   const value: BalancesProps = useMemo(() => {
     const _defaultBalance: BalanceProps = {
       symbol: tokenSymbol && tokenSymbol[0],
-      decimals: tokenDecimals && tokenDecimals[0] && Number(tokenDecimals[0]),
+      decimals: tokenDecimals && tokenDecimals[0],
       isDefault: true,
       balance: defaultAssetBalance?.availableBalance,
       balanceFormat:
@@ -63,7 +65,7 @@ function BalancesProvider({ children }: Children): ReactElement<Children> {
     );
     return {
       balances: [_defaultBalance, ..._potentialBalances],
-      defaultAssetBalance: defaultAssetBalance || null,
+      defaultAssetBalance,
       potentialAssetsBalance,
     };
   }, [mountedRef, currentAccount, defaultAssetBalance, potentialAssetsBalance]);

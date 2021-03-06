@@ -3,19 +3,33 @@ import { KeyringStore } from '@polkadot/ui-keyring/types';
 import { Children } from '@components/types';
 import { ChainContext, ChainProps } from '@components/polkadot/context';
 import { useApi } from '@components/polkadot/hook';
-import { initChain } from './utils';
+import { EMPTY_CHAIN_PROPERTIES, getChainState } from './utils';
 
-interface Props extends Children {
+interface ChainProviderProps extends Children {
   store?: KeyringStore;
 }
 
-function ChainProvider({ children, store }: Props): ReactElement<Props> {
-  const { api, isDevelopment } = useApi();
-  const [state, setState] = useState<ChainProps>(({} as unknown) as ChainProps);
+const DEFAULT_CHAIN_PROPS: ChainProps = {
+  properties: EMPTY_CHAIN_PROPERTIES,
+  systemName: '<unknown>',
+  systemVersion: '<unknown>',
+  ss58Format: 42,
+  tokenDecimals: [8],
+  tokenSymbol: ['UECC'],
+  genesisHash: '<unknown>',
+  isChainReady: false,
+};
 
-  useEffect((): void => {
-    initChain(api, isDevelopment, store).then(setState);
-  }, [api]);
+function ChainProvider({
+  children,
+  store,
+}: ChainProviderProps): ReactElement<ChainProviderProps> {
+  const { api, isDevelopment, isApiReady } = useApi();
+  const [state, setState] = useState<ChainProps>(DEFAULT_CHAIN_PROPS);
+
+  useEffect(() => {
+    isApiReady && getChainState(api, isDevelopment, store).then(setState);
+  }, [api, isApiReady]);
 
   return (
     <ChainContext.Provider value={state}>{children}</ChainContext.Provider>

@@ -1,7 +1,11 @@
 import {
   AppBar,
+  Avatar,
   Box,
+  Card,
+  CardHeader,
   Container,
+  Divider,
   IconButton,
   Toolbar,
   Typography,
@@ -17,6 +21,7 @@ import {
   AccountPicker,
   BalanceList,
 } from '@components/wallet';
+import { Skeleton } from '@material-ui/lab';
 
 function sortAccount(address: string): SortedAccount | undefined {
   const account = keyring.getAccount(address);

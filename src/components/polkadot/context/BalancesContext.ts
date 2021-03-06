@@ -6,7 +6,7 @@ import type { Urc10Balance } from '@components/polkadot/hook';
 
 export interface BalancesProps {
   balances: BalanceProps[];
-  defaultAssetBalance: DeriveBalancesAll | null;
+  defaultAssetBalance?: DeriveBalancesAll;
   potentialAssetsBalance: Urc10Balance[];
 }
 
@@ -22,7 +22,7 @@ export interface BalanceProps {
 export const BalancesContext: Context<BalancesProps> = createContext<BalancesProps>(
   {
     balances: [],
-    defaultAssetBalance: null,
+    // defaultAssetBalance: null,
     potentialAssetsBalance: [],
   }
 );

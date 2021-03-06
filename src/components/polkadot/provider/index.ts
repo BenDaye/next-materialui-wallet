@@ -8,10 +8,12 @@ export { default as EventsProvider } from './Events';
 export { default as QueueProvider } from './Queue';
 
 export {
+  getApiState,
+  getSystemInfo,
   sortAccounts,
   isKeyringLoaded,
-  getChainProps,
-  initChain,
+  getChainSystemInfo,
+  getChainState,
   subscribeValidator,
   subscribeNewHeads,
 } from './utils';

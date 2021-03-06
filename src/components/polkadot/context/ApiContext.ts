@@ -1,6 +1,11 @@
 import { ApiPromise } from '@polkadot/api';
 import { Context, createContext } from 'react';
+import type { ChainType } from '@polkadot/types/interfaces';
 
+export interface ApiSystemInfo {
+  systemChain: string;
+  systemChainType: ChainType;
+}
 export interface ApiState {
   isApiReady: boolean;
   isDevelopment: boolean;

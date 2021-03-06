@@ -3,13 +3,14 @@ import {
   AccountsProps,
   AccountsState,
 } from '@components/polkadot/context';
-import { useIsMountedRef } from '@components/polkadot/hook';
+import { useChain, useIsMountedRef } from '@components/polkadot/hook';
 import { Children } from '@components/types';
 import { keyring } from '@polkadot/ui-keyring';
 import { memo, ReactElement, useEffect, useMemo, useState } from 'react';
 import { sortAccounts } from './utils';
 
 function AccountsProvider({ children }: Children): ReactElement<Children> {
+  const { isChainReady } = useChain();
   const mountedRef = useIsMountedRef();
   const [
     { accounts, hasAccount, isAccount, sortedAccounts },
@@ -36,22 +37,24 @@ function AccountsProvider({ children }: Children): ReactElement<Children> {
   );
 
   useEffect((): (() => void) => {
-    const subscription = keyring.accounts.subject.subscribe((value): void => {
-      if (mountedRef.current) {
-        const accounts = value ? Object.keys(value) : [];
-        const hasAccount = accounts.length !== 0;
-        const isAccount = (address: string): boolean =>
-          accounts.includes(address);
-        const sortedAccounts = sortAccounts(accounts);
+    const subscription =
+      isChainReady &&
+      keyring.accounts.subject.subscribe((value): void => {
+        if (mountedRef.current) {
+          const accounts = value ? Object.keys(value) : [];
+          const hasAccount = accounts.length !== 0;
+          const isAccount = (address: string): boolean =>
+            accounts.includes(address);
+          const sortedAccounts = sortAccounts(accounts);
 
-        setState({ accounts, hasAccount, isAccount, sortedAccounts });
-      }
-    });
+          setState({ accounts, hasAccount, isAccount, sortedAccounts });
+        }
+      });
 
     return (): void => {
-      setTimeout(() => subscription.unsubscribe(), 0);
+      setTimeout(() => subscription && subscription.unsubscribe(), 0);
     };
-  }, [mountedRef]);
+  }, [mountedRef, isChainReady]);
 
   useEffect(() => {
     if (!hasAccount || (currentAccount && !isAccount(currentAccount))) {

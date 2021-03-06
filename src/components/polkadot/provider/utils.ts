@@ -1,19 +1,51 @@
 import { KeyringAddress, KeyringStore } from '@polkadot/ui-keyring/types';
 import { keyring } from '@polkadot/ui-keyring';
 import {
+  ApiState,
+  ApiSystemInfo,
   Authors,
   ChainProps,
+  ChainSystemInfo,
   SortedAccount,
 } from '@components/polkadot/context';
 import registry from '@utils/typeRegistry';
 import { DEFAULT_DECIMALS, DEFAULT_SS58, DEFAULT_AUX } from '@constants';
-import { formatBalance, formatNumber } from '@polkadot/util';
+import { formatBalance, formatNumber, isTestChain } from '@polkadot/util';
 import { deriveMapCache, setDeriveCache } from '@polkadot/api-derive/util';
 import { ApiPromise } from '@polkadot/api';
 import type BN from 'bn.js';
 import { VoidFn } from '@polkadot/api/types';
 import { HeaderExtended } from '@polkadot/api-derive';
 import { Dispatch, SetStateAction } from 'react';
+import type { ChainProperties } from '@polkadot/types/interfaces';
+
+export async function getSystemInfo(api: ApiPromise): Promise<ApiSystemInfo> {
+  const [systemChain, systemChainType] = await Promise.all([
+    api.rpc.system.chain(),
+    api.rpc.system.chainType
+      ? api.rpc.system.chainType()
+      : Promise.resolve(registry.createType('ChainType', 'Live')),
+  ]);
+
+  return {
+    systemChain: (systemChain || '<unknown>').toString(),
+    systemChainType,
+  };
+}
+
+export async function getApiState(api: ApiPromise): Promise<ApiState> {
+  const { systemChain, systemChainType } = await getSystemInfo(api);
+
+  const isDevelopment =
+    systemChainType.isDevelopment ||
+    systemChainType.isLocal ||
+    isTestChain(systemChain);
+
+  return {
+    isApiReady: true,
+    isDevelopment,
+  };
+}
 
 export function sortAccounts(addresses: string[]): SortedAccount[] {
   return addresses
@@ -43,7 +75,13 @@ export function isKeyringLoaded() {
   }
 }
 
-export async function getChainProps(api: ApiPromise): Promise<ChainProps> {
+export const EMPTY_CHAIN_PROPERTIES: ChainProperties = registry.createType(
+  'ChainProperties'
+);
+
+export async function getChainSystemInfo(
+  api: ApiPromise
+): Promise<ChainSystemInfo> {
   const [chainProperties, systemName, systemVersion] = await Promise.all([
     api.rpc.system.properties(),
     api.rpc.system.name(),
@@ -62,12 +100,14 @@ export async function getChainProps(api: ApiPromise): Promise<ChainProps> {
   };
 }
 
-export async function initChain(
+export async function getChainState(
   api: ApiPromise,
   isDevelopment: boolean,
   store?: KeyringStore
 ): Promise<ChainProps> {
-  const { properties, systemName, systemVersion } = await getChainProps(api);
+  const { properties, systemName, systemVersion } = await getChainSystemInfo(
+    api
+  );
 
   const ss58Format = properties.ss58Format.unwrapOr(DEFAULT_SS58).toNumber();
   const tokenDecimals = properties.tokenDecimals.unwrapOr([DEFAULT_DECIMALS]);
@@ -105,9 +145,10 @@ export async function initChain(
     systemName,
     systemVersion,
     ss58Format,
-    tokenDecimals: properties.tokenDecimals?.toHuman(),
-    tokenSymbol: properties.tokenSymbol?.toHuman(),
+    tokenDecimals: (tokenDecimals as BN[]).map((b) => b.toNumber()),
+    tokenSymbol: tokenSymbol.map((s: any) => s.toString()),
     genesisHash: api.genesisHash.toString(),
+    isChainReady: true,
   };
 }
 

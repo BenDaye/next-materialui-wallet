@@ -13,15 +13,15 @@ module.exports = {
     // Important: return the modified config
     return config
   },
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/explorer',
-        permanent: true,
-      },
-    ]
-  },
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/',
+  //       destination: '/explorer',
+  //       permanent: true,
+  //     },
+  //   ]
+  // },
   typescript: {
     // !! WARN !!
     // Dangerously allow production builds to successfully complete even if

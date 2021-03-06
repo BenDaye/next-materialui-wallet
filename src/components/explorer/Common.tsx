@@ -1,15 +1,14 @@
+import { useApi, useCall } from '@components/polkadot/hook';
 import { TextField } from '@material-ui/core';
-import React, { memo, ReactElement, ReactNode } from 'react';
+import React, { memo, ReactElement } from 'react';
 
 interface Props {
-  children?: ReactNode;
   id?: string;
   label?: string;
   value?: string | number | null;
 }
 
 function Common({
-  children,
   id = `common-${Date.now().toString()}`,
   label = 'Label',
   value = '-',
@@ -25,9 +24,9 @@ function Common({
         margin="dense"
         value={value}
         InputLabelProps={{ shrink: true }}
-        inputProps={{ readOnly: true }}
+        // inputProps={{ readOnly: true }}
+        disabled
       />
-      {children}
     </>
   );
 }

@@ -1,7 +1,7 @@
-import type '@material-ui/lab/themeAugmentation';
+import type {} from '@material-ui/lab/themeAugmentation';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { createMuiTheme, ThemeProvider as TP } from '@material-ui/core/styles';
-import { Children } from './components';
+import type { Children } from '@components/types';
 import { memo, ReactElement, useMemo } from 'react';
 import { orange, grey, blue } from '@material-ui/core/colors';
 
@@ -14,21 +14,21 @@ function ThemeProvider({ children }: Children): ReactElement<Children> {
         palette: {
           type: prefersDarkMode ? 'dark' : 'light',
           primary: {
-            main: prefersDarkMode ? grey[900] : blue[500]
+            main: prefersDarkMode ? grey[900] : blue[500],
           },
           secondary: {
-            main: prefersDarkMode ? orange[500] : grey[50]
+            main: prefersDarkMode ? orange[500] : grey[50],
           },
         },
         overrides: {
           MuiBottomNavigationAction: {
-            "root": {
-              "&$selected": {
-                "color": prefersDarkMode ? orange[500] : blue[500]
-              }
-            }
-          }
-        }
+            root: {
+              '&$selected': {
+                color: prefersDarkMode ? orange[500] : blue[500],
+              },
+            },
+          },
+        },
       }),
     [prefersDarkMode]
   );
