@@ -15,7 +15,7 @@ import DescriptionIcon from '@material-ui/icons/Description';
 import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
 import TransformIcon from '@material-ui/icons/Transform';
 import type { DeriveBalancesAll } from '@polkadot/api-derive/types';
-import { formatBalance } from '@polkadot/util';
+import { formatBalance, isFunction } from '@polkadot/util';
 import styles from '@styles/Layout.module.css';
 import {
   Urc10Balance,
@@ -34,7 +34,7 @@ export default function BalancePage() {
   const {
     query: { address, asset: assetId },
   } = router;
-  const { api } = useApi();
+  const { api, isApiReady } = useApi();
   const { setError } = useError();
   const { tokenSymbol, tokenDecimals } = useChain();
   const [currentTabIndex, setCurrentTabIndex] = useState<number>(0);
@@ -72,7 +72,9 @@ export default function BalancePage() {
   );
 
   const defaultAssetBalance = useCall<DeriveBalancesAll>(
-    api.derive.balances.all,
+    isApiReady &&
+      isFunction(api.derive.balances.all) &&
+      api.derive.balances.all,
     [address]
   );
   const potentialAssetsBalance: Urc10Balance[] =
