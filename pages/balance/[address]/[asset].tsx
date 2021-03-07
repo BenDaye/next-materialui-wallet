@@ -143,7 +143,7 @@ export default function BalancePage() {
             <ArrowBackIosIcon />
           </IconButton>
           <Box flexGrow={1}>
-            <Typography align="center">{title}</Typography>
+            <Typography>{title}</Typography>
           </Box>
           <IconButton edge="end">
             <DescriptionIcon />

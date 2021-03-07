@@ -25,9 +25,7 @@ export default function Settings() {
       <AppBar position="fixed">
         <Toolbar>
           <Box flexGrow={1}>
-            <Typography variant="h6" align="center">
-              设置
-            </Typography>
+            <Typography>设置</Typography>
           </Box>
         </Toolbar>
       </AppBar>

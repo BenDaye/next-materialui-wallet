@@ -1,16 +1,12 @@
 import {
   AppBar,
-  Avatar,
   Box,
-  Card,
-  CardHeader,
   Container,
-  Divider,
   IconButton,
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
+import CropFreeIcon from '@material-ui/icons/CropFree';
 import React, { useMemo } from 'react';
 import keyring from '@polkadot/ui-keyring';
 import { SortedAccount } from '@components/polkadot/context';
@@ -21,7 +17,6 @@ import {
   AccountPicker,
   BalanceList,
 } from '@components/wallet';
-import { Skeleton } from '@material-ui/lab';
 
 function sortAccount(address: string): SortedAccount | undefined {
   const account = keyring.getAccount(address);
@@ -51,12 +46,10 @@ export default function Wallet() {
         <Toolbar>
           <AccountPicker />
           <Box flexGrow={1}>
-            <Typography variant="h6" align="center">
-              钱包
-            </Typography>
+            <Typography>钱包</Typography>
           </Box>
           <IconButton edge="end" color="inherit" aria-label="scan">
-            <MenuIcon />
+            <CropFreeIcon />
           </IconButton>
         </Toolbar>
       </AppBar>

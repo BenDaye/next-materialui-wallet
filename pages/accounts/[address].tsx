@@ -64,7 +64,7 @@ export default function AccountByAddressPage() {
             <ArrowBackIosIcon />
           </IconButton>
           <Box flexGrow={1}>
-            <Typography align="center">账户详情</Typography>
+            <Typography>账户详情</Typography>
           </Box>
           <IconButton edge="end" onClick={() => router.push('/auth')}>
             <PlaylistAddIcon />

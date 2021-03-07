@@ -9,14 +9,18 @@ import {
   Typography,
 } from '@material-ui/core';
 import MenuIcon from '@material-ui/icons/Menu';
+import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+
 import ChainList from './ChainList';
 import AccountList from './AccountList';
+import { useRouter } from 'next/router';
 
 interface AccountPickerProps extends Children {}
 
 function AccountPicker({
   children,
 }: AccountPickerProps): ReactElement<AccountPickerProps> {
+  const router = useRouter();
   const [open, setOpen] = useState<boolean>(false);
   return (
     <>
@@ -35,8 +39,8 @@ function AccountPicker({
               <Box flexGrow={1}>
                 <Typography variant="subtitle2">选择账户</Typography>
               </Box>
-              <IconButton edge="end" color="inherit" aria-label="scan">
-                <MenuIcon />
+              <IconButton edge="end" onClick={() => router.push('/auth')}>
+                <PlaylistAddIcon />
               </IconButton>
             </Toolbar>
           </AppBar>

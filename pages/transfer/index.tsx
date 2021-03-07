@@ -49,7 +49,6 @@ export default function TransferPage() {
   const { currentAccount, sortedAccounts, setCurrentAccount } = useAccounts();
   const { balances } = useBalances();
   const { queueExtrinsic } = useQueue();
-  const { enqueueSnackbar } = useSnackbar();
   const [isSending, setIsSending] = useState<boolean>(false);
 
   const {
@@ -190,7 +189,7 @@ export default function TransferPage() {
             <ArrowBackIosIcon />
           </IconButton>
           <Box flexGrow={1}>
-            <Typography align="center">转账</Typography>
+            <Typography>转账</Typography>
           </Box>
           <IconButton edge="end">
             <CropFreeIcon />
@@ -290,7 +289,7 @@ export default function TransferPage() {
               InputProps={{
                 endAdornment: (
                   <InputAdornment position="end">
-                    {watch('symbol', tokenSymbol)}
+                    {watch('symbol', tokenSymbol[0])}
                   </InputAdornment>
                 ),
               }}

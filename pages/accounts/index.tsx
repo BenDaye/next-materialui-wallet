@@ -9,8 +9,6 @@ import {
   Divider,
   List,
   ListItem,
-  ListItemIcon,
-  ListItemSecondaryAction,
   ListItemText,
   Paper,
   ListItemAvatar,
@@ -32,9 +30,9 @@ export default function AccountsPage() {
             <ArrowBackIosIcon />
           </IconButton>
           <Box flexGrow={1}>
-            <Typography align="center">账户管理</Typography>
+            <Typography>账户管理</Typography>
           </Box>
-          <IconButton edge="end">
+          <IconButton edge="end" onClick={() => router.push('/auth')}>
             <PlaylistAddIcon />
           </IconButton>
         </Toolbar>

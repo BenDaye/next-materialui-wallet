@@ -10,7 +10,7 @@ export default function AddressesPage() {
       <AppBar position="fixed">
         <Toolbar>
           <Box flexGrow={1}>
-            <Typography align="center">地址管理</Typography>
+            <Typography>地址管理</Typography>
           </Box>
         </Toolbar>
       </AppBar>

@@ -286,7 +286,7 @@ function TransactionDialog({
               <CloseIcon />
             </IconButton>
             <Box flexGrow={1}>
-              <Typography align="center">授权</Typography>
+              <Typography>授权</Typography>
             </Box>
             <ButtonWithLoading loading={isSending}>
               <Button
