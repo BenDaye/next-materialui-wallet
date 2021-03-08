@@ -43,63 +43,6 @@ interface AuthRestoreForm {
   type: RestoreSeedType;
 }
 
-function deriveValidate(
-  seed: string,
-  seedType: RestoreSeedType,
-  derivePath: string = '',
-  pairType: PairType = 'sr25519'
-): boolean | string {
-  try {
-    const { password, path } = keyExtractSuri(
-      pairType === 'ethereum' ? `${seed}/${derivePath}` : `${seed}${derivePath}`
-    );
-
-    if (password?.includes('/')) {
-      return 'WARNING_SLASH_PASSWORD';
-    }
-
-    if (pairType === 'ed25519' && path.some(({ isSoft }): boolean => isSoft)) {
-      return 'SOFT_NOT_ALLOWED';
-    }
-
-    if (seedType === 'raw' && password) {
-      return 'PASSWORD_IGNORED';
-    }
-
-    if (pairType === 'ethereum' && !hdValidatePath(derivePath)) {
-      return 'INVALID_DERIVATION_PATH';
-    }
-    return true;
-  } catch (error) {
-    console.error(error);
-    return (error as Error).message || 'Unexpected Error';
-  }
-}
-
-// function createByKeystore(
-//   data: AuthRestoreForm,
-//   genesisHash: string
-// ): UpdatePairResult {
-//   if (!data.keystore) return {};
-
-//   try {
-//     const pair = keyring.createFromJson(JSON.parse(data.keystore), {
-//       genesisHash,
-//     });
-//     return { pair };
-//   } catch (error) {
-//     return {
-//       error: {
-//         name: 'keystore',
-//         option: {
-//           type: 'manual',
-//           message: (error as Error).message,
-//         },
-//       },
-//     };
-//   }
-// }
-
 // function createByBip(
 //   data: AuthRestoreForm,
 //   genesisHash: string
@@ -185,6 +128,9 @@ function AuthRestoreParams({
 }: AuthRestoreParamsProps): ReactElement<AuthRestoreParamsProps> {
   const { register, watch, errors } = useForm<AuthRestoreForm>({
     mode: 'onBlur',
+    defaultValues: {
+      type: 'bip',
+    },
   });
 
   const type = useMemo(() => watch('type', 'keystore'), [watch('type')]);

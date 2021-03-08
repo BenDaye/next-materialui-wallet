@@ -1,6 +1,6 @@
-import React, { memo, ReactElement } from 'react';
+import React, { memo, ReactElement, useState } from 'react';
 import type { Children } from '@components/types';
-import { useApi } from '@components/polkadot/hook';
+import { useApi, useChain } from '@components/polkadot/hook';
 import { PairType, RestoreSeedType } from './types';
 import { useForm } from 'react-hook-form';
 import {
@@ -15,14 +15,19 @@ import {
   Typography,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { PageFooter } from '@components/common';
+import { ButtonWithLoading, PageFooter } from '@components/common';
 import keyring from '@polkadot/ui-keyring';
 import {
+  hdLedger,
   hdValidatePath,
   keyExtractSuri,
   mnemonicValidate,
 } from '@polkadot/util-crypto';
-import { isHex } from '@polkadot/util';
+import { isHex, u8aToHex } from '@polkadot/util';
+import { useError } from '@components/error';
+import { useSnackbar } from 'notistack';
+import { useRouter } from 'next/router';
+import { CreateResult, KeyringJson$Meta } from '@polkadot/ui-keyring/types';
 
 interface AuthRestoreByBipOrRawProps extends Children {
   type: RestoreSeedType;
@@ -65,23 +70,74 @@ function deriveValidate(
     }
     return true;
   } catch (error) {
-    console.error(error);
     return (error as Error).message || 'UNEXPECTED_ERROR';
   }
+}
+
+function getSuri(seed: string, derivePath: string, pairType: PairType): string {
+  return pairType === 'ed25519-ledger'
+    ? u8aToHex(hdLedger(seed, derivePath).secretKey.slice(0, 32))
+    : pairType === 'ethereum'
+    ? `${seed}/${derivePath}`
+    : `${seed}${derivePath}`;
 }
 
 function AuthRestoreByBipOrRaw({
   children,
   type,
 }: AuthRestoreByBipOrRawProps): ReactElement<AuthRestoreByBipOrRawProps> {
-  const { api } = useApi();
-  const { register, handleSubmit, watch, errors, getValues } = useForm({
+  const { setError } = useError();
+  const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
+  const {
+    register,
+    handleSubmit,
+    watch,
+    errors,
+    getValues,
+  } = useForm<AuthRestoreByBipOrRawForm>({
     mode: 'onBlur',
   });
+  const [loading, setLoading] = useState<boolean>(false);
+  const { genesisHash } = useChain();
 
-  const onSubmit = (data: AuthRestoreByBipOrRawForm) => console.log(data);
+  const onSubmit = ({
+    seed,
+    name,
+    pairType,
+    password,
+    derivePath,
+  }: AuthRestoreByBipOrRawForm) => {
+    setLoading(true);
 
-  const onError = (errors: any) => console.error(errors);
+    // TODO: 写入队列
+    new Promise((resolve, reject) => {
+      setTimeout(() => {
+        try {
+          const meta: KeyringJson$Meta = {
+            name: name.trim(),
+            isHardware: false,
+            genesisHash,
+          };
+          const result: CreateResult = keyring.addUri(
+            getSuri(seed, derivePath, pairType),
+            password,
+            meta,
+            pairType === 'ed25519-ledger' ? 'ed25519' : pairType
+          );
+          enqueueSnackbar(`账户[${result.json.meta?.name}]导入成功`, {
+            variant: 'success',
+          });
+          router.push('/wallet');
+        } catch (error) {
+          setError(error);
+        } finally {
+          setLoading(false);
+          resolve(true);
+        }
+      }, 100);
+    });
+  };
 
   const validSeed = (value: string): boolean | string => {
     switch (type) {
@@ -100,12 +156,13 @@ function AuthRestoreByBipOrRaw({
 
   const validDerive = (value: string): boolean | string => {
     const { seed, pairType } = getValues(['seed', 'pairType']);
+    if (!value || !seed) return true;
     return deriveValidate(seed, type, value, pairType);
   };
 
   return (
     <>
-      <form onSubmit={handleSubmit(onSubmit, onError)}>
+      <form onSubmit={handleSubmit(onSubmit)}>
         <Container>
           <TextField
             name="seed"
@@ -144,9 +201,8 @@ function AuthRestoreByBipOrRaw({
             name="password"
             label="密码"
             inputRef={register({
-              required: 'INVALID_PASSWORD',
               validate: (value) =>
-                keyring.isPassValid(value) || 'PASSWORD_REQUIRED',
+                keyring.isPassValid(value) || 'INVALID_PASSWORD',
             })}
             InputLabelProps={{ shrink: true }}
             variant="filled"
@@ -163,18 +219,19 @@ function AuthRestoreByBipOrRaw({
             name="passwordConfirm"
             label="确认密码"
             inputRef={register({
-              required: 'INVALID_PASSWORD_CONFIRM',
               validate: (value) =>
-                keyring.isPassValid(value) || 'PASSWORD_CONFIRM_REQUIRED',
+                (keyring.isPassValid(value) &&
+                  value === getValues('password')) ||
+                'INVALID_PASSWORD_CONFIRM',
             })}
             InputLabelProps={{ shrink: true }}
             variant="filled"
             fullWidth
             margin="normal"
             type="password"
-            error={!!errors.password}
+            error={!!errors.passwordConfirm}
             helperText={
-              errors.password?.message ||
+              errors.passwordConfirm?.message ||
               '请确保您使用的是强密码以进行正确的帐户保护。'
             }
           />
@@ -232,9 +289,19 @@ function AuthRestoreByBipOrRaw({
         </Container>
         <PageFooter>
           <Toolbar>
-            <Button variant="contained" fullWidth color="primary" type="submit">
-              导入
-            </Button>
+            <Box flexGrow={1}>
+              <ButtonWithLoading loading={loading}>
+                <Button
+                  variant="contained"
+                  fullWidth
+                  color="primary"
+                  type="submit"
+                  disabled={loading}
+                >
+                  导入
+                </Button>
+              </ButtonWithLoading>
+            </Box>
           </Toolbar>
         </PageFooter>
       </form>
