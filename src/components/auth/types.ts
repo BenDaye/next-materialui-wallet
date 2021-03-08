@@ -5,6 +5,7 @@ export type PairType =
   | 'ethereum'
   | 'sr25519';
 export type SeedType = 'bip' | 'raw' | 'dev';
+export type RestoreSeedType = 'bip' | 'raw' | 'keystore';
 export const DEFAULT_PAIR_TYPE = 'sr25519';
 
 export interface DeriveValidationOutput {
