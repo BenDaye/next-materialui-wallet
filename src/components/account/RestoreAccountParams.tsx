@@ -34,10 +34,12 @@ import {
   mnemonicValidate,
 } from '@polkadot/util-crypto';
 import { isHex } from '@polkadot/util';
-import AuthRestoreByKeystore from './AuthRestoreByKeystore';
-import AuthRestoreByBipOrRaw from './AuthRestoreByBipOrRaw';
+import {
+  RestoreAccountByKeystore,
+  RestoreAccountByBipOrRaw,
+} from '@components/account';
 
-interface AuthRestoreParamsProps extends Children {}
+interface RestoreAccountParamsProps extends Children {}
 
 interface AuthRestoreForm {
   type: RestoreSeedType;
@@ -123,9 +125,9 @@ interface AuthRestoreForm {
 //   }
 // }
 
-function AuthRestoreParams({
+function RestoreAccountParams({
   children,
-}: AuthRestoreParamsProps): ReactElement<AuthRestoreParamsProps> {
+}: RestoreAccountParamsProps): ReactElement<RestoreAccountParamsProps> {
   const { register, watch, errors } = useForm<AuthRestoreForm>({
     mode: 'onBlur',
     defaultValues: {
@@ -162,12 +164,12 @@ function AuthRestoreParams({
         </Container>
       </form>
       {type === 'keystore' ? (
-        <AuthRestoreByKeystore />
+        <RestoreAccountByKeystore />
       ) : (
-        <AuthRestoreByBipOrRaw type={type} />
+        <RestoreAccountByBipOrRaw type={type} />
       )}
     </>
   );
 }
 
-export default memo(AuthRestoreParams);
+export default memo(RestoreAccountParams);

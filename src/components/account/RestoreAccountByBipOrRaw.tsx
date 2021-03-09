@@ -29,11 +29,11 @@ import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
 import { CreateResult, KeyringJson$Meta } from '@polkadot/ui-keyring/types';
 
-interface AuthRestoreByBipOrRawProps extends Children {
+interface RestoreAccountByBipOrRawProps extends Children {
   type: RestoreSeedType;
 }
 
-interface AuthRestoreByBipOrRawForm {
+interface RestoreAccountByBipOrRawForm {
   seed: string;
   name: string;
   password: string;
@@ -82,10 +82,10 @@ function getSuri(seed: string, derivePath: string, pairType: PairType): string {
     : `${seed}${derivePath}`;
 }
 
-function AuthRestoreByBipOrRaw({
+function RestoreAccountByBipOrRaw({
   children,
   type,
-}: AuthRestoreByBipOrRawProps): ReactElement<AuthRestoreByBipOrRawProps> {
+}: RestoreAccountByBipOrRawProps): ReactElement<RestoreAccountByBipOrRawProps> {
   const { setError } = useError();
   const router = useRouter();
   const { showSuccess } = useNotice();
@@ -95,7 +95,7 @@ function AuthRestoreByBipOrRaw({
     watch,
     errors,
     getValues,
-  } = useForm<AuthRestoreByBipOrRawForm>({
+  } = useForm<RestoreAccountByBipOrRawForm>({
     mode: 'onBlur',
   });
   const [loading, setLoading] = useState<boolean>(false);
@@ -107,7 +107,7 @@ function AuthRestoreByBipOrRaw({
     pairType,
     password,
     derivePath,
-  }: AuthRestoreByBipOrRawForm) => {
+  }: RestoreAccountByBipOrRawForm) => {
     setLoading(true);
 
     // TODO: 写入队列
@@ -307,4 +307,4 @@ function AuthRestoreByBipOrRaw({
   );
 }
 
-export default memo(AuthRestoreByBipOrRaw);
+export default memo(RestoreAccountByBipOrRaw);

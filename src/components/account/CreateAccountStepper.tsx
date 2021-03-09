@@ -9,10 +9,10 @@ import type { Children } from '@components/types';
 import { useApi, useChain } from '@components/polkadot/hook';
 import { Container, Fade, Paper, Slide } from '@material-ui/core';
 import {
-  AuthCreateConfirm,
-  AuthCreateIntro,
-  AuthCreateParams,
-  AuthCreateSelectMnemonicWord,
+  CreateAccountConfirm,
+  CreateAccountIntro,
+  CreateAccountParams,
+  CreateAccountSelectMnemonicWord,
 } from '.';
 import {
   mnemonicGenerate,
@@ -30,7 +30,7 @@ import {
   PairType,
   DEFAULT_PAIR_TYPE,
   AddressState,
-  AuthCreateParamsCallback,
+  CreateAccountParamsCallback,
   DeriveValidationOutput,
 } from './types';
 import { CreateResult, KeyringJson$Meta } from '@polkadot/ui-keyring/types';
@@ -40,7 +40,7 @@ import { useError } from '@components/error';
 import { useSnackbar } from 'notistack';
 import { useNotice } from '@components/common';
 
-interface AuthCreateStepperProps extends Children {
+interface CreateAccountStepperProps extends Children {
   seed?: string;
   type?: PairType;
 }
@@ -202,11 +202,11 @@ function createAccount(
   }
 }
 
-function AuthCreateStepper({
+function CreateAccountStepper({
   children,
   seed: propsSeed,
   type: propsType,
-}: AuthCreateStepperProps): ReactElement<AuthCreateStepperProps> {
+}: CreateAccountStepperProps): ReactElement<CreateAccountStepperProps> {
   const router = useRouter();
   const { genesisHash } = useChain();
   const { setError } = useError();
@@ -223,7 +223,7 @@ function AuthCreateStepper({
     ({
       derivePath: newDerivePath,
       pairType: newPairType,
-    }: AuthCreateParamsCallback) => {
+    }: CreateAccountParamsCallback) => {
       const { seed, derivePath, pairType, seedType } = address;
       if (derivePath === newDerivePath && pairType === newDerivePath) return;
       setAddress(updateAddress(seed, newDerivePath, seedType, newPairType));
@@ -260,14 +260,14 @@ function AuthCreateStepper({
       {step === 1 && (
         <Fade in={step === 1}>
           <Container>
-            <AuthCreateIntro onChangeStep={onChangeStep} />
+            <CreateAccountIntro onChangeStep={onChangeStep} />
           </Container>
         </Fade>
       )}
       {step === 2 && (
         <Fade in={step === 2}>
           <Container>
-            <AuthCreateParams
+            <CreateAccountParams
               alert={{ showScreenShootAlert, setShowScreenShootAlert }}
               params={address}
               onChange={onChangeParams}
@@ -279,7 +279,7 @@ function AuthCreateStepper({
       {step === 3 && (
         <Fade in={step === 3}>
           <Container>
-            <AuthCreateSelectMnemonicWord
+            <CreateAccountSelectMnemonicWord
               params={address}
               onChangeStep={onChangeStep}
             />
@@ -289,7 +289,7 @@ function AuthCreateStepper({
       {step === 4 && (
         <Fade in={step === 4}>
           <Container>
-            <AuthCreateConfirm
+            <CreateAccountConfirm
               params={address}
               onConfirm={onConfirm}
               onChangeStep={onChangeStep}
@@ -301,4 +301,4 @@ function AuthCreateStepper({
   );
 }
 
-export default memo(AuthCreateStepper);
+export default memo(CreateAccountStepper);

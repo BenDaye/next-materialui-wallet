@@ -32,31 +32,31 @@ import {
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
 import { Skeleton } from '@material-ui/lab';
 import { useForm } from 'react-hook-form';
-import { AddressState, AuthCreateParamsCallback } from './types';
+import { AddressState, CreateAccountParamsCallback } from './types';
 import styles from '@styles/Layout.module.css';
 
-interface AuthCreateParamsProps extends Children {
+interface CreateAccountParamsProps extends Children {
   alert: {
     showScreenShootAlert: boolean;
     setShowScreenShootAlert: React.Dispatch<React.SetStateAction<boolean>>;
   };
   params: AddressState;
-  onChange: (params: AuthCreateParamsCallback) => void;
+  onChange: (params: CreateAccountParamsCallback) => void;
   onChangeStep: (step: number) => void;
 }
 
-function AuthCreateParams({
+function CreateAccountParams({
   children,
   alert: { showScreenShootAlert, setShowScreenShootAlert },
   params,
   onChange,
   onChangeStep,
-}: AuthCreateParamsProps): ReactElement<AuthCreateParamsProps> {
+}: CreateAccountParamsProps): ReactElement<CreateAccountParamsProps> {
   const theme = useTheme();
   const { register, watch } = useForm();
 
   useEffect(() => {
-    const newParams: AuthCreateParamsCallback = {
+    const newParams: CreateAccountParamsCallback = {
       derivePath: watch('derivePath', params.derivePath),
       pairType: watch('pairType', params.pairType),
     };
@@ -193,4 +193,4 @@ function AuthCreateParams({
   );
 }
 
-export default memo(AuthCreateParams);
+export default memo(CreateAccountParams);

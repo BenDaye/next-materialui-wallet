@@ -11,14 +11,14 @@ import {
 } from '@material-ui/core';
 import styles from '@styles/Layout.module.css';
 
-interface AuthCreateIntroProps extends Children {
+interface CreateAccountIntroProps extends Children {
   onChangeStep: (step: number) => void;
 }
 
-function AuthCreateIntro({
+function CreateAccountIntro({
   children,
   onChangeStep,
-}: AuthCreateIntroProps): ReactElement<AuthCreateIntroProps> {
+}: CreateAccountIntroProps): ReactElement<CreateAccountIntroProps> {
   const nextStep = useCallback(() => {
     onChangeStep(2);
   }, []);
@@ -67,4 +67,4 @@ function AuthCreateIntro({
   );
 }
 
-export default memo(AuthCreateIntro);
+export default memo(CreateAccountIntro);

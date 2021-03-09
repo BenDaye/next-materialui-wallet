@@ -27,7 +27,7 @@ import Identicon from '@polkadot/react-identicon';
 import { useForm } from 'react-hook-form';
 import keyring from '@polkadot/ui-keyring';
 
-interface AuthCreateConfirmProps extends Children {
+interface CreateAccountConfirmProps extends Children {
   params: AddressState;
   onConfirm: (data: ConfirmForm) => void;
   onChangeStep: (step: number) => void;
@@ -39,12 +39,12 @@ interface ConfirmForm {
   passwordConfirm: string;
 }
 
-function AuthCreateConfirm({
+function CreateAccountConfirm({
   children,
   params,
   onConfirm,
   onChangeStep,
-}: AuthCreateConfirmProps): ReactElement<AuthCreateConfirmProps> {
+}: CreateAccountConfirmProps): ReactElement<CreateAccountConfirmProps> {
   const { api } = useApi();
   const {
     register,
@@ -162,4 +162,4 @@ function AuthCreateConfirm({
   );
 }
 
-export default memo(AuthCreateConfirm);
+export default memo(CreateAccountConfirm);

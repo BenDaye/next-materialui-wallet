@@ -52,7 +52,7 @@ export default function AddressesPage() {
                       <ListItem
                         button
                         onClick={() =>
-                          router.push(`/addresses/${address.address}`)
+                          router.push(`/address/${address.address}`)
                         }
                       >
                         <ListItemAvatar>

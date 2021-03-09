@@ -22,7 +22,7 @@ export default function AddressByAddressPage() {
 
   const onForgetSuccess = () => {
     showSuccess(`地址[${info.name}]删除成功`);
-    router.replace('/addresses');
+    router.replace('/address');
   };
 
   const handleClickForget = useCallback(() => info.onForget(onForgetSuccess), [

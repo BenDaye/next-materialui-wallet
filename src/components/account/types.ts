@@ -23,7 +23,7 @@ export interface AddressState {
   seedType: SeedType;
 }
 
-export interface AuthCreateParamsCallback {
+export interface CreateAccountParamsCallback {
   derivePath: string;
   pairType: PairType;
 }

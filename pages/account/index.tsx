@@ -49,7 +49,7 @@ export default function AccountsPage() {
                       button
                       selected={currentAccount === account.account.address}
                       onClick={() =>
-                        router.push(`/accounts/${account.account.address}`)
+                        router.push(`/account/${account.account.address}`)
                       }
                     >
                       <ListItemAvatar>

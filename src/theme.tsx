@@ -6,13 +6,16 @@ import { memo, ReactElement, useMemo } from 'react';
 import { orange, grey, blue } from '@material-ui/core/colors';
 
 function ThemeProvider({ children }: Children): ReactElement<Children> {
-  const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
+  const prefersDarkMode = true;
 
   const theme = useMemo(
     () =>
       createMuiTheme({
         palette: {
-          type: prefersDarkMode ? 'dark' : 'light',
+          // type: prefersDarkMode ? 'dark' : 'light',
+          // TODO: 暂时只做深色
+          type: 'dark',
           primary: {
             main: prefersDarkMode ? grey[900] : blue[500],
           },

@@ -28,7 +28,7 @@ import { Skeleton } from '@material-ui/lab';
 import { AddressState } from './types';
 import styles from '@styles/Layout.module.css';
 
-interface AuthCreateSelectMnemonicWordProps extends Children {
+interface CreateAccountSelectMnemonicWordProps extends Children {
   params: AddressState;
   onChangeStep: (step: number) => void;
 }
@@ -37,11 +37,11 @@ function randomSortWords(seed: string): string[] {
   return seed.split(' ').sort(() => Math.random() - 0.5);
 }
 
-function AuthCreateSelectMnemonicWord({
+function CreateAccountSelectMnemonicWord({
   children,
   params,
   onChangeStep,
-}: AuthCreateSelectMnemonicWordProps): ReactElement<AuthCreateSelectMnemonicWordProps> {
+}: CreateAccountSelectMnemonicWordProps): ReactElement<CreateAccountSelectMnemonicWordProps> {
   const { api } = useApi();
   const theme = useTheme();
   const [selectedWords, setSelectedWords] = useState<string[]>([]);
@@ -152,4 +152,4 @@ function AuthCreateSelectMnemonicWord({
   );
 }
 
-export default memo(AuthCreateSelectMnemonicWord);
+export default memo(CreateAccountSelectMnemonicWord);

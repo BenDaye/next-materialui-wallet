@@ -1,4 +1,4 @@
-import { AuthCreateStepper } from '@components/auth';
+import { CreateAccountStepper } from '@components/account';
 import { useChain } from '@components/polkadot/hook';
 import {
   AppBar,
@@ -35,7 +35,7 @@ export default function AuthCreatePage() {
         </Toolbar>
       </AppBar>
       <Toolbar />
-      <Box py={1}>{isChainReady && <AuthCreateStepper />}</Box>
+      <Box py={1}>{isChainReady && <CreateAccountStepper />}</Box>
       <Toolbar />
       <Toolbar />
     </>

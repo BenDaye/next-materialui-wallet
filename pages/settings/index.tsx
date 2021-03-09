@@ -34,7 +34,7 @@ export default function Settings() {
         <Box display="flex" flexDirection="column" marginTop={1}>
           <Paper>
             <List>
-              <ListItem button onClick={() => router.push('/accounts')}>
+              <ListItem button onClick={() => router.push('/account')}>
                 <ListItemIcon>
                   <SettingsIcon />
                 </ListItemIcon>
@@ -46,7 +46,7 @@ export default function Settings() {
                 </ListItemSecondaryAction>
               </ListItem>
               <Divider variant="inset" component="li" />
-              <ListItem button onClick={() => router.push('/addresses')}>
+              <ListItem button onClick={() => router.push('/address')}>
                 <ListItemIcon>
                   <SettingsIcon />
                 </ListItemIcon>

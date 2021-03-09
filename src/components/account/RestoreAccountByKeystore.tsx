@@ -11,9 +11,9 @@ import { CreateResult } from '@polkadot/ui-keyring/types';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
 
-interface AuthRestoreByKeystoreProps extends Children {}
+interface RestoreAccountByKeystoreProps extends Children {}
 
-interface AuthRestoreByKeystoreForm {
+interface RestoreAccountByKeystoreForm {
   keystore: string;
   password: string;
   name?: string;
@@ -23,9 +23,9 @@ function createFromJson(value: string): KeyringPair {
   return keyring.createFromJson(JSON.parse(value));
 }
 
-function AuthRestoreByKeystore({
+function RestoreAccountByKeystore({
   children,
-}: AuthRestoreByKeystoreProps): ReactElement<AuthRestoreByKeystoreProps> {
+}: RestoreAccountByKeystoreProps): ReactElement<RestoreAccountByKeystoreProps> {
   const { setError } = useError();
   const router = useRouter();
   const { showSuccess } = useNotice();
@@ -35,7 +35,7 @@ function AuthRestoreByKeystore({
   const [pair, setPair] = useState<KeyringPair | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const onSubmit = ({ password }: AuthRestoreByKeystoreForm) => {
+  const onSubmit = ({ password }: RestoreAccountByKeystoreForm) => {
     if (!pair) return;
     setLoading(true);
 
@@ -146,4 +146,4 @@ function AuthRestoreByKeystore({
   );
 }
 
-export default memo(AuthRestoreByKeystore);
+export default memo(RestoreAccountByKeystore);
