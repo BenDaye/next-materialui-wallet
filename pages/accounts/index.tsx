@@ -73,6 +73,7 @@ export default function AccountsPage() {
           </Paper>
         </Box>
       </Container>
+      <Toolbar />
     </>
   );
 }

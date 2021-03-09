@@ -8,6 +8,7 @@ import type { Urc10Balance } from '@components/polkadot/hook';
 import { KeyringAddress } from '@polkadot/ui-keyring/types';
 import { Dispatch, SetStateAction } from 'react';
 import type { BlockNumber, EventRecord } from '@polkadot/types/interfaces';
+import { KeyringPair$Json } from '@polkadot/keyring/types';
 
 export interface ApiSystemInfo {
   systemChain: string;
@@ -72,10 +73,15 @@ export interface AccountsProps extends AccountsState {
   setCurrentAccount: Dispatch<SetStateAction<string | null>>;
 }
 
+export interface SortedAddress extends KeyringAddress {
+  shortAddress: string;
+}
+
 export interface AddressesProps {
   addresses: string[];
   hasAddress: boolean;
   isAddress: (address: string) => boolean;
+  sortedAddresses: SortedAddress[];
 }
 
 export interface Authors {

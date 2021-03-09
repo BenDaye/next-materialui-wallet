@@ -7,5 +7,6 @@ export const AddressesContext: Context<AddressesProps> = createContext<Addresses
     addresses: [],
     hasAddress: false,
     isAddress: (address: string) => false,
+    sortedAddresses: [],
   }
 );

@@ -36,6 +36,7 @@ import { VoidFn } from '@polkadot/api/types';
 import { HeaderExtended } from '@polkadot/api-derive';
 import { getShortAddress } from '@utils/getShortAddress';
 import { xxhashAsHex } from '@polkadot/util-crypto';
+import { SortedAddress } from './context/types';
 
 export const registry = new TypeRegistry();
 
@@ -355,4 +356,19 @@ export function sortAccounts(addresses: string[]): SortedAccount[] {
       (a, b) =>
         (a.account.meta.whenCreated || 0) - (b.account.meta.whenCreated || 0)
     );
+}
+
+export function sortAddresses(addresses: string[]): SortedAddress[] {
+  return addresses
+    .map((address) => keyring.getAddress(address))
+    .filter((address): address is KeyringAddress => !!address)
+    .map(
+      (address): SortedAddress => ({
+        address: address.address,
+        meta: address.meta,
+        publicKey: address.publicKey,
+        shortAddress: getShortAddress(address.address),
+      })
+    )
+    .sort((a, b) => (a.meta.whenCreated || 0) - (b.meta.whenCreated || 0));
 }
