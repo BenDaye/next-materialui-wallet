@@ -7,12 +7,11 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import registry from '@utils/typeRegistry';
 import type { ApiState, ApiProps } from '@components/polkadot/context';
 import { Backdrop, Box, CircularProgress, Typography } from '@material-ui/core';
 import { ApiContext } from '../context';
 import { useError } from '@components/error';
-import { getApiState } from './utils';
+import { getApiState } from '@components/polkadot/utils';
 
 interface ApiProviderProps {
   children: ReactNode;
@@ -86,6 +85,7 @@ function ApiProvider({
     };
   }, []);
 
+  // TODO: 弹出一个对话框或者跳转页面,查看节点连接状态,或切换节点
   // if (!value.isApiReady) {
   //   return (
   //     <Backdrop open={true}>

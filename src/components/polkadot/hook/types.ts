@@ -207,3 +207,10 @@ export interface Urc10AssetResponse {
 export interface Urc10Balance extends Urc10Asset {
   balance: Codec;
 }
+
+export interface TransferParams {
+  owner?: string | null;
+  symbol?: string | null;
+  counterparty?: string | null;
+  direction?: number | null;
+}

@@ -10,9 +10,10 @@ import {
 } from '@components/polkadot/context';
 import { useApi, useCall } from '@components/polkadot/hook';
 import { useError } from '@components/error';
-import { subscribeNewHeads, subscribeValidator } from './utils';
-
-const MAX_HEADERS = 50;
+import {
+  subscribeNewHeads,
+  subscribeValidator,
+} from '@components/polkadot/utils';
 
 const byAuthor: Record<string, string> = {};
 const eraPoints: Record<string, string> = {};
@@ -20,7 +21,8 @@ const eraPoints: Record<string, string> = {};
 function BlockAuthorsProvider({ children }: Children): ReactElement<Children> {
   const { api, isApiReady } = useApi();
   const queryPoints = useCall<EraRewardPoints>(
-    isApiReady &&
+    api &&
+      isApiReady &&
       isFunction(api.derive.staking?.currentPoints) &&
       api.derive.staking?.currentPoints
   );
@@ -35,7 +37,7 @@ function BlockAuthorsProvider({ children }: Children): ReactElement<Children> {
   const { setError } = useError();
 
   useEffect(() => {
-    if (!isApiReady) return;
+    if (!api || !isApiReady) return;
 
     let unsubscribeValidator: VoidFn | null;
     let unsubscribeNewHeads: VoidFn | null;
@@ -44,7 +46,7 @@ function BlockAuthorsProvider({ children }: Children): ReactElement<Children> {
       .then((unsubscribe) => (unsubscribeValidator = unsubscribe))
       .catch(setError);
 
-    subscribeNewHeads(api, setState, byAuthor, eraPoints, MAX_HEADERS)
+    subscribeNewHeads(api, setState, byAuthor, eraPoints)
       .then((unsubscribe) => (unsubscribeNewHeads = unsubscribe))
       .catch(setError);
 

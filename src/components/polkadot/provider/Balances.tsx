@@ -23,7 +23,8 @@ function BalancesProvider({ children }: Children): ReactElement<Children> {
   const { tokenDecimals, tokenSymbol } = useChain();
   const { currentAccount } = useAccounts();
   const defaultAssetBalance = useCall<DeriveBalancesAll>(
-    isApiReady &&
+    api &&
+      isApiReady &&
       isFunction(api.derive.balances.all) &&
       api.derive.balances.all,
     [currentAccount]

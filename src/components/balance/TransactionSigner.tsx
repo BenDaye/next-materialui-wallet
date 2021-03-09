@@ -45,7 +45,7 @@ function TransactionSigner({
 }: TransactionSignerProps): ReactElement<TransactionSignerProps> {
   const { api } = useApi();
   const mountedRef = useIsMountedRef();
-  const { register, handleSubmit, watch, errors } = useForm();
+  const { register, handleSubmit, watch, errors, getValues } = useForm();
   const { accounts } = useAccounts();
   const [multiAddress, setMultiAddress] = useState<string | null>(null);
   const [proxyAddress, setProxyAddress] = useState<string | null>(null);
@@ -84,7 +84,7 @@ function TransactionSigner({
     () =>
       setSignPassword({
         isUnlockCached: false,
-        signPassword: watch('password', ''),
+        signPassword: getValues('password'),
       }),
     [watch('password')]
   );
@@ -158,6 +158,8 @@ function TransactionSigner({
           inputRef={register}
           margin="dense"
           variant="filled"
+          fullWidth
+          type="password"
         />
       )}
       {children}

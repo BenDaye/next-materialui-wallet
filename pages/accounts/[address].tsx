@@ -16,6 +16,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useError } from '@components/error';
 import { useAccounts, useIsMountedRef } from '@components/polkadot/hook';
 import { SortedAccount } from '@components/polkadot/context';
+import { getSortedAccountName } from '@utils/getSortedAccountName';
 
 export default function AccountByAddressPage() {
   const router = useRouter();
@@ -78,7 +79,7 @@ export default function AccountByAddressPage() {
             <>
               <TextField
                 label="账户名称"
-                defaultValue={thisAccount?.account.meta.name}
+                defaultValue={getSortedAccountName(thisAccount)}
                 margin="normal"
                 variant="filled"
               />
@@ -89,14 +90,16 @@ export default function AccountByAddressPage() {
                 variant="filled"
                 multiline
               />
-              <Button
-                fullWidth
-                color="secondary"
-                variant="contained"
-                disabled={thisAccount.isDevelopment}
-              >
-                删除
-              </Button>
+              {!thisAccount.isDevelopment && (
+                <Button
+                  fullWidth
+                  color="secondary"
+                  variant="contained"
+                  disabled={thisAccount.isDevelopment}
+                >
+                  删除
+                </Button>
+              )}
             </>
           )}
         </Box>

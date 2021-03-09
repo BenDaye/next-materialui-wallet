@@ -1,14 +1,5 @@
 import { Context, createContext } from 'react';
-import { HeaderExtended } from '@polkadot/api-derive';
-
-export interface Authors {
-  byAuthor: Record<string, string>;
-  eraPoints: Record<string, string>;
-  lastBlockAuthors: string[];
-  lastBlockNumber?: string;
-  lastHeader?: HeaderExtended;
-  lastHeaders: HeaderExtended[];
-}
+import { Authors } from './types';
 
 export const BlockAuthorsContext: Context<Authors> = createContext<Authors>({
   byAuthor: {},

@@ -8,7 +8,6 @@ import {
 } from '@material-ui/core';
 import CropFreeIcon from '@material-ui/icons/CropFree';
 import React, { useMemo } from 'react';
-import keyring from '@polkadot/ui-keyring';
 import { SortedAccount } from '@components/polkadot/context';
 import { useAccounts } from '@components/polkadot/hook';
 import {
@@ -18,26 +17,22 @@ import {
   BalanceList,
 } from '@components/wallet';
 
-function sortAccount(address: string): SortedAccount | undefined {
-  const account = keyring.getAccount(address);
-  return (
-    account && {
-      account,
-      isDevelopment: !!account.meta.isTesting,
-      shortAddress:
-        account.address.length > 13
-          ? `${account.address.slice(0, 6)}...${account.address.slice(-6)}`
-          : account.address,
-    }
-  );
+function getAccount(
+  currentAccount: string,
+  sortedAccounts: SortedAccount[]
+): SortedAccount | undefined {
+  return sortedAccounts.find((v) => v.account.address === currentAccount);
 }
 
 export default function Wallet() {
-  const { hasAccount, currentAccount } = useAccounts();
+  const { hasAccount, currentAccount, sortedAccounts } = useAccounts();
 
   const account = useMemo(
-    () => hasAccount && currentAccount && sortAccount(currentAccount),
-    [hasAccount, currentAccount]
+    () =>
+      hasAccount &&
+      currentAccount &&
+      getAccount(currentAccount, sortedAccounts),
+    [hasAccount, currentAccount, sortedAccounts]
   );
 
   return (

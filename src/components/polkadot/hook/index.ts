@@ -24,6 +24,7 @@ export type {
   Urc10AssetResponseResult,
   Urc10AssetResponse,
   Urc10Balance,
+  TransferParams,
 } from './types';
 export { useAccounts } from './useAccounts';
 export { useAddresses } from './useAddresses';
@@ -43,7 +44,6 @@ export {
   usePotentialBalance,
   useTransfers,
 } from './useHttp';
-export type { TransferParams } from './useHttp';
 export { useIsMountedRef } from './useIsMountedRef';
 export type { MountedRef } from './useIsMountedRef';
 export { useQueue } from './useQueue';

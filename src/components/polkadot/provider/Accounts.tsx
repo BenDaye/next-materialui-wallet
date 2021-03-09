@@ -7,7 +7,7 @@ import { useChain, useIsMountedRef } from '@components/polkadot/hook';
 import { Children } from '@components/types';
 import { keyring } from '@polkadot/ui-keyring';
 import { memo, ReactElement, useEffect, useMemo, useState } from 'react';
-import { sortAccounts } from './utils';
+import { sortAccounts } from '@components/polkadot/utils';
 
 function AccountsProvider({ children }: Children): ReactElement<Children> {
   const { isChainReady } = useChain();

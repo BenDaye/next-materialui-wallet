@@ -1,11 +1,11 @@
 import { Context, createContext } from 'react';
-
-export interface AddressesProps {
-  addresses: string[];
-  hasAddress: boolean;
-  isAddress: (address: string) => boolean;
-}
+import { AddressesProps } from './types';
 
 export const AddressesContext: Context<AddressesProps> = createContext<AddressesProps>(
-  ({} as unknown) as AddressesProps
+  // ({} as unknown) as AddressesProps
+  {
+    addresses: [],
+    hasAddress: false,
+    isAddress: (address: string) => false,
+  }
 );

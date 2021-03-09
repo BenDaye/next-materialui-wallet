@@ -13,18 +13,13 @@ import {
 } from '@material-ui/core';
 import Identicon from '@polkadot/react-identicon';
 import { formatNumber, formatBalance } from '@polkadot/util';
+import { getShortAddress } from '@utils/getShortAddress';
 
 interface TransferListProps extends Children {
   owner?: string | null;
   symbol?: string | null;
   counterparty?: string | null;
   direction?: number | null;
-}
-
-function shortAddress(address: string) {
-  return address.length > 13
-    ? `${address.slice(0, 6)}...${address.slice(-6)}`
-    : address;
 }
 
 function TransferList({
@@ -47,7 +42,7 @@ function TransferList({
                   <Identicon value={transfer.counterparty} size={32} />
                 </ListItemAvatar>
                 <ListItemText
-                  primary={shortAddress(transfer.counterparty)}
+                  primary={getShortAddress(transfer.counterparty)}
                   primaryTypographyProps={{ variant: 'subtitle2' }}
                   secondary={`区块: ${formatNumber(transfer.blockNumber)}`}
                   secondaryTypographyProps={{ variant: 'caption' }}

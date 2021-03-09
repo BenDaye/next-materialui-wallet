@@ -6,14 +6,3 @@ export { default as BalancesProvider } from './Balances';
 export { default as ChainProvider } from './Chain';
 export { default as EventsProvider } from './Events';
 export { default as QueueProvider } from './Queue';
-
-export {
-  getApiState,
-  getSystemInfo,
-  sortAccounts,
-  isKeyringLoaded,
-  getChainSystemInfo,
-  getChainState,
-  subscribeValidator,
-  subscribeNewHeads,
-} from './utils';

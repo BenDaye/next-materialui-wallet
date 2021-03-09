@@ -1,4 +1,6 @@
-import registry from '@utils/typeRegistry';
+import { TypeRegistry } from '@polkadot/types/create';
+
+const registry = new TypeRegistry();
 
 export const DEFAULT_DECIMALS = registry.createType('u32', 12);
 
@@ -15,3 +17,7 @@ export const DEFAULT_AUX = [
   'Aux8',
   'Aux9',
 ];
+
+export const MAX_HEADERS = 20;
+
+export const MAX_EVENTS = 20;

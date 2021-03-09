@@ -4,6 +4,7 @@ import {
   PotentialAsset,
   PotentialBalance,
   PotentialBalancesResponse,
+  TransferParams,
   Urc10Asset,
   Urc10AssetResponse,
   Urc10Balance,
@@ -26,14 +27,6 @@ export function useHttp() {
   return hook;
 }
 
-interface PotentialAssetsParams {
-  address: string | null;
-}
-
-interface PotentialBalanceParams extends PotentialAssetsParams {
-  assetId: string;
-}
-
 export function usePotentialAssets(): Urc10Asset[] {
   const { get, response } = useHttp();
   const [assets, setAssets] = useState<Urc10Asset[]>([]);
@@ -52,9 +45,7 @@ export function usePotentialAssets(): Urc10Asset[] {
   return assets;
 }
 
-export function usePotentialAssetsByAddress({
-  address,
-}: PotentialAssetsParams) {
+export function usePotentialAssetsByAddress(address: string | null) {
   const { get, response } = useHttp();
   const [assets, setAssets] = useState<PotentialAsset[]>([]);
 
@@ -80,10 +71,12 @@ export function usePotentialBalances(address: string | null) {
   const [balances, setBalances] = useState<Urc10Balance[]>([]);
 
   useEffect(() => {
-    isApiReady && address && getBalances();
-  }, [potentialAssets, isApiReady, address]);
+    api && isApiReady && address && getBalances();
+  }, [potentialAssets, api, isApiReady, address]);
 
   async function getBalances() {
+    await api.isReady;
+
     const keys = potentialAssets.map((asset) =>
       createTypeUnsafe(api.registry, '(Hash, AccountId)', [
         [asset.assetId, address],
@@ -105,18 +98,18 @@ export function usePotentialBalances(address: string | null) {
   return balances;
 }
 
-export function usePotentialBalancesByAddress({
-  address,
-}: PotentialAssetsParams) {
+export function usePotentialBalancesByAddress(address: string | null) {
   const { api, isApiReady } = useApi();
-  const potentialAssets = usePotentialAssetsByAddress({ address });
+  const potentialAssets = usePotentialAssetsByAddress(address);
   const [balances, setBalances] = useState<PotentialBalance[]>([]);
 
   useEffect(() => {
-    isApiReady && getBalances();
-  }, [potentialAssets, isApiReady, address]);
+    api && isApiReady && getBalances();
+  }, [potentialAssets, api, isApiReady, address]);
 
   async function getBalances() {
+    await api.isReady;
+
     const keys = potentialAssets.map((asset) =>
       createTypeUnsafe(api.registry, '(Hash, AccountId)', [
         [asset.assetId, address],
@@ -138,18 +131,17 @@ export function usePotentialBalancesByAddress({
   return balances;
 }
 
-export function usePotentialBalance({
-  address,
-  assetId,
-}: PotentialBalanceParams) {
+export function usePotentialBalance(address: string | null, assetId: string) {
   const { api, isApiReady } = useApi();
   const [balance, setBalance] = useState<Codec>();
 
   useEffect(() => {
-    isApiReady && getBalance();
-  }, [address, assetId, isApiReady]);
+    api && isApiReady && address && assetId && getBalance();
+  }, [address, assetId, api, isApiReady]);
 
   async function getBalance() {
+    await api.isReady;
+
     const key = createTypeUnsafe(api.registry, '(Hash, AccountId)', [
       [assetId, address],
     ]);
@@ -160,13 +152,6 @@ export function usePotentialBalance({
   }
 
   return balance;
-}
-
-export interface TransferParams {
-  owner?: string | null;
-  symbol?: string | null;
-  counterparty?: string | null;
-  direction?: number | null;
 }
 
 interface TransfersResponse {
