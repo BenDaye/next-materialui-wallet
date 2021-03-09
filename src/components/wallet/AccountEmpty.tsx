@@ -23,7 +23,7 @@ function AccountEmpty({
       {isChainReady ? (
         <Card>
           <CardHeader
-            avatar={<Avatar sizes="40">N</Avatar>}
+            avatar={<Avatar>N</Avatar>}
             title="[尚未添加账户]"
             titleTypographyProps={{ variant: 'button' }}
             subheader={systemName}
@@ -43,7 +43,7 @@ function AccountEmpty({
           <CardHeader
             avatar={
               <Skeleton variant="circle">
-                <Avatar sizes="40">N</Avatar>
+                <Avatar>N</Avatar>
               </Skeleton>
             }
             title={<Skeleton />}

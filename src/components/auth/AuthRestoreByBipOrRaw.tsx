@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
-import { ButtonWithLoading, PageFooter } from '@components/common';
+import { ButtonWithLoading, PageFooter, useNotice } from '@components/common';
 import keyring from '@polkadot/ui-keyring';
 import {
   hdLedger,
@@ -88,7 +88,7 @@ function AuthRestoreByBipOrRaw({
 }: AuthRestoreByBipOrRawProps): ReactElement<AuthRestoreByBipOrRawProps> {
   const { setError } = useError();
   const router = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
+  const { showSuccess } = useNotice();
   const {
     register,
     handleSubmit,
@@ -125,9 +125,7 @@ function AuthRestoreByBipOrRaw({
             meta,
             pairType === 'ed25519-ledger' ? 'ed25519' : pairType
           );
-          enqueueSnackbar(`账户[${result.json.meta?.name}]导入成功`, {
-            variant: 'success',
-          });
+          showSuccess(`账户[${result.json.meta?.name}]导入成功`);
           router.push('/wallet');
         } catch (error) {
           setError(error);

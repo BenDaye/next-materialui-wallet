@@ -28,6 +28,8 @@ import {
 import { useError } from '@components/error';
 import { BalanceProps } from '@components/polkadot/context';
 import { TransferList } from '@components/balance';
+import { getShortAddress } from '@utils/getShortAddress';
+import { getSortedAccountName } from '@utils/getSortedAccountName';
 
 export default function BalancePage() {
   const router = useRouter();
@@ -56,14 +58,12 @@ export default function BalancePage() {
     const _address = typeof address === 'string' ? address : null;
     if (!_address) return '/';
     if (!isAccount(_address)) {
-      return _address.length > 13
-        ? `${_address.slice(0, 6)}...${_address.slice(-6)}`
-        : _address;
+      return getShortAddress(_address);
     }
     const theAccount = sortedAccounts.find(
       (ac) => ac.account.address === _address
     );
-    return theAccount?.account.meta?.name || '/';
+    return theAccount ? getSortedAccountName(theAccount) : '';
   }, [hasAccount, isAccount, sortedAccounts, address]);
 
   const showBottomNavigation = useMemo(

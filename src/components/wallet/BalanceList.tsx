@@ -2,13 +2,18 @@ import React, { memo, ReactElement } from 'react';
 import type { Children } from '@components/types';
 import { useAccounts, useBalances, useChain } from '@components/polkadot/hook';
 import {
+  Avatar,
   Box,
+  createStyles,
   List,
   ListItem,
+  ListItemAvatar,
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
+  makeStyles,
   Paper,
+  Theme,
   Typography,
 } from '@material-ui/core';
 import PaymentIcon from '@material-ui/icons/Payment';
@@ -18,6 +23,25 @@ import { Skeleton } from '@material-ui/lab';
 
 interface BalanceListProps extends Children {}
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    root: {
+      display: 'flex',
+      '& > *': {
+        margin: theme.spacing(1),
+      },
+    },
+    small: {
+      width: theme.spacing(3),
+      height: theme.spacing(3),
+    },
+    large: {
+      width: theme.spacing(7),
+      height: theme.spacing(7),
+    },
+  })
+);
+
 function BalanceList({
   children,
 }: BalanceListProps): ReactElement<BalanceListProps> {
@@ -25,6 +49,7 @@ function BalanceList({
   const { isChainReady } = useChain();
   const { currentAccount } = useAccounts();
   const { balances } = useBalances();
+  const classes = useStyles();
 
   return (
     <>
@@ -42,9 +67,14 @@ function BalanceList({
             >
               <List disablePadding>
                 <ListItem>
-                  <ListItemIcon>
+                  {/* <ListItemIcon>
                     <PaymentIcon />
-                  </ListItemIcon>
+                  </ListItemIcon> */}
+                  <ListItemAvatar>
+                    <Avatar className={classes.small}>
+                      {b.symbol.slice(0, 1)}
+                    </Avatar>
+                  </ListItemAvatar>
                   <ListItemText primary={b.symbol} />
                   <ListItemSecondaryAction>
                     <Typography variant="body2">{b.balanceFormat}</Typography>

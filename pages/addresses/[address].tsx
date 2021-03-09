@@ -1,69 +1,73 @@
-import { PageHeader } from '@components/common';
-import { useError } from '@components/error';
-import { SortedAddress } from '@components/polkadot/context/types';
-import { useAddresses, useIsMountedRef } from '@components/polkadot/hook';
+import { PageHeader, useNotice } from '@components/common';
 import { useRouter } from 'next/router';
-import React, { useEffect, useState } from 'react';
+import React, { ChangeEvent, useCallback, useMemo } from 'react';
 import Container from '@material-ui/core/Container';
 import { Box, Button, TextField } from '@material-ui/core';
+import { useAccountInfo } from '@components/polkadot/hook';
 
 export default function AddressByAddressPage() {
   const router = useRouter();
   const { address } = router.query;
-  const mountedRef = useIsMountedRef();
+  const { showSuccess } = useNotice();
 
-  const { isAddress, hasAddress, sortedAddresses } = useAddresses();
-  const { setError } = useError();
-  const [thisAddress, setThisAddress] = useState<SortedAddress | null>(null);
+  const info = useAccountInfo(typeof address === 'string' ? address : null);
 
-  useEffect(() => {
-    let error: Error | null = null;
-    if (!address) {
-      error = new TypeError('Expected [address], but got undefined');
-    } else if (typeof address !== 'string') {
-      error = new TypeError(`Expected single [address], but got ${address}`);
-    } else if (hasAddress && !isAddress(address)) {
-      error = new TypeError(`{address} is not account`);
-    }
+  const isEditable: boolean = useMemo(() => !!info.flags.isEditable, [info]);
 
-    if (error) {
-      setError(error);
-      router.back();
-    }
-  }, [address, mountedRef, hasAddress, isAddress]);
+  const handleChangeName = useCallback(
+    ({ target: { value = '' } }: ChangeEvent<HTMLInputElement>) =>
+      info.setName(value),
+    [info]
+  );
 
-  useEffect(() => {
-    if (typeof address === 'string' && isAddress(address)) {
-      const _thisAddress = sortedAddresses.find((v) => v.address === address);
-      _thisAddress && setThisAddress(_thisAddress);
-    }
-  }, [address, hasAddress, sortedAddresses, isAddress]);
+  const onForgetSuccess = () => {
+    showSuccess(`地址[${info.name}]删除成功`);
+    router.replace('/addresses');
+  };
+
+  const handleClickForget = useCallback(() => info.onForget(onForgetSuccess), [
+    info,
+  ]);
 
   return (
     <>
       <PageHeader title="地址详情" />
       <Container>
         <Box display="flex" flexDirection="column" marginTop={1}>
-          {thisAddress && (
-            <>
-              <TextField
-                label="账户名称"
-                defaultValue={thisAddress.meta.name}
-                margin="normal"
-                variant="filled"
-              />
+          <>
+            {typeof address === 'string' && (
               <TextField
                 label="账户地址"
-                defaultValue={thisAddress.address}
+                defaultValue={address}
                 margin="normal"
                 variant="filled"
                 multiline
+                disabled
               />
-              <Button fullWidth color="secondary" variant="contained">
-                删除
-              </Button>
-            </>
-          )}
+            )}
+            {!info.isNull && (
+              <>
+                <TextField
+                  label="账户名称"
+                  margin="normal"
+                  variant="filled"
+                  value={info.name}
+                  onChange={handleChangeName}
+                  onBlur={info.onSaveName}
+                  disabled={!isEditable}
+                />
+                <Button
+                  fullWidth
+                  color="secondary"
+                  variant="contained"
+                  disabled={!isEditable}
+                  onClick={handleClickForget}
+                >
+                  删除
+                </Button>
+              </>
+            )}
+          </>
         </Box>
       </Container>
     </>

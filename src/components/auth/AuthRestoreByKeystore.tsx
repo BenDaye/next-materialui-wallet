@@ -1,7 +1,7 @@
 import React, { memo, ReactElement, useEffect, useState } from 'react';
 import type { Children } from '@components/types';
 import { useForm } from 'react-hook-form';
-import { ButtonWithLoading, PageFooter } from '@components/common';
+import { ButtonWithLoading, PageFooter, useNotice } from '@components/common';
 import { Box, Button, Container, TextField, Toolbar } from '@material-ui/core';
 import keyring from '@polkadot/ui-keyring';
 import { useChain } from '@components/polkadot/hook';
@@ -28,7 +28,7 @@ function AuthRestoreByKeystore({
 }: AuthRestoreByKeystoreProps): ReactElement<AuthRestoreByKeystoreProps> {
   const { setError } = useError();
   const router = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
+  const { showSuccess } = useNotice();
   const { register, handleSubmit, errors, setValue } = useForm({
     mode: 'onBlur',
   });
@@ -44,9 +44,7 @@ function AuthRestoreByKeystore({
       setTimeout(() => {
         try {
           const result: CreateResult = keyring.addPair(pair, password);
-          enqueueSnackbar(`账户[${result.json.meta?.name}]导入成功`, {
-            variant: 'success',
-          });
+          showSuccess(`账户[${result.json.meta?.name}]导入成功`);
           router.push('/wallet');
         } catch (error) {
           setError(error);

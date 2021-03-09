@@ -3,6 +3,7 @@ import type { Children } from '@components/types';
 import { QueueTx, STATUS_COMPLETE } from '@components/polkadot/context';
 import { useQueue } from '@components/polkadot/hook/useQueue';
 import { useSnackbar } from 'notistack';
+import { useNotice } from '@components/common';
 
 interface TransactionStatusProps extends Children {}
 
@@ -25,7 +26,7 @@ function TransactionStatus({
     [],
     [],
   ]);
-  const { enqueueSnackbar } = useSnackbar();
+  const { showInfo, showError } = useNotice();
 
   useEffect(() => {
     setAllTx(filterTx(txqueue));
@@ -42,9 +43,11 @@ function TransactionStatus({
         }
       }
       const message = `${status}[${section}.${method}]`;
-      enqueueSnackbar(message, {
-        variant: error || status === 'cancelled' ? 'error' : 'info',
-      });
+      if (error || status === 'cancelled') {
+        showError(message);
+      } else {
+        showInfo(message);
+      }
     });
   }, [allTx, completedTx]);
 

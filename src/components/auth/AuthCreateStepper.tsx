@@ -38,6 +38,7 @@ import { NOOP } from '@components/balance/util';
 import { useRouter } from 'next/router';
 import { useError } from '@components/error';
 import { useSnackbar } from 'notistack';
+import { useNotice } from '@components/common';
 
 interface AuthCreateStepperProps extends Children {
   seed?: string;
@@ -209,7 +210,7 @@ function AuthCreateStepper({
   const router = useRouter();
   const { genesisHash } = useChain();
   const { setError } = useError();
-  const { enqueueSnackbar } = useSnackbar();
+  const { showSuccess } = useNotice();
   const [step, setStep] = useState<number>(1);
   const [showScreenShootAlert, setShowScreenShootAlert] = useState<boolean>(
     false
@@ -232,9 +233,7 @@ function AuthCreateStepper({
 
   const onSuccess = useCallback(
     (result: CreateResult) => {
-      enqueueSnackbar(`账户[${result.json.meta?.name}]创建成功`, {
-        variant: 'success',
-      });
+      showSuccess(`账户[${result.json.meta?.name}]创建成功`);
       router.push('/wallet');
     },
     [router]

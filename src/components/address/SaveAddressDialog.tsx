@@ -16,7 +16,7 @@ import type { DeriveAccountInfo } from '@polkadot/api-derive/types';
 import { useError } from '@components/error';
 import { KeyringJson$Meta } from '@polkadot/ui-keyring/types';
 import { KeyringPair$Json } from '@polkadot/keyring/types';
-import { useSnackbar } from 'notistack';
+import { useNotice } from '@components/common';
 
 interface SaveAddressDialogProps extends Children {
   show: boolean;
@@ -36,7 +36,7 @@ function SaveAddressDialog({
   const { api, isApiReady } = useApi();
   const { isChainReady, genesisHash } = useChain();
   const { setError } = useError();
-  const { enqueueSnackbar } = useSnackbar();
+  const { showSuccess } = useNotice();
   const [loading, setLoading] = useState<boolean>(false);
 
   const [address, setAddress] = useState<string | null>(null);
@@ -70,9 +70,7 @@ function SaveAddressDialog({
     };
     try {
       const result: KeyringPair$Json = keyring.saveAddress(_address, meta);
-      enqueueSnackbar(`地址[${result.meta?.name}]保存成功`, {
-        variant: 'success',
-      });
+      showSuccess(`地址[${result.meta?.name}]保存成功`);
       reset();
       setLoading(false);
       onClose && onClose();

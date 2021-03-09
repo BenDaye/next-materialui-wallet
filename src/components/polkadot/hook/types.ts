@@ -127,27 +127,6 @@ export interface AddressIdentity extends DeriveAccountRegistration {
   waitCount: number;
 }
 
-export interface UseAccountInfo {
-  accountIndex?: string;
-  flags: AddressFlags;
-  name: string;
-  setName: React.Dispatch<string>;
-  tags: string[];
-  setTags: React.Dispatch<string[]>;
-  genesisHash: string | null;
-  identity?: AddressIdentity;
-  isEditingName: boolean;
-  meta?: KeyringJson$Meta;
-  toggleIsEditingName: () => void;
-  isEditingTags: boolean;
-  isNull: boolean;
-  toggleIsEditingTags: () => void;
-  onSaveName: () => void;
-  onSaveTags: () => void;
-  onSetGenesisHash: (genesisHash: string | null) => void;
-  onForgetAddress: () => void;
-}
-
 export interface StakerState {
   controllerId: string | null;
   destination?: RewardDestination;
@@ -213,4 +192,28 @@ export interface TransferParams {
   symbol?: string | null;
   counterparty?: string | null;
   direction?: number | null;
+}
+
+export type AccountTypeInLocal =
+  | 'isAccount'
+  | 'isAddress'
+  | 'isContract'
+  | 'unknown';
+
+export interface UseAccountInfo {
+  accountIndex?: string;
+  flags: AddressFlags;
+  name: string;
+  setName: React.Dispatch<string>;
+  tags: string[];
+  setTags: React.Dispatch<string[]>;
+  genesisHash: string | null;
+  identity?: AddressIdentity;
+  meta?: KeyringJson$Meta;
+  isNull: boolean;
+  onSaveName: () => void;
+  onSaveTags: () => void;
+  onSetGenesisHash: (genesisHash: string | null) => void;
+  onForget: (cb?: () => void) => void;
+  type: AccountTypeInLocal;
 }

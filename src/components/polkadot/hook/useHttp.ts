@@ -187,6 +187,9 @@ export function useTransfers({
 
   useEffect(() => {
     getTransfers();
+    return () => {
+      setTransfers([]);
+    };
   }, [owner, symbol, counterparty, direction]);
 
   async function getTransfers() {

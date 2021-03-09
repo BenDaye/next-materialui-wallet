@@ -28,12 +28,14 @@ function TransferList({
   symbol,
   counterparty,
   direction,
-}: TransferListProps): ReactElement<TransferListProps> {
+}: TransferListProps): ReactElement<TransferListProps> | null {
   const transfers = useTransfers({ owner, symbol, counterparty, direction });
   const theme = useTheme();
+  if (!symbol) return null;
+
   return (
     <>
-      {symbol && transfers?.length ? (
+      {transfers?.length ? (
         <List>
           {transfers.map((transfer, i, ts) => (
             <Fragment key={`transfer: ${transfer._id}`}>
