@@ -1,76 +1,54 @@
+import { AccountInfo, AccountInfoSkeleton } from '@components/account';
+import { PageHeader } from '@components/common';
 import { useAccounts } from '@components/polkadot/hook';
 import {
-  AppBar,
   Toolbar,
   Box,
-  Typography,
   Container,
   IconButton,
   Divider,
   List,
-  ListItem,
-  ListItemText,
   Paper,
-  ListItemAvatar,
 } from '@material-ui/core';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
-import Identicon from '@polkadot/react-identicon';
 import { useRouter } from 'next/router';
 import React, { Fragment } from 'react';
 
 export default function AccountsPage() {
-  const { hasAccount, sortedAccounts, currentAccount } = useAccounts();
+  const { hasAccount, accounts } = useAccounts();
   const router = useRouter();
   return (
     <>
-      <AppBar position="fixed">
-        <Toolbar>
-          <IconButton edge="start" onClick={() => router.back()}>
-            <ArrowBackIosIcon />
-          </IconButton>
-          <Box flexGrow={1}>
-            <Typography>账户管理</Typography>
-          </Box>
+      <PageHeader
+        title="账户管理"
+        right={
           <IconButton edge="end" onClick={() => router.push('/auth')}>
             <PlaylistAddIcon />
           </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Toolbar />
+        }
+      />
       <Container>
         <Box display="flex" flexDirection="column" marginTop={1}>
-          <Paper>
-            <List>
-              {hasAccount &&
-                sortedAccounts.map((account, index, array) => (
+          {hasAccount ? (
+            <Paper>
+              <List>
+                {accounts.map((account, index, array) => (
                   <Fragment key={`account: ${index}`}>
-                    <ListItem
-                      button
-                      selected={currentAccount === account.account.address}
-                      onClick={() =>
-                        router.push(`/account/${account.account.address}`)
-                      }
-                    >
-                      <ListItemAvatar>
-                        <Identicon value={account.account.address} size={32} />
-                      </ListItemAvatar>
-                      <ListItemText
-                        primary={`${account.isDevelopment ? '[TEST] ' : ''}${
-                          account.account.meta.name
-                        }`}
-                        primaryTypographyProps={{ variant: 'button' }}
-                        secondary={account.shortAddress}
-                        secondaryTypographyProps={{ variant: 'caption' }}
-                      />
-                    </ListItem>
+                    <AccountInfo
+                      value={account}
+                      onlyItem
+                      onSelect={() => router.push(`/account/${account}`)}
+                    />
                     {index < array.length - 1 && (
                       <Divider variant="inset" component="li" />
                     )}
                   </Fragment>
                 ))}
-            </List>
-          </Paper>
+              </List>
+            </Paper>
+          ) : (
+            <AccountInfoSkeleton />
+          )}
         </Box>
       </Container>
       <Toolbar />

@@ -3,14 +3,16 @@ import { useRouter } from 'next/router';
 import React, { ChangeEvent, useCallback, useMemo } from 'react';
 import Container from '@material-ui/core/Container';
 import { Box, Button, TextField } from '@material-ui/core';
-import { useAccountInfo } from '@components/polkadot/hook';
+import { UseAccountInfo, useAccountInfo } from '@components/polkadot/hook';
 
 export default function AddressByAddressPage() {
   const router = useRouter();
   const { address } = router.query;
   const { showSuccess } = useNotice();
 
-  const info = useAccountInfo(typeof address === 'string' ? address : null);
+  const info: UseAccountInfo = useAccountInfo(
+    typeof address === 'string' ? address : null
+  );
 
   const isEditable: boolean = useMemo(() => !!info.flags.isEditable, [info]);
 

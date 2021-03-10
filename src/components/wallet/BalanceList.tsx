@@ -20,6 +20,7 @@ import PaymentIcon from '@material-ui/icons/Payment';
 import { useRouter } from 'next/router';
 import type { BalanceProps } from '@components/polkadot/context';
 import { Skeleton } from '@material-ui/lab';
+import BitcoinIcon from 'mdi-material-ui/Bitcoin';
 
 interface BalanceListProps extends Children {}
 
@@ -67,14 +68,14 @@ function BalanceList({
             >
               <List disablePadding>
                 <ListItem>
-                  {/* <ListItemIcon>
-                    <PaymentIcon />
-                  </ListItemIcon> */}
-                  <ListItemAvatar>
+                  <ListItemIcon>
+                    <BitcoinIcon />
+                  </ListItemIcon>
+                  {/* <ListItemAvatar>
                     <Avatar className={classes.small}>
                       {b.symbol.slice(0, 1)}
                     </Avatar>
-                  </ListItemAvatar>
+                  </ListItemAvatar> */}
                   <ListItemText primary={b.symbol} />
                   <ListItemSecondaryAction>
                     <Typography variant="body2">{b.balanceFormat}</Typography>

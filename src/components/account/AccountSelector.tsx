@@ -1,4 +1,4 @@
-import React, { memo, ReactElement, useState } from 'react';
+import React, { memo, ReactElement, useCallback, useState } from 'react';
 import { Children } from '@components/types';
 import {
   AppBar,
@@ -11,17 +11,25 @@ import {
 import MenuIcon from '@material-ui/icons/Menu';
 import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
 
-import ChainList from './ChainList';
-import AccountList from './AccountList';
+import ChainList from '../wallet/ChainList';
+import AccountList from '../wallet/AccountList';
 import { useRouter } from 'next/router';
+import { UseAccountInfo, useChain } from '@components/polkadot/hook';
+import AccountSelectorList from './AccountSelectorList';
 
-interface AccountPickerProps extends Children {}
+interface AccountSelectorProps extends Children {}
 
-function AccountPicker({
+function AccountSelector({
   children,
-}: AccountPickerProps): ReactElement<AccountPickerProps> {
+}: AccountSelectorProps): ReactElement<AccountSelectorProps> {
   const router = useRouter();
+  const { isChainReady } = useChain();
   const [open, setOpen] = useState<boolean>(false);
+
+  const onSelectAccount = useCallback(
+    (info: UseAccountInfo) => setOpen(false),
+    [isChainReady]
+  );
   return (
     <>
       <IconButton
@@ -29,6 +37,7 @@ function AccountPicker({
         color="inherit"
         aria-label="menu"
         onClick={() => setOpen(true)}
+        disabled={!isChainReady}
       >
         <MenuIcon />
       </IconButton>
@@ -46,7 +55,7 @@ function AccountPicker({
           </AppBar>
           <Box display="flex" flexWrap="nowrap" width={1}>
             <ChainList />
-            <AccountList />
+            <AccountSelectorList onSelect={onSelectAccount} />
           </Box>
         </Box>
       </Drawer>
@@ -55,4 +64,4 @@ function AccountPicker({
   );
 }
 
-export default memo(AccountPicker);
+export default memo(AccountSelector);

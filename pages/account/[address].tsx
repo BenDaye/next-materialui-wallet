@@ -1,107 +1,80 @@
-import {
-  AppBar,
-  Toolbar,
-  IconButton,
-  Box,
-  Typography,
-  Container,
-  TextField,
-  Button,
-} from '@material-ui/core';
+import { Box, Container, TextField, Button } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
-
-import React, { useEffect, useMemo, useState } from 'react';
-import { useError } from '@components/error';
-import { useAccounts, useIsMountedRef } from '@components/polkadot/hook';
-import { SortedAccount } from '@components/polkadot/context';
-import { getSortedAccountName } from '@utils/getSortedAccountName';
+import React, {
+  ChangeEvent,
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { UseAccountInfo, useAccountInfo } from '@components/polkadot/hook';
+import { PageHeader, useNotice } from '@components/common';
 
 export default function AccountByAddressPage() {
   const router = useRouter();
   const { address } = router.query;
-  const mountedRef = useIsMountedRef();
+  const { showSuccess } = useNotice();
 
-  const {
-    isAccount,
-    currentAccount,
-    sortedAccounts,
-    hasAccount,
-  } = useAccounts();
-  const { setError } = useError();
-  const [thisAccount, setThisAccount] = useState<SortedAccount | null>(null);
+  const info: UseAccountInfo = useAccountInfo(
+    typeof address === 'string' ? address : null
+  );
 
-  useEffect(() => {
-    let error: Error | null = null;
-    if (!address) {
-      error = new TypeError('Expected [address], but got undefined');
-    } else if (typeof address !== 'string') {
-      error = new TypeError(`Expected single [address], but got ${address}`);
-    } else if (hasAccount && !isAccount(address)) {
-      error = new TypeError(`{address} is not account`);
-    }
+  const isEditable: boolean = useMemo(() => !!info.flags.isEditable, [info]);
 
-    if (error) {
-      setError(error);
-      router.back();
-    }
-  }, [address, mountedRef, hasAccount, isAccount]);
+  const handleChangeName = useCallback(
+    ({ target: { value = '' } }: ChangeEvent<HTMLInputElement>) =>
+      info.setName(value),
+    [info]
+  );
 
-  useEffect(() => {
-    if (typeof address === 'string' && isAccount(address)) {
-      const _thisAccount = sortedAccounts.find(
-        (account) => account.account.address === address
-      );
-      _thisAccount && setThisAccount(_thisAccount);
-    }
-  }, [address, hasAccount, sortedAccounts, isAccount]);
+  const onForgetSuccess = () => {
+    showSuccess(`账户[${info.name}]删除成功`);
+    router.replace('/account');
+  };
+
+  const handleClickForget = useCallback(() => info.onForget(onForgetSuccess), [
+    info,
+  ]);
 
   return (
     <>
-      <AppBar position="fixed">
-        <Toolbar>
-          <IconButton edge="start" onClick={() => router.back()}>
-            <ArrowBackIosIcon />
-          </IconButton>
-          <Box flexGrow={1}>
-            <Typography>账户详情</Typography>
-          </Box>
-          <IconButton edge="end" onClick={() => router.push('/auth')}>
-            <PlaylistAddIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Toolbar />
+      <PageHeader title="账户详情" />
       <Container>
         <Box display="flex" flexDirection="column" marginTop={1}>
-          {thisAccount && (
-            <>
-              <TextField
-                label="账户名称"
-                defaultValue={getSortedAccountName(thisAccount)}
-                margin="normal"
-                variant="filled"
-              />
+          <>
+            {typeof address === 'string' && (
               <TextField
                 label="账户地址"
-                defaultValue={thisAccount?.account.address}
+                defaultValue={address}
                 margin="normal"
                 variant="filled"
                 multiline
+                disabled
               />
-              {!thisAccount.isDevelopment && (
+            )}
+            {!info.isNull && (
+              <>
+                <TextField
+                  label="账户名称"
+                  margin="normal"
+                  variant="filled"
+                  value={info.name}
+                  onChange={handleChangeName}
+                  onBlur={info.onSaveName}
+                  disabled={!isEditable}
+                />
                 <Button
                   fullWidth
                   color="secondary"
                   variant="contained"
-                  disabled={thisAccount.isDevelopment}
+                  disabled={!isEditable}
+                  onClick={handleClickForget}
                 >
                   删除
                 </Button>
-              )}
-            </>
-          )}
+              </>
+            )}
+          </>
         </Box>
       </Container>
     </>
