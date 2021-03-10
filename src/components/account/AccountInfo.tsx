@@ -122,7 +122,7 @@ function AccountInfo({
             onChange={() => setCurrentAccount(value)}
           />
         ) : showQrcode ? (
-          <QrcodeIcon />
+          <QrcodeIcon onClick={() => setShowQr(true)} />
         ) : (
           value === currentAccount && (
             <Chip label="当前账户" color="secondary" size="small" />
