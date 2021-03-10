@@ -1,8 +1,5 @@
 import {
   Box,
-  AppBar,
-  Toolbar,
-  Typography,
   IconButton,
   Container,
   TextField,
@@ -11,8 +8,7 @@ import {
   Switch,
   FormControlLabel,
 } from '@material-ui/core';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import CropFreeIcon from '@material-ui/icons/CropFree';
+import QrcodeScanIcon from 'mdi-material-ui/QrcodeScan';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -26,11 +22,11 @@ import {
 } from '@components/polkadot/hook';
 import { BalanceProps } from '@components/polkadot/context';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
-import { assert, isFunction } from '@polkadot/util';
+import { assert } from '@polkadot/util';
 import { useQueue } from '@components/polkadot/hook/useQueue';
-import { useSnackbar } from 'notistack';
 import { SubmittableResult } from '@polkadot/api';
 import ButtonWithLoading from '@components/common/ButtonWithLoading';
+import { PageHeader } from '@components/common';
 
 interface TransferFormProps {
   senderId: string;
@@ -42,7 +38,6 @@ interface TransferFormProps {
 }
 
 export default function TransferPage() {
-  const router = useRouter();
   const { api, isApiReady } = useApi();
   const mountedRef = useIsMountedRef();
   const { tokenSymbol } = useChain();
@@ -183,20 +178,14 @@ export default function TransferPage() {
 
   return (
     <>
-      <AppBar position="fixed">
-        <Toolbar>
-          <IconButton edge="start" onClick={() => router.back()}>
-            <ArrowBackIosIcon />
-          </IconButton>
-          <Box flexGrow={1}>
-            <Typography>转账</Typography>
-          </Box>
+      <PageHeader
+        title="转账"
+        right={
           <IconButton edge="end">
-            <CropFreeIcon />
+            <QrcodeScanIcon />
           </IconButton>
-        </Toolbar>
-      </AppBar>
-      <Toolbar />
+        }
+      />
       <Container>
         <form onSubmit={handleSubmit(onSubmit)}>
           <TextField

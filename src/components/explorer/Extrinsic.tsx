@@ -13,7 +13,7 @@ import {
   Box,
   Typography,
 } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MenuDownIcon from 'mdi-material-ui/MenuDown';
 import type { FunctionMetadataLatest } from '@polkadot/types/interfaces/metadata';
 import CardContentItemValue from './CardContentItemValue';
 
@@ -128,7 +128,7 @@ function Extrinsic({
     <>
       <Accordion>
         <AccordionSummary
-          expandIcon={<ExpandMoreIcon />}
+          expandIcon={<MenuDownIcon />}
           aria-controls="extrinsic-content"
         >
           <Box>
@@ -152,7 +152,7 @@ function Extrinsic({
             )}
             {thisEvents.map(({ key, record }) => (
               <Accordion key={key}>
-                <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+                <AccordionSummary expandIcon={<MenuDownIcon />}>
                   <Box>
                     <Typography variant="subtitle2">
                       {record.event.section}.{record.event.method}

@@ -14,7 +14,7 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MenuDownIcon from 'mdi-material-ui/MenuDown';
 import { ButtonWithLoading, PageFooter, useNotice } from '@components/common';
 import keyring from '@polkadot/ui-keyring';
 import {
@@ -234,7 +234,7 @@ function RestoreAccountByBipOrRaw({
             }
           />
           <Accordion defaultExpanded>
-            <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+            <AccordionSummary expandIcon={<MenuDownIcon />}>
               <Typography>高级选项</Typography>
             </AccordionSummary>
             <AccordionDetails>

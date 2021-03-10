@@ -1,16 +1,10 @@
 import { useError } from '@components/error';
-import {
-  AppBar,
-  Box,
-  IconButton,
-  Toolbar,
-  Typography,
-} from '@material-ui/core';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
+import { Box } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import React, { memo, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { isHex } from '@polkadot/util';
 import { BlockByHash, BlockByNumber } from '@components/explorer';
+import { PageHeader } from '@components/common';
 
 export default function Block() {
   const router = useRouter();
@@ -19,6 +13,7 @@ export default function Block() {
   const [blockHash, setBlockHash] = useState<string>('');
   const { id } = router.query;
 
+  // TODO: 判断url参数
   useEffect(() => {
     if (isHex(id)) {
       setBlockHash(id);
@@ -32,15 +27,7 @@ export default function Block() {
 
   return (
     <>
-      <AppBar position="fixed">
-        <Toolbar>
-          <IconButton edge="start" onClick={() => router.back()}>
-            <ArrowBackIosIcon />
-          </IconButton>
-          <Typography>区块详情</Typography>
-        </Toolbar>
-      </AppBar>
-      <Toolbar />
+      <PageHeader title="区块详情" />
       <Box flexGrow={1}>
         {blockHash ? (
           <BlockByHash blockHash={blockHash} />

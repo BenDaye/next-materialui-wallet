@@ -6,10 +6,10 @@ import {
   Box,
   Toolbar,
 } from '@material-ui/core';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import ShowChartIcon from '@material-ui/icons/ShowChart';
-import ExploreIcon from '@material-ui/icons/Explore';
-import SettingsIcon from '@material-ui/icons/Settings';
+import WalletIcon from 'mdi-material-ui/Wallet';
+import ChartScatterPlotHexbinIcon from 'mdi-material-ui/ChartScatterPlotHexbin';
+import ViewDashboardIcon from 'mdi-material-ui/ViewDashboard';
+import CogsIcon from 'mdi-material-ui/Cogs';
 import React, {
   ChangeEvent,
   memo,
@@ -64,22 +64,22 @@ function Layout({ children }: Children): ReactElement<Children> | null {
             <BottomNavigationAction
               label="钱包"
               value="/wallet"
-              icon={<AccountBalanceWalletIcon />}
+              icon={<WalletIcon />}
             />
             <BottomNavigationAction
               label="行情"
               value="/market"
-              icon={<ShowChartIcon />}
+              icon={<ChartScatterPlotHexbinIcon />}
             />
             <BottomNavigationAction
               label="浏览"
               value="/explorer"
-              icon={<ExploreIcon />}
+              icon={<ViewDashboardIcon />}
             />
             <BottomNavigationAction
               label="设置"
               value="/settings"
-              icon={<SettingsIcon />}
+              icon={<CogsIcon />}
             />
           </BottomNavigation>
         </AppBar>

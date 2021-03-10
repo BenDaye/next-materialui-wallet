@@ -2,12 +2,10 @@ import React, { memo, ReactElement } from 'react';
 import type { Children } from '@components/types';
 import { useAccounts, useBalances, useChain } from '@components/polkadot/hook';
 import {
-  Avatar,
   Box,
   createStyles,
   List,
   ListItem,
-  ListItemAvatar,
   ListItemIcon,
   ListItemSecondaryAction,
   ListItemText,
@@ -16,7 +14,6 @@ import {
   Theme,
   Typography,
 } from '@material-ui/core';
-import PaymentIcon from '@material-ui/icons/Payment';
 import { useRouter } from 'next/router';
 import type { BalanceProps } from '@components/polkadot/context';
 import { Skeleton } from '@material-ui/lab';
@@ -26,12 +23,6 @@ interface BalanceListProps extends Children {}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
-    root: {
-      display: 'flex',
-      '& > *': {
-        margin: theme.spacing(1),
-      },
-    },
     small: {
       width: theme.spacing(3),
       height: theme.spacing(3),
@@ -91,7 +82,7 @@ function BalanceList({
             <List disablePadding>
               <ListItem>
                 <ListItemIcon>
-                  <PaymentIcon />
+                  <BitcoinIcon />
                 </ListItemIcon>
                 <ListItemText primary={<Skeleton />} />
               </ListItem>

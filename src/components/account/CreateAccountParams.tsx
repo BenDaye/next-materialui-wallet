@@ -29,7 +29,7 @@ import {
   Typography,
   useTheme,
 } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MenuDownIcon from 'mdi-material-ui/MenuDown';
 import { Skeleton } from '@material-ui/lab';
 import { useForm } from 'react-hook-form';
 import { AddressState, CreateAccountParamsCallback } from './types';
@@ -114,7 +114,7 @@ function CreateAccountParams({
         </List>
 
         <Accordion defaultExpanded>
-          <AccordionSummary expandIcon={<ExpandMoreIcon />}>
+          <AccordionSummary expandIcon={<MenuDownIcon />}>
             <Typography>高级选项</Typography>
           </AccordionSummary>
           <AccordionDetails>

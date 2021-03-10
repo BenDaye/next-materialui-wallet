@@ -7,7 +7,7 @@ import {
   Container,
   Button,
 } from '@material-ui/core';
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from 'mdi-material-ui/Close';
 import router from 'next/router';
 import Image from 'next/image';
 import React, { useCallback } from 'react';

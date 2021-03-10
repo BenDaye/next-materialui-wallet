@@ -8,11 +8,10 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import MenuIcon from '@material-ui/icons/Menu';
-import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+import AccountMultiplePlusIcon from 'mdi-material-ui/AccountMultiplePlus';
+import MenuIcon from 'mdi-material-ui/Menu';
 
 import ChainList from '../wallet/ChainList';
-import AccountList from '../wallet/AccountList';
 import { useRouter } from 'next/router';
 import { UseAccountInfo, useChain } from '@components/polkadot/hook';
 import AccountSelectorList from './AccountSelectorList';
@@ -49,7 +48,7 @@ function AccountSelector({
                 <Typography variant="subtitle2">选择账户</Typography>
               </Box>
               <IconButton edge="end" onClick={() => router.push('/auth')}>
-                <PlaylistAddIcon />
+                <AccountMultiplePlusIcon />
               </IconButton>
             </Toolbar>
           </AppBar>

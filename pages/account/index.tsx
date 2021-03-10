@@ -10,7 +10,7 @@ import {
   List,
   Paper,
 } from '@material-ui/core';
-import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+import AccountMultiplePlusIcon from 'mdi-material-ui/AccountMultiplePlus';
 import { useRouter } from 'next/router';
 import React, { Fragment } from 'react';
 
@@ -23,7 +23,7 @@ export default function AccountsPage() {
         title="账户管理"
         right={
           <IconButton edge="end" onClick={() => router.push('/auth')}>
-            <PlaylistAddIcon />
+            <AccountMultiplePlusIcon />
           </IconButton>
         }
       />

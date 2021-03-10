@@ -7,8 +7,8 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 import { useRouter } from 'next/router';
+import ChevronLeftIcon from 'mdi-material-ui/ChevronLeft';
 
 interface PageHeaderProps extends Children {
   showBack?: boolean;
@@ -31,15 +31,15 @@ function PageHeader({
         <Toolbar>
           {showBack && (
             <IconButton edge="start" onClick={() => router.back()}>
-              <ArrowBackIosIcon />
+              <ChevronLeftIcon />
             </IconButton>
           )}
           {left}
           <Box flexGrow={1}>
             {typeof title === 'string' ? (
-              <Typography>{title}</Typography>
+              <Typography variant="subtitle1">{title}</Typography>
             ) : (
-              { title }
+              title
             )}
           </Box>
           {right}

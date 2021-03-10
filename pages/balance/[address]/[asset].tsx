@@ -10,10 +10,10 @@ import {
   Box,
   Button,
 } from '@material-ui/core';
-import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
-import DescriptionIcon from '@material-ui/icons/Description';
-import AccountBalanceWalletIcon from '@material-ui/icons/AccountBalanceWallet';
-import TransformIcon from '@material-ui/icons/Transform';
+import ChevronLeftIcon from 'mdi-material-ui/ChevronLeft';
+import NewspaperVariantIcon from 'mdi-material-ui/NewspaperVariant';
+import QrcodeIcon from 'mdi-material-ui/Qrcode';
+import CreditCardIcon from 'mdi-material-ui/CreditCard';
 import type { DeriveBalancesAll } from '@polkadot/api-derive/types';
 import { formatBalance, isFunction } from '@polkadot/util';
 import styles from '@styles/Layout.module.css';
@@ -142,13 +142,13 @@ export default function BalancePage() {
       <AppBar position="fixed">
         <Toolbar>
           <IconButton edge="start" onClick={() => router.back()}>
-            <ArrowBackIosIcon />
+            <ChevronLeftIcon />
           </IconButton>
           <Box flexGrow={1}>
             <Typography>{title}</Typography>
           </Box>
           <IconButton edge="end">
-            <DescriptionIcon />
+            <NewspaperVariantIcon />
           </IconButton>
         </Toolbar>
         <Toolbar>
@@ -218,7 +218,7 @@ export default function BalancePage() {
                     variant="contained"
                     color="secondary"
                     fullWidth
-                    startIcon={<AccountBalanceWalletIcon />}
+                    startIcon={<QrcodeIcon />}
                   >
                     收款
                   </Button>
@@ -228,7 +228,7 @@ export default function BalancePage() {
                     variant="contained"
                     color="secondary"
                     fullWidth
-                    startIcon={<TransformIcon />}
+                    startIcon={<CreditCardIcon />}
                     onClick={() => router.push('/transfer')}
                   >
                     转账

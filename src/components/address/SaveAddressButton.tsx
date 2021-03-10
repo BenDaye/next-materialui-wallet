@@ -2,7 +2,7 @@ import React, { memo, ReactElement, useCallback, useState } from 'react';
 import type { Children } from '@components/types';
 import { useChain } from '@components/polkadot/hook';
 import { IconButton } from '@material-ui/core';
-import PlaylistAddIcon from '@material-ui/icons/PlaylistAdd';
+import AccountMultiplePlusIcon from 'mdi-material-ui/AccountMultiplePlus';
 import SaveAddressDialog from './SaveAddressDialog';
 
 interface SaveAddressButtonProps extends Children {}
@@ -22,7 +22,7 @@ function SaveAddressButton({
   return (
     <>
       <IconButton edge="end" onClick={handleClick} disabled={open}>
-        <PlaylistAddIcon />
+        <AccountMultiplePlusIcon />
       </IconButton>
       <SaveAddressDialog
         show={open}

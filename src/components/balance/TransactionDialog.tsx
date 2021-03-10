@@ -1,4 +1,4 @@
-import CloseIcon from '@material-ui/icons/Close';
+import CloseIcon from 'mdi-material-ui/Close';
 import React, {
   memo,
   ReactElement,

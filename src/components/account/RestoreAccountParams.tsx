@@ -22,7 +22,7 @@ import {
   AccordionDetails,
   Box,
 } from '@material-ui/core';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MenuDownIcon from 'mdi-material-ui/MenuDown';
 
 import { useForm, ErrorOption } from 'react-hook-form';
 import { PairType, RestoreSeedType } from './types';

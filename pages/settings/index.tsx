@@ -1,5 +1,4 @@
 import {
-  AppBar,
   Box,
   Container,
   Divider,
@@ -13,49 +12,50 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import SettingsIcon from '@material-ui/icons/Settings';
-import ArrowForwardIosIcon from '@material-ui/icons/ArrowForwardIos';
+import AccountMultipleIcon from 'mdi-material-ui/AccountMultiple';
+import ContactsIcon from 'mdi-material-ui/Contacts';
 import React from 'react';
 import { useRouter } from 'next/router';
+import { PageHeader } from '@components/common';
 
 export default function Settings() {
   const router = useRouter();
   return (
     <>
-      <AppBar position="fixed">
-        <Toolbar>
-          <Box flexGrow={1}>
-            <Typography>设置</Typography>
-          </Box>
-        </Toolbar>
-      </AppBar>
-      <Toolbar />
+      <PageHeader
+        title={
+          <Typography variant="subtitle1" align="center">
+            设置
+          </Typography>
+        }
+        showBack={false}
+      />
       <Container>
         <Box display="flex" flexDirection="column" marginTop={1}>
           <Paper>
             <List>
               <ListItem button onClick={() => router.push('/account')}>
                 <ListItemIcon>
-                  <SettingsIcon />
+                  <AccountMultipleIcon />
                 </ListItemIcon>
                 <ListItemText primary="账户管理" />
-                <ListItemSecondaryAction>
+                {/* <ListItemSecondaryAction>
                   <IconButton edge="end">
                     <ArrowForwardIosIcon fontSize="small" color="action" />
                   </IconButton>
-                </ListItemSecondaryAction>
+                </ListItemSecondaryAction> */}
               </ListItem>
               <Divider variant="inset" component="li" />
               <ListItem button onClick={() => router.push('/address')}>
                 <ListItemIcon>
-                  <SettingsIcon />
+                  <ContactsIcon />
                 </ListItemIcon>
                 <ListItemText primary="地址管理" />
-                <ListItemSecondaryAction>
+                {/* <ListItemSecondaryAction>
                   <IconButton edge="end">
                     <ArrowForwardIosIcon fontSize="small" color="action" />
                   </IconButton>
-                </ListItemSecondaryAction>
+                </ListItemSecondaryAction> */}
               </ListItem>
             </List>
           </Paper>

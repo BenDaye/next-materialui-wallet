@@ -1,14 +1,17 @@
 import React, { memo, ReactElement, useCallback, useState } from 'react';
 import type { Children } from '@components/types';
 import { useApi, useCall, useChain } from '@components/polkadot/hook';
-import Button from '@material-ui/core/Button';
-import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
-import DialogContent from '@material-ui/core/DialogContent';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import { Box, TextField } from '@material-ui/core';
+import {
+  Box,
+  TextField,
+  Button,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  AppBar,
+  Toolbar,
+  Typography,
+} from '@material-ui/core';
 import { useForm } from 'react-hook-form';
 import keyring from '@polkadot/ui-keyring';
 import { isFunction } from '@polkadot/util';

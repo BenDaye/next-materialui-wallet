@@ -7,7 +7,7 @@ import {
   Link,
   Typography,
 } from '@material-ui/core';
-import MoreVertIcon from '@material-ui/icons/MoreVert';
+import DotsVerticalIcon from 'mdi-material-ui/DotsVertical';
 import { formatNumber } from '@polkadot/util';
 import { HeaderExtended } from '@polkadot/api-derive';
 import React, { memo, ReactElement, ReactNode } from 'react';
@@ -43,7 +43,7 @@ function BlockProvider({
           action={
             showMoreIcon && (
               <IconButton aria-label="more" size="medium">
-                <MoreVertIcon />
+                <DotsVerticalIcon />
               </IconButton>
             )
           }

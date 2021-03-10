@@ -1,5 +1,5 @@
 import React, { memo, ReactElement, ReactNode } from 'react';
-import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+import MenuDownIcon from 'mdi-material-ui/MenuDown';
 import {
   Accordion,
   AccordionDetails,
@@ -17,7 +17,7 @@ function Event({ children, event }: EventProps): ReactElement<EventProps> {
   return (
     <Accordion>
       <AccordionSummary
-        expandIcon={<ExpandMoreIcon />}
+        expandIcon={<MenuDownIcon />}
         aria-controls="event-content"
       >
         <Typography>{event.record.event.method}</Typography>
