@@ -11,7 +11,6 @@ import {
   UseAccountInfo,
   useAccountInfo,
   useAccounts,
-  useApi,
   useChain,
 } from '@components/polkadot/hook';
 import {
@@ -28,10 +27,11 @@ import {
   Dialog,
   DialogActions,
   DialogContent,
-  DialogContentText,
-  DialogTitle,
   Box,
   NoSsr,
+  makeStyles,
+  Theme,
+  createStyles,
 } from '@material-ui/core';
 import Identicon from '@polkadot/react-identicon';
 import { getShortAddress } from '@utils/getShortAddress';
@@ -52,6 +52,17 @@ interface AccountInfoProps extends Children {
   onlyItem?: boolean;
 }
 
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    selected: {
+      backgroundColor: theme.palette.primary.main,
+    },
+    unselected: {
+      // backgroundColor: theme.palette.primary.light,
+    },
+  })
+);
+
 function AccountInfo({
   children,
   value,
@@ -63,13 +74,20 @@ function AccountInfo({
   dense = false,
   onlyItem = false,
 }: AccountInfoProps): ReactElement<AccountInfoProps> | null {
-  const { api } = useApi();
   const { systemName } = useChain();
   const { copy, copied } = useCopy(value || '');
   const { showSuccess } = useNotice();
   const { currentAccount, setCurrentAccount } = useAccounts();
   const [showQr, setShowQr] = useState<boolean>(false);
   const info = useAccountInfo(value);
+  const classes = useStyles();
+
+  const selectClass: string | undefined = useMemo(() => {
+    if (!!select) {
+      return value === currentAccount ? classes.selected : classes.unselected;
+    }
+    return;
+  }, [value, currentAccount, select, classes]);
 
   const formatName: string = useMemo(
     () =>
@@ -138,7 +156,7 @@ function AccountInfo({
 
   return (
     <>
-      <Paper>
+      <Paper className={selectClass}>
         <List disablePadding={dense}>
           {MainItem}
           {showAddress && (

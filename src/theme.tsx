@@ -22,6 +22,7 @@ function ThemeProvider({ children }: Children): ReactElement<Children> {
           secondary: {
             main: prefersDarkMode ? orange[500] : grey[50],
           },
+          background: {},
         },
         overrides: {
           MuiBottomNavigationAction: {

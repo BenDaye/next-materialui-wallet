@@ -28,7 +28,12 @@ function ChainExplorerProvider({ children }: Children): ReactElement<Children> {
         </Box>
         <Box marginTop={2}>
           <Typography variant="subtitle2">注册信息</Typography>
-          <Common id="genesis_hash" label="创世哈希" value={genesisHash} />
+          <Common
+            id="genesis_hash"
+            label="创世哈希"
+            multiline
+            value={genesisHash}
+          />
           <Common id="token_symbol" label="默认单位" value={tokenSymbol[0]} />
           <Common id="ss58format" label="地址前缀" value={ss58Format} />
           <Common

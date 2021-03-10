@@ -50,7 +50,7 @@ export default function Explorer({ data }: Props) {
             <NoSsr>
               <TextField
                 id="query_block"
-                placeholder="查询区块(哈希或高度)"
+                label="查询区块(哈希或高度)"
                 variant="filled"
                 color="secondary"
                 fullWidth

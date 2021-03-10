@@ -145,20 +145,22 @@ export default function BalancePage() {
             <ChevronLeftIcon />
           </IconButton>
           <Box flexGrow={1}>
-            <Typography>{title}</Typography>
+            <Typography variant="subtitle1" align="center">
+              {title}
+            </Typography>
           </Box>
           <IconButton edge="end">
             <NewspaperVariantIcon />
           </IconButton>
         </Toolbar>
-        <Toolbar>
+        <Toolbar variant="dense">
           <Box flexGrow={1}>
             <Typography variant="h6" align="center">
               {thisBalance?.balanceFormat || '/'}
             </Typography>
           </Box>
         </Toolbar>
-        <Toolbar>
+        <Toolbar variant="dense">
           <Box
             display="flex"
             justifyContent="space-around"
@@ -191,8 +193,8 @@ export default function BalancePage() {
         </Tabs>
       </AppBar>
       <Toolbar />
-      <Toolbar />
-      <Toolbar />
+      <Toolbar variant="dense" />
+      <Toolbar variant="dense" />
       <Toolbar />
       {thisBalance && (
         <TransferList

@@ -23,7 +23,12 @@ function AccountSelectorList({
 
   return (
     <>
-      <Box flexGrow={1} className={styles.content} py={1}>
+      <Box
+        flexGrow={1}
+        bgcolor="background.default"
+        className={styles.content}
+        py={1}
+      >
         <Container>
           <Box className="width-fill-available">
             {hasAccount ? (

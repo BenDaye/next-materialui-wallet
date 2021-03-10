@@ -45,7 +45,7 @@ function AccountSelector({
           <AppBar position="static">
             <Toolbar>
               <Box flexGrow={1}>
-                <Typography variant="subtitle2">选择账户</Typography>
+                <Typography variant="subtitle1">选择账户</Typography>
               </Box>
               <IconButton edge="end" onClick={() => router.push('/auth')}>
                 <AccountMultiplePlusIcon />
