@@ -122,7 +122,7 @@ export default function TransferPage() {
   }, [mountedRef, setIsSending]);
 
   const _onUpdate = useCallback(() => {
-    console.log('update');
+    // console.log('update');
   }, [mountedRef]);
 
   const onSubmit = useCallback(
