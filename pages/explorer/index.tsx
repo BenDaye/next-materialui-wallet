@@ -14,33 +14,33 @@ import {
   Toolbar,
 } from '@material-ui/core';
 import React, { ChangeEvent, useState } from 'react';
-import { GetStaticProps } from 'next';
+// import { GetStaticProps } from 'next';
 
-// TODO: 优化请求(分页...)
-interface Result {
-  count: number;
-  doc: Record<string, any>[];
-}
-export interface Response {
-  success: boolean;
-  result?: Result | any;
-}
+// // TODO: 优化请求(分页...)
+// interface Result {
+//   count: number;
+//   doc: Record<string, any>[];
+// }
+// export interface Response {
+//   success: boolean;
+//   result?: Result | any;
+// }
 
-interface Props {
-  data: Response;
-}
+// interface Props {
+//   data: Response;
+// }
 
-export const getStaticProps: GetStaticProps = async () => {
-  const res = await fetch('http://221.122.102.163:4000/extrinsics');
-  const data: Response = await res.json();
-  return {
-    props: {
-      data,
-    },
-  };
-};
+// export const getStaticProps: GetStaticProps = async () => {
+//   const res = await fetch('http://221.122.102.163:4000/extrinsics');
+//   const data: Response = await res.json();
+//   return {
+//     props: {
+//       data,
+//     },
+//   };
+// };
 
-export default function Explorer({ data }: Props) {
+export default function Explorer() {
   const [currentTabIndex, setCurrentTabIndex] = useState<number>(0);
   return (
     <>
@@ -74,7 +74,7 @@ export default function Explorer({ data }: Props) {
       </AppBar>
       <Toolbar />
       <Toolbar />
-      <Box flexGrow={1}>
+      <Box flexGrow={1} py={1}>
         <SwipeableViews
           index={currentTabIndex}
           onChangeIndex={(v: number) => setCurrentTabIndex(v)}
@@ -86,7 +86,7 @@ export default function Explorer({ data }: Props) {
             <BlockExplorer />
           </Box>
           <Box hidden={currentTabIndex !== 2}>
-            <EventExplorer data={data} />
+            <EventExplorer />
           </Box>
         </SwipeableViews>
       </Box>

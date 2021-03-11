@@ -38,6 +38,7 @@ import { AccountSigner, NOOP, NO_FLAGS, unlockAccount } from './util';
 import { useError } from '@components/error';
 import keyring from '@polkadot/ui-keyring';
 import { TransactionContent, TransactionSigner } from '.';
+import delay from '@utils/delay';
 
 interface TransactionDialogProps extends Children {}
 
@@ -124,7 +125,6 @@ function TransactionDialog({
   const { api } = useApi();
   const { setError } = useError();
   const { queueSetTxStatus, txqueue } = useQueue();
-  const [canConfirm, toggleCanConfirm] = useState<boolean>(true);
   const [isSending, setIsSending] = useState<boolean>(false);
 
   const { count, currentItem, isRpc, isVisible, requestAddress } = useMemo(
@@ -159,17 +159,18 @@ function TransactionDialog({
   }, [currentItem, queueSetTxStatus]);
 
   const _unlock = useCallback(async () => {
-    let passwordError: string | null = null;
+    // let passwordError: string | null = null;
 
-    if (senderInfo.signAddress) {
-      if (senderInfo.flags.isUnlockable) {
-        passwordError = unlockAccount(senderInfo);
-      } else if (senderInfo.flags.isHardware) {
-        // TODO: isHardware
-      }
-    }
+    // if (senderInfo.signAddress) {
+    //   if (senderInfo.flags.isUnlockable) {
+    //     passwordError = unlockAccount(senderInfo);
+    //   } else if (senderInfo.flags.isHardware) {
+    //     // TODO: isHardware
+    //   }
+    // }
 
-    return !passwordError;
+    // return !passwordError;
+    unlockAccount(senderInfo);
   }, [senderInfo]);
 
   const _onSendPayload = useCallback(() => {
@@ -248,57 +249,36 @@ function TransactionDialog({
   }, [queueSetTxStatus, currentItem, senderInfo, api]);
 
   const _onConfirm = useCallback(async () => {
-    await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(true);
-      }, 100);
-    });
     setIsSending(true);
+    await delay();
 
     _unlock()
-      .then((isUnlockable: boolean) => {
-        if (isUnlockable) {
-          currentItem?.payload ? _onSendPayload() : _onSend();
-        } else {
-          setIsSending(false);
-        }
+      .then(() => {
+        currentItem?.payload ? _onSendPayload() : _onSend();
       })
-      .catch(setError);
-  }, [queueSetTxStatus, currentItem]);
+      .catch((error) => {
+        setError(error as Error);
+        setIsSending(false);
+      });
+  }, [queueSetTxStatus, currentItem, senderInfo]);
 
   return (
     <>
       {children}
       <Dialog
         open={!!currentItem && isVisible}
-        fullWidth
+        fullScreen
         aria-labelledby="sign-dialog"
         scroll="paper"
       >
         <AppBar position="static" color="primary">
           <Toolbar>
-            <IconButton
-              edge="start"
-              color="inherit"
-              onClick={_onCancel}
-              aria-label="close"
-            >
+            <Box flexGrow={1}>
+              <Typography variant="subtitle1">授权</Typography>
+            </Box>
+            <IconButton edge="end" onClick={_onCancel}>
               <CloseIcon />
             </IconButton>
-            <Box flexGrow={1}>
-              <Typography>授权</Typography>
-            </Box>
-            <ButtonWithLoading loading={isSending}>
-              <Button
-                variant="contained"
-                autoFocus
-                color="secondary"
-                disabled={!canConfirm || isSending}
-                onClick={_onConfirm}
-              >
-                确认
-              </Button>
-            </ButtonWithLoading>
           </Toolbar>
         </AppBar>
         <DialogContent>
@@ -311,6 +291,20 @@ function TransactionDialog({
             />
           )}
         </DialogContent>
+        <DialogActions>
+          <Box flexGrow={1} />
+          <ButtonWithLoading loading={isSending}>
+            <Button
+              variant="contained"
+              autoFocus
+              color="secondary"
+              disabled={isSending}
+              onClick={_onConfirm}
+            >
+              确认
+            </Button>
+          </ButtonWithLoading>
+        </DialogActions>
       </Dialog>
     </>
   );

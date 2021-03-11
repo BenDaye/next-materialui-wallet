@@ -53,29 +53,37 @@ export function unlockAccount({
   isUnlockCached,
   signAddress,
   signPassword,
-}: AddressProxy): string | null {
-  let publicKey;
-
-  try {
-    publicKey = keyring.decodeAddress(signAddress as string);
-  } catch (error) {
-    console.error(error);
-
-    return 'unable to decode address';
-  }
+}: AddressProxy): void {
+  const publicKey = keyring.decodeAddress(signAddress as string);
 
   const pair = keyring.getPair(publicKey);
 
-  try {
-    pair.decodePkcs8(signPassword);
-    isUnlockCached && cacheUnlock(pair);
-  } catch (error) {
-    console.error(error);
+  pair.decodePkcs8(signPassword);
 
-    return (error as Error).message;
-  }
+  isUnlockCached && cacheUnlock(pair);
 
-  return null;
+  // let publicKey;
+
+  // try {
+  //   publicKey = keyring.decodeAddress(signAddress as string);
+  // } catch (error) {
+  //   console.error(error);
+
+  //   return 'unable to decode address';
+  // }
+
+  // const pair = keyring.getPair(publicKey);
+
+  // try {
+  //   pair.decodePkcs8(signPassword);
+  //   isUnlockCached && cacheUnlock(pair);
+  // } catch (error) {
+  //   console.error(error);
+
+  //   return (error as Error).message;
+  // }
+
+  // return null;
 }
 
 export function extractExternal(accountId: string | null): AddressFlags {

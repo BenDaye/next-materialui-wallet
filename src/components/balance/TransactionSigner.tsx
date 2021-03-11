@@ -1,4 +1,4 @@
-import {
+import React, {
   memo,
   ReactElement,
   useCallback,
@@ -24,12 +24,14 @@ import { extractExternal, queryForMultisig, queryForProxy } from './util';
 import { useForm } from 'react-hook-form';
 import TextField from '@material-ui/core/TextField';
 import {
+  Box,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
 } from '@material-ui/core';
 import Identicon from '@polkadot/react-identicon';
+import { AccountInfo } from '@components/account';
 
 interface TransactionSignerProps extends Children {
   currentItem: QueueTx;
@@ -45,7 +47,9 @@ function TransactionSigner({
 }: TransactionSignerProps): ReactElement<TransactionSignerProps> {
   const { api } = useApi();
   const mountedRef = useIsMountedRef();
-  const { register, handleSubmit, watch, errors, getValues } = useForm();
+  const { register, handleSubmit, watch, errors, getValues } = useForm({
+    mode: 'all',
+  });
   const { accounts } = useAccounts();
   const [multiAddress, setMultiAddress] = useState<string | null>(null);
   const [proxyAddress, setProxyAddress] = useState<string | null>(null);
@@ -80,14 +84,10 @@ function TransactionSigner({
     []
   );
 
-  useEffect(
-    () =>
-      setSignPassword({
-        isUnlockCached: false,
-        signPassword: getValues('password'),
-      }),
-    [watch('password')]
-  );
+  const passwordValidate = (value: string): boolean | string => {
+    setSignPassword({ isUnlockCached: false, signPassword: value });
+    return true;
+  };
 
   useEffect((): void => {
     !proxyInfo && setProxyAddress(null);
@@ -143,19 +143,15 @@ function TransactionSigner({
 
   return (
     <>
-      <List disablePadding dense>
-        <ListItem disableGutters>
-          <ListItemAvatar>
-            <Identicon value={requestAddress} size={32} />
-          </ListItemAvatar>
-          <ListItemText />
-        </ListItem>
-      </List>
+      <Box mt={1}>
+        <AccountInfo value={requestAddress} dense />
+      </Box>
+      {/* <div style={{ height: '1000px' }}></div> */}
       {signAddress && !currentItem.isUnsigned && flags.isUnlockable && (
         <TextField
           name="password"
           label="密码"
-          inputRef={register}
+          inputRef={register({ validate: passwordValidate })}
           margin="dense"
           variant="filled"
           fullWidth

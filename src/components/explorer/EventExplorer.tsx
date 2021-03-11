@@ -1,19 +1,15 @@
 import { Children } from '@components/types';
 import { memo, ReactElement } from 'react';
-import { Response } from '../../../pages/explorer/index';
 
-interface EventExplorerProps extends Children {
-  data?: Response;
-}
+interface EventExplorerProps extends Children {}
 
 function EventExplorerProvider({
   children,
-  data,
 }: EventExplorerProps): ReactElement<EventExplorerProps> {
   return (
     <>
       <div>
-        <code>{JSON.stringify(data)}</code>
+        <code></code>
       </div>
       {children}
     </>

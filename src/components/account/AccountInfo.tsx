@@ -50,6 +50,7 @@ interface AccountInfoProps extends Children {
   onSelect?: (info: UseAccountInfo) => void;
   dense?: boolean;
   onlyItem?: boolean;
+  showBadge?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -73,6 +74,7 @@ function AccountInfo({
   onSelect,
   dense = false,
   onlyItem = false,
+  showBadge = false,
 }: AccountInfoProps): ReactElement<AccountInfoProps> | null {
   const { systemName } = useChain();
   const { copy, copied } = useCopy(value || '');
@@ -141,11 +143,11 @@ function AccountInfo({
           />
         ) : showQrcode ? (
           <QrcodeIcon onClick={() => setShowQr(true)} />
-        ) : (
+        ) : showBadge ? (
           value === currentAccount && (
             <Chip label="当前账户" color="secondary" size="small" />
           )
-        )}
+        ) : null}
       </ListItemSecondaryAction>
     </ListItem>
   );

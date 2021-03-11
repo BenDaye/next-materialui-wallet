@@ -7,8 +7,10 @@ import {
   InputAdornment,
   Switch,
   FormControlLabel,
+  Backdrop,
+  CircularProgress,
 } from '@material-ui/core';
-import QrcodeScanIcon from 'mdi-material-ui/QrcodeScan';
+import ScanHelperIcon from 'mdi-material-ui/ScanHelper';
 import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
@@ -39,6 +41,7 @@ interface TransferFormProps {
 
 export default function TransferPage() {
   const { api, isApiReady } = useApi();
+  const { isChainReady } = useChain();
   const mountedRef = useIsMountedRef();
   const { tokenSymbol } = useChain();
   const { currentAccount, sortedAccounts, setCurrentAccount } = useAccounts();
@@ -51,11 +54,13 @@ export default function TransferPage() {
     handleSubmit,
     watch,
     errors,
-    clearErrors,
-  } = useForm<TransferFormProps>();
+    getValues,
+  } = useForm<TransferFormProps>({
+    mode: 'onBlur',
+  });
 
   useEffect(() => {
-    const senderId = watch('senderId', currentAccount || undefined);
+    const senderId = getValues('senderId');
     senderId && setCurrentAccount(senderId);
   }, [mountedRef, watch('senderId')]);
 
@@ -81,8 +86,7 @@ export default function TransferPage() {
   }, [mountedRef, theAssetBalance, watch('symbol')]);
 
   const formatAmount: string | null = useMemo(() => {
-    clearErrors(['amount']);
-    const amount = Number(watch('amount', 0));
+    const amount = Number(getValues('amount'));
     if (!amount || !theAssetBalance) return null;
     const { symbol, decimals } = theAssetBalance;
     const withUnit = typeof symbol === 'string' ? symbol : symbol[0];
@@ -98,24 +102,6 @@ export default function TransferPage() {
       withUnit,
     });
   }, [mountedRef, watch('amount')]);
-
-  const canSubmit: boolean = useMemo(
-    () =>
-      !!watch('amount') &&
-      !!watch('senderId') &&
-      !!watch('recipientId') &&
-      !!watch('symbol') &&
-      !isSending,
-    [
-      mountedRef,
-      watch('amount'),
-      watch('senderId'),
-      watch('recipientId'),
-      watch('symbol'),
-      balances,
-      isSending,
-    ]
-  );
 
   const _onFailed = useCallback(
     (result: SubmittableResult | null) => {
@@ -140,21 +126,26 @@ export default function TransferPage() {
   }, [mountedRef]);
 
   const onSubmit = useCallback(
-    (data: TransferFormProps) => {
+    ({
+      keepAlive,
+      amount,
+      senderId: accountId,
+      recipientId,
+    }: TransferFormProps) => {
       let extrinsics: SubmittableExtrinsic<'promise'>[] | undefined;
 
       if (isDefaultAssetBalance) {
         extrinsics = [
-          data.keepAlive
-            ? api.tx.balances.transferKeepAlive(data.recipientId, data.amount)
-            : api.tx.balances.transfer(data.recipientId, data.amount),
+          keepAlive
+            ? api.tx.balances.transferKeepAlive(recipientId, amount)
+            : api.tx.balances.transfer(recipientId, amount),
         ];
       } else {
         extrinsics = [
           api.tx['urc10Module'].transfer(
             theAssetBalance?.assetId,
-            data.recipientId,
-            data.amount
+            recipientId,
+            amount
           ),
         ];
       }
@@ -163,7 +154,7 @@ export default function TransferPage() {
 
       extrinsics.forEach((extrinsic) => {
         queueExtrinsic({
-          accountId: data.senderId,
+          accountId,
           extrinsic,
           isUnsigned: false,
           txFailedCb: _onFailed,
@@ -173,8 +164,16 @@ export default function TransferPage() {
         });
       });
     },
-    [watch(), isDefaultAssetBalance]
+    [isDefaultAssetBalance, api, isApiReady]
   );
+
+  if (!isApiReady || !isChainReady) {
+    return (
+      <Backdrop open={true}>
+        <CircularProgress color="inherit" />
+      </Backdrop>
+    );
+  }
 
   return (
     <>
@@ -182,7 +181,7 @@ export default function TransferPage() {
         title="转账"
         right={
           <IconButton edge="end">
-            <QrcodeScanIcon />
+            <ScanHelperIcon fontSize="small" />
           </IconButton>
         }
       />
@@ -191,7 +190,7 @@ export default function TransferPage() {
           <TextField
             name="senderId"
             label="从此账户发出"
-            inputRef={register({ required: true })}
+            inputRef={register({ required: 'INVALID_SENDER_ID' })}
             select
             SelectProps={{
               native: true,
@@ -218,7 +217,7 @@ export default function TransferPage() {
             <TextField
               name="symbol"
               label="资产"
-              inputRef={register({ required: true })}
+              inputRef={register({ required: 'SYMBOL_REQUIRED' })}
               select
               SelectProps={{
                 native: true,
@@ -236,7 +235,7 @@ export default function TransferPage() {
           <TextField
             name="recipientId"
             label="转账至此账户"
-            inputRef={register({ required: true })}
+            inputRef={register({ required: 'INVALID_RECIPIENT_ID' })}
             select
             SelectProps={{
               native: true,
@@ -262,7 +261,7 @@ export default function TransferPage() {
             <TextField
               name="amount"
               label="转账金额"
-              inputRef={register({ required: true, min: 0 })}
+              inputRef={register({ required: 'AMOUNT_REQUIRED', min: 0 })}
               variant="filled"
               fullWidth
               InputLabelProps={{ shrink: true }}
@@ -285,19 +284,17 @@ export default function TransferPage() {
               type="number"
             />
           )}
-          {isApiReady && (
-            <TextField
-              name="deposit"
-              label="押金"
-              variant="filled"
-              fullWidth
-              InputLabelProps={{ shrink: true }}
-              defaultValue={api.consts.balances.existentialDeposit}
-              helperText="通过设置[保持账户活跃]选项，可以保护帐户不因余额低而被删除。"
-              disabled
-              margin="normal"
-            />
-          )}
+          <TextField
+            name="deposit"
+            label="押金"
+            variant="filled"
+            fullWidth
+            InputLabelProps={{ shrink: true }}
+            defaultValue={api.consts.balances.existentialDeposit}
+            helperText="通过设置[保持账户活跃]选项，可以保护帐户不因余额低而被删除。"
+            disabled
+            margin="normal"
+          />
           {isDefaultAssetBalance && (
             <Box display="flex" justifyContent="flex-end">
               <FormControlLabel
@@ -333,7 +330,7 @@ export default function TransferPage() {
                 fullWidth
                 size="large"
                 type="submit"
-                disabled={!canSubmit}
+                disabled={isSending}
               >
                 提交
               </Button>
