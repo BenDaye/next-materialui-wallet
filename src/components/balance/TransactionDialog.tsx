@@ -161,16 +161,15 @@ function TransactionDialog({
   const _unlock = useCallback(async () => {
     // let passwordError: string | null = null;
 
-    // if (senderInfo.signAddress) {
-    //   if (senderInfo.flags.isUnlockable) {
-    //     passwordError = unlockAccount(senderInfo);
-    //   } else if (senderInfo.flags.isHardware) {
-    //     // TODO: isHardware
-    //   }
-    // }
+    if (senderInfo.signAddress) {
+      if (senderInfo.flags.isUnlockable) {
+        unlockAccount(senderInfo);
+      } else if (senderInfo.flags.isHardware) {
+        // TODO: isHardware
+      }
+    }
 
     // return !passwordError;
-    unlockAccount(senderInfo);
   }, [senderInfo]);
 
   const _onSendPayload = useCallback(() => {
@@ -183,6 +182,7 @@ function TransactionDialog({
 
       signerCb(id, { id, ...result });
       queueSetTxStatus(id, 'completed');
+      setIsSending(false);
     }
   }, [queueSetTxStatus, currentItem, senderInfo, api]);
 
@@ -244,6 +244,8 @@ function TransactionDialog({
       } catch (error) {
         queueSetTxStatus(id, 'error', {}, error);
         txFailedCb(error);
+      } finally {
+        setIsSending(false);
       }
     }
   }, [queueSetTxStatus, currentItem, senderInfo, api]);

@@ -38,6 +38,7 @@ export default function AccountsPage() {
                       value={account}
                       onlyItem
                       onSelect={() => router.push(`/account/${account}`)}
+                      showBadge
                     />
                     {index < array.length - 1 && (
                       <Divider variant="inset" component="li" />

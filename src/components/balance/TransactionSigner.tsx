@@ -146,7 +146,6 @@ function TransactionSigner({
       <Box mt={1}>
         <AccountInfo value={requestAddress} dense />
       </Box>
-      {/* <div style={{ height: '1000px' }}></div> */}
       {signAddress && !currentItem.isUnsigned && flags.isUnlockable && (
         <TextField
           name="password"
