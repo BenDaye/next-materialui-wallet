@@ -7,7 +7,9 @@ import { BestFinalized, BestNumber, Common, TotalIssuance } from './index';
 
 function ChainExplorerProvider({ children }: Children): ReactElement<Children> {
   const {
+    systemChain,
     systemName,
+    systemVersion,
     ss58Format,
     tokenDecimals,
     tokenSymbol,
@@ -18,7 +20,9 @@ function ChainExplorerProvider({ children }: Children): ReactElement<Children> {
       <Container>
         <Box marginTop={2}>
           <Typography variant="subtitle2">链</Typography>
+          <Common id="system_chain" label="链名称" value={systemChain} />
           <Common id="system_name" label="系统名称" value={systemName} />
+          <Common id="system_version" label="系统版本" value={systemVersion} />
           <TotalIssuance />
         </Box>
         <Box marginTop={2}>

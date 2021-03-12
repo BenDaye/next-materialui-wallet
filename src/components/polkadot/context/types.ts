@@ -28,6 +28,7 @@ export interface ApiProps extends ApiState {
 
 export interface ChainSystemInfo {
   properties: ChainProperties;
+  systemChain: string;
   systemName: string;
   systemVersion: string;
 }

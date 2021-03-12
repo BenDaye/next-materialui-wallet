@@ -76,7 +76,7 @@ function AccountInfo({
   onlyItem = false,
   showBadge = false,
 }: AccountInfoProps): ReactElement<AccountInfoProps> | null {
-  const { systemName } = useChain();
+  const { systemChain } = useChain();
   const { copy, copied } = useCopy(value || '');
   const { showSuccess } = useNotice();
   const { currentAccount, setCurrentAccount } = useAccounts();
@@ -131,7 +131,9 @@ function AccountInfo({
         primaryTypographyProps={{
           variant: dense ? 'body2' : 'body1',
         }}
-        secondary={select || !showAddress ? getShortAddress(value) : systemName}
+        secondary={
+          select || !showAddress ? getShortAddress(value) : systemChain
+        }
         secondaryTypographyProps={{ variant: 'caption' }}
       />
       <ListItemSecondaryAction>
@@ -182,7 +184,7 @@ function AccountInfo({
             <ListItemText
               primary={formatName}
               primaryTypographyProps={{ variant: 'subtitle1' }}
-              secondary={systemName}
+              secondary={systemChain}
               secondaryTypographyProps={{ variant: 'caption' }}
             />
           </ListItem>

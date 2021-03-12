@@ -80,6 +80,7 @@ export const EMPTY_CHAIN_PROPERTIES: ChainProperties = registry.createType(
 
 export const DEFAULT_CHAIN_PROPS: ChainProps = {
   properties: EMPTY_CHAIN_PROPERTIES,
+  systemChain: '<unknown>',
   systemName: '<unknown>',
   systemVersion: '<unknown>',
   ss58Format: 42,
@@ -95,8 +96,14 @@ export async function getChainSystemInfo(
   assert(api, 'API_REQUIRED');
   await api.isReady;
 
-  const [chainProperties, systemName, systemVersion] = await Promise.all([
+  const [
+    chainProperties,
+    systemChain,
+    systemName,
+    systemVersion,
+  ] = await Promise.all([
     api.rpc.system.properties(),
+    api.rpc.system.chain(),
     api.rpc.system.name(),
     api.rpc.system.version(),
   ]);
@@ -108,6 +115,7 @@ export async function getChainSystemInfo(
 
   return {
     properties,
+    systemChain: systemChain.toString(),
     systemName: systemName.toString(),
     systemVersion: systemVersion.toString(),
   };
@@ -129,9 +137,12 @@ export async function getChainState(
   assert(api, 'API_REQUIRED');
   await api.isReady;
 
-  const { properties, systemName, systemVersion } = await getChainSystemInfo(
-    api
-  );
+  const {
+    properties,
+    systemChain,
+    systemName,
+    systemVersion,
+  } = await getChainSystemInfo(api);
 
   const ss58Format = properties.ss58Format.unwrapOr(DEFAULT_SS58).toNumber();
   const tokenDecimals = properties.tokenDecimals.unwrapOr([DEFAULT_DECIMALS]);
@@ -166,6 +177,7 @@ export async function getChainState(
 
   return {
     properties,
+    systemChain,
     systemName,
     systemVersion,
     ss58Format,
@@ -273,18 +285,19 @@ export async function subscribeEvents(
   return await api.query.system.events((records): void => {
     const newEvents: IndexedEvent[] = records
       .map((record, index) => ({ indexes: [index], record }))
-      .filter(
-        ({
-          record: {
-            event: { method, section },
-          },
-        }) =>
-          section !== 'system' &&
-          (method !== 'Deposit' ||
-            !['balances', 'treasury'].includes(section)) &&
-          (section !== 'inclusion' ||
-            !['CandidateBacked', 'CandidateIncluded'].includes(method))
-      )
+      // FIXME: 暂时不筛选事件类型
+      // .filter(
+      //   ({
+      //     record: {
+      //       event: { method, section },
+      //     },
+      //   }) =>
+      //     section !== 'system' &&
+      //     (method !== 'Deposit' ||
+      //       !['balances', 'treasury'].includes(section)) &&
+      //     (section !== 'inclusion' ||
+      //       !['CandidateBacked', 'CandidateIncluded'].includes(method))
+      // )
       .reduce((combined: IndexedEvent[], e): IndexedEvent[] => {
         const prev = combined.find(
           ({

@@ -1,17 +1,21 @@
+import { useEvent } from '@components/polkadot/hook';
 import { Children } from '@components/types';
-import { memo, ReactElement } from 'react';
+import { Container } from '@material-ui/core';
+import React, { memo, ReactElement } from 'react';
+import Events from './Events';
 
 interface EventExplorerProps extends Children {}
 
 function EventExplorerProvider({
   children,
 }: EventExplorerProps): ReactElement<EventExplorerProps> {
+  const events = useEvent();
   return (
     <>
-      <div>
-        <code></code>
-      </div>
-      {children}
+      <Container>
+        <Events events={events} />
+        {children}
+      </Container>
     </>
   );
 }

@@ -14,31 +14,6 @@ import {
   Toolbar,
 } from '@material-ui/core';
 import React, { ChangeEvent, useState } from 'react';
-// import { GetStaticProps } from 'next';
-
-// // TODO: 优化请求(分页...)
-// interface Result {
-//   count: number;
-//   doc: Record<string, any>[];
-// }
-// export interface Response {
-//   success: boolean;
-//   result?: Result | any;
-// }
-
-// interface Props {
-//   data: Response;
-// }
-
-// export const getStaticProps: GetStaticProps = async () => {
-//   const res = await fetch('http://221.122.102.163:4000/extrinsics');
-//   const data: Response = await res.json();
-//   return {
-//     props: {
-//       data,
-//     },
-//   };
-// };
 
 export default function Explorer() {
   const [currentTabIndex, setCurrentTabIndex] = useState<number>(0);
