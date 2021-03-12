@@ -3,7 +3,6 @@ import {
   ChainExplorer,
   EventExplorer,
 } from '@components/explorer';
-import SwipeableViews from 'react-swipeable-views';
 import {
   AppBar,
   Box,
@@ -50,20 +49,15 @@ export default function Explorer() {
       <Toolbar />
       <Toolbar />
       <Box flexGrow={1} py={1}>
-        <SwipeableViews
-          index={currentTabIndex}
-          onChangeIndex={(v: number) => setCurrentTabIndex(v)}
-        >
-          <Box hidden={currentTabIndex !== 0}>
-            <ChainExplorer />
-          </Box>
-          <Box hidden={currentTabIndex !== 1}>
-            <BlockExplorer />
-          </Box>
-          <Box hidden={currentTabIndex !== 2}>
-            <EventExplorer />
-          </Box>
-        </SwipeableViews>
+        <Box hidden={currentTabIndex !== 0}>
+          <ChainExplorer />
+        </Box>
+        <Box hidden={currentTabIndex !== 1}>
+          <BlockExplorer />
+        </Box>
+        <Box hidden={currentTabIndex !== 2}>
+          <EventExplorer />
+        </Box>
       </Box>
     </>
   );
