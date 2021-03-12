@@ -41,15 +41,15 @@ function ApiProvider({
   const handleConnected = () => setIsApiConnected(true);
   const handleDisconnected = () => setIsApiConnected(false);
   const handleConnectError = (error: Error) => {
-    setError(error);
-    setApiError(error.message);
+    // setError(error);
+    setApiError(error.message || '节点错误或无响应');
   };
 
   const handleConnectReady = () => {
     getApiState(api)
       .then(setState)
       .catch((err: Error) => {
-        setError(err);
+        // setError(err);
         setApiError(err.message);
       });
   };
@@ -75,6 +75,7 @@ function ApiProvider({
     api.on('ready', handleConnectReady);
 
     setIsApiInitialized(true);
+
     return () => {
       if (api) {
         api.off('connected', handleConnected);
@@ -85,14 +86,9 @@ function ApiProvider({
     };
   }, []);
 
-  // TODO: 弹出一个对话框或者跳转页面,查看节点连接状态,或切换节点
-  // if (!value.isApiReady) {
-  //   return (
-  //     <Backdrop open={true}>
-  //       <CircularProgress color="secondary" />
-  //     </Backdrop>
-  //   );
-  // }
+  if (!value.isApiInitialized) {
+    return null;
+  }
 
   return <ApiContext.Provider value={value}>{children}</ApiContext.Provider>;
 }

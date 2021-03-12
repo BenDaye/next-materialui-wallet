@@ -16,7 +16,8 @@ function BestFinalized({
 }: Props): ReactElement<Props> {
   const { api, isApiReady } = useApi();
   const result = useCall<BlockNumber>(
-    isApiReady &&
+    api &&
+      isApiReady &&
       isFunction(api.derive.chain.bestNumberFinalized) &&
       api.derive.chain.bestNumberFinalized
   );

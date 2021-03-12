@@ -15,7 +15,8 @@ function TotalIssuance({
 }: Props): ReactElement<Props> {
   const { api, isApiReady } = useApi();
   const result = useCall<string>(
-    isApiReady &&
+    api &&
+      isApiReady &&
       isFunction(api.query.balances?.totalIssuance) &&
       api.query.balances?.totalIssuance
   );
