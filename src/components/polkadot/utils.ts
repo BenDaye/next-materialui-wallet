@@ -285,19 +285,18 @@ export async function subscribeEvents(
   return await api.query.system.events((records): void => {
     const newEvents: IndexedEvent[] = records
       .map((record, index) => ({ indexes: [index], record }))
-      // FIXME: 暂时不筛选事件类型
-      // .filter(
-      //   ({
-      //     record: {
-      //       event: { method, section },
-      //     },
-      //   }) =>
-      //     section !== 'system' &&
-      //     (method !== 'Deposit' ||
-      //       !['balances', 'treasury'].includes(section)) &&
-      //     (section !== 'inclusion' ||
-      //       !['CandidateBacked', 'CandidateIncluded'].includes(method))
-      // )
+      .filter(
+        ({
+          record: {
+            event: { method, section },
+          },
+        }) =>
+          section !== 'system' &&
+          (method !== 'Deposit' ||
+            !['balances', 'treasury'].includes(section)) &&
+          (section !== 'inclusion' ||
+            !['CandidateBacked', 'CandidateIncluded'].includes(method))
+      )
       .reduce((combined: IndexedEvent[], e): IndexedEvent[] => {
         const prev = combined.find(
           ({
