@@ -37,7 +37,7 @@ export default function AuthPage() {
         flexDirection="column"
         justifyContent="center"
         alignItems="center"
-        marginTop={1}
+        mt={12}
         flexGrow={1}
       >
         <Box className="animate__animated animate__pulse animate__infinite">

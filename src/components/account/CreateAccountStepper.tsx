@@ -213,7 +213,7 @@ function CreateAccountStepper({
   const { showSuccess } = useNotice();
   const [step, setStep] = useState<number>(1);
   const [showScreenShootAlert, setShowScreenShootAlert] = useState<boolean>(
-    false
+    true
   );
   const [address, setAddress] = useState<AddressState>(() =>
     generateSeed(propsSeed, '', propsSeed ? 'raw' : 'bip', propsType)

@@ -131,7 +131,7 @@ function RestoreAccountParams({
   const { register, watch, errors } = useForm<AuthRestoreForm>({
     mode: 'onBlur',
     defaultValues: {
-      type: 'bip',
+      type: 'keystore',
     },
   });
 

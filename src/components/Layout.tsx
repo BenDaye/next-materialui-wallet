@@ -42,47 +42,36 @@ function Layout({ children }: Children): ReactElement<Children> | null {
   }, [router]);
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      flexWrap="nowrap"
-      className={styles.root}
-    >
-      <Box
-        display="flex"
-        flexDirection="column"
-        flexWrap="nowrap"
-        flexGrow={1}
-        className={styles.content}
-      >
-        {children}
-        {isMainRouter && <Toolbar />}
-      </Box>
+    <Box>
+      {children}
       {isMainRouter && (
-        <AppBar position="fixed" className={styles.bottomNavigation}>
-          <BottomNavigation value={nav} onChange={handleChangeNav}>
-            <BottomNavigationAction
-              label="钱包"
-              value="/wallet"
-              icon={<WalletIcon />}
-            />
-            <BottomNavigationAction
-              label="行情"
-              value="/market"
-              icon={<ChartScatterPlotHexbinIcon />}
-            />
-            <BottomNavigationAction
-              label="浏览"
-              value="/explorer"
-              icon={<ViewDashboardIcon />}
-            />
-            <BottomNavigationAction
-              label="设置"
-              value="/settings"
-              icon={<CogsIcon />}
-            />
-          </BottomNavigation>
-        </AppBar>
+        <>
+          <Toolbar />
+          <AppBar position="fixed" className={styles.bottomNavigation}>
+            <BottomNavigation value={nav} onChange={handleChangeNav}>
+              <BottomNavigationAction
+                label="钱包"
+                value="/wallet"
+                icon={<WalletIcon />}
+              />
+              <BottomNavigationAction
+                label="行情"
+                value="/market"
+                icon={<ChartScatterPlotHexbinIcon />}
+              />
+              <BottomNavigationAction
+                label="浏览"
+                value="/explorer"
+                icon={<ViewDashboardIcon />}
+              />
+              <BottomNavigationAction
+                label="设置"
+                value="/settings"
+                icon={<CogsIcon />}
+              />
+            </BottomNavigation>
+          </AppBar>
+        </>
       )}
     </Box>
   );
