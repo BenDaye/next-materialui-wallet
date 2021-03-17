@@ -10,6 +10,7 @@ import React, {
 import Image from 'next/image';
 import keyring from '@polkadot/ui-keyring';
 import { useRouter } from 'next/router';
+import styles from '@styles/Layout.module.css';
 
 export default function Home() {
   const router = useRouter();
@@ -54,19 +55,21 @@ export default function Home() {
   }
 
   return (
-    <Box
-      display="flex"
-      flexDirection="column"
-      justifyContent="center"
-      alignItems="center"
-      marginTop={1}
-      flexGrow={1}
-    >
+    <Box display="flex" className={styles.root}>
       <Box
-        id="logo"
-        className="animate__animated animate__pulse animate__infinite"
+        display="flex"
+        flexDirection="column"
+        justifyContent="center"
+        alignItems="center"
+        marginTop={1}
+        flexGrow={1}
       >
-        <Image src="/img/loading.png" alt="logo" height="80" width="80" />
+        <Box
+          id="logo"
+          className="animate__animated animate__pulse animate__infinite"
+        >
+          <Image src="/img/loading.png" alt="logo" height="80" width="80" />
+        </Box>
       </Box>
     </Box>
   );

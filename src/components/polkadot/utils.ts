@@ -173,6 +173,19 @@ export async function getChainState(
       type: 'sr25519',
     });
 
+  // if (isKeyringLoaded()) {
+  //   keyring.setDevMode(isDevelopment);
+  //   keyring.setSS58Format(ss58Format);
+  // } else {
+  //   keyring.loadAll({
+  //     genesisHash: api.genesisHash,
+  //     isDevelopment,
+  //     ss58Format,
+  //     store,
+  //     type: 'sr25519',
+  //   });
+  // }
+
   setDeriveCache(api.genesisHash.toHex(), deriveMapCache);
 
   return {

@@ -145,7 +145,7 @@ export interface StakerState {
   validatorPrefs?: ValidatorPrefs;
 }
 
-export interface PotentialAsset {
+export interface Urc10ModuleAsset {
   account: string;
   assetId: string;
   decimals: number;
@@ -155,12 +155,12 @@ export interface PotentialAsset {
   _id: string;
 }
 
-export interface PotentialBalancesResponse {
+export interface Urc10ModuleBalancesResponse {
   success: boolean;
-  result: PotentialAsset[];
+  result: Urc10ModuleAsset[];
 }
 
-export interface PotentialBalance extends PotentialAsset {
+export interface Urc10ModuleBalance extends Urc10ModuleAsset {
   balance: Codec;
 }
 

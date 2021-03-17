@@ -7,7 +7,6 @@ import { memo, ReactElement, useEffect, useState } from 'react';
 
 function AddressesProvider({ children }: Children): ReactElement<Children> {
   const { isChainReady } = useChain();
-  const mountedRef = useIsMountedRef();
   const [state, setState] = useState<AddressesProps>({
     addresses: [],
     hasAddress: false,
@@ -15,26 +14,23 @@ function AddressesProvider({ children }: Children): ReactElement<Children> {
     sortedAddresses: [],
   });
 
-  useEffect((): (() => void) => {
-    const subscription =
-      isChainReady &&
-      keyring.addresses.subject.subscribe((value): void => {
-        if (mountedRef.current) {
-          const addresses = value ? Object.keys(value) : [];
-          const hasAddress = addresses.length !== 0;
-          const isAddress = (address: string): boolean =>
-            addresses.includes(address);
+  useEffect(() => {
+    if (!isChainReady) return;
+    const subscription = keyring.addresses.subject.subscribe((value): void => {
+      const addresses = value ? Object.keys(value) : [];
+      const hasAddress = addresses.length !== 0;
+      const isAddress = (address: string): boolean =>
+        addresses.includes(address);
 
-          const sortedAddresses = sortAddresses(addresses);
+      const sortedAddresses = sortAddresses(addresses);
 
-          setState({ addresses, hasAddress, isAddress, sortedAddresses });
-        }
-      });
+      setState({ addresses, hasAddress, isAddress, sortedAddresses });
+    });
 
-    return (): void => {
+    return () => {
       setTimeout(() => subscription && subscription.unsubscribe(), 0);
     };
-  }, [mountedRef, isChainReady]);
+  }, [isChainReady]);
 
   return (
     <AddressesContext.Provider value={state}>

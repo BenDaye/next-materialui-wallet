@@ -11,7 +11,6 @@ import { sortAccounts } from '@components/polkadot/utils';
 
 function AccountsProvider({ children }: Children): ReactElement<Children> {
   const { isChainReady } = useChain();
-  const mountedRef = useIsMountedRef();
   const [
     { accounts, hasAccount, isAccount, sortedAccounts },
     setState,
@@ -33,28 +32,25 @@ function AccountsProvider({ children }: Children): ReactElement<Children> {
       setCurrentAccount,
       sortedAccounts,
     }),
-    [accounts, hasAccount, currentAccount, mountedRef, sortedAccounts]
+    [accounts, hasAccount, currentAccount, sortedAccounts]
   );
 
-  useEffect((): (() => void) => {
-    const subscription =
-      isChainReady &&
-      keyring.accounts.subject.subscribe((value): void => {
-        if (mountedRef.current) {
-          const accounts = value ? Object.keys(value) : [];
-          const hasAccount = accounts.length !== 0;
-          const isAccount = (address: string): boolean =>
-            accounts.includes(address);
-          const sortedAccounts = sortAccounts(accounts);
+  useEffect(() => {
+    if (!isChainReady) return;
+    const subscription = keyring.accounts.subject.subscribe((value): void => {
+      const accounts = value ? Object.keys(value) : [];
+      const hasAccount = accounts.length !== 0;
+      const isAccount = (address: string): boolean =>
+        accounts.includes(address);
+      const sortedAccounts = sortAccounts(accounts);
 
-          setState({ accounts, hasAccount, isAccount, sortedAccounts });
-        }
-      });
+      setState({ accounts, hasAccount, isAccount, sortedAccounts });
+    });
 
-    return (): void => {
+    return () => {
       setTimeout(() => subscription && subscription.unsubscribe(), 0);
     };
-  }, [mountedRef, isChainReady]);
+  }, [isChainReady]);
 
   useEffect(() => {
     if (!hasAccount || (currentAccount && !isAccount(currentAccount))) {
@@ -63,7 +59,7 @@ function AccountsProvider({ children }: Children): ReactElement<Children> {
     if (hasAccount && !currentAccount) {
       setCurrentAccount(accounts[0]);
     }
-  }, [mountedRef, accounts, hasAccount, currentAccount]);
+  }, [accounts, hasAccount, currentAccount]);
 
   return (
     <AccountsContext.Provider value={value}>

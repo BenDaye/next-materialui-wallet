@@ -1,29 +1,19 @@
 import { ApiPromise, WsProvider } from '@polkadot/api';
-import React, {
-  memo,
-  ReactElement,
-  ReactNode,
-  useEffect,
-  useMemo,
-  useState,
-} from 'react';
+import React, { memo, ReactElement, useEffect, useMemo, useState } from 'react';
 import type { ApiState, ApiProps } from '@components/polkadot/context';
-import { Backdrop, Box, CircularProgress, Typography } from '@material-ui/core';
 import { ApiContext } from '../context';
-import { useError } from '@components/error';
 import { getApiState } from '@components/polkadot/utils';
+import { Children } from '@components/types';
+import { useSetting } from '@components/common/Setting';
 
-interface ApiProviderProps {
-  children: ReactNode;
-  url?: string;
-}
+interface ApiProviderProps extends Children {}
 
 let api: ApiPromise;
 
 function ApiProvider({
   children,
-  url = 'ws://221.122.102.163:9944',
 }: ApiProviderProps): ReactElement<ApiProviderProps> | null {
+  const { node } = useSetting();
   const [state, setState] = useState<ApiState>({
     isApiReady: false,
     isDevelopment: true,
@@ -31,7 +21,6 @@ function ApiProvider({
   const [isApiConnected, setIsApiConnected] = useState<boolean>(false);
   const [isApiInitialized, setIsApiInitialized] = useState<boolean>(false);
   const [apiError, setApiError] = useState<null | string>(null);
-  const { setError } = useError();
 
   const value = useMemo<ApiProps>(
     () => ({ ...state, api, apiError, isApiConnected, isApiInitialized }),
@@ -41,7 +30,6 @@ function ApiProvider({
   const handleConnected = () => setIsApiConnected(true);
   const handleDisconnected = () => setIsApiConnected(false);
   const handleConnectError = (error: Error) => {
-    // setError(error);
     setApiError(error.message || '节点错误或无响应');
   };
 
@@ -49,25 +37,16 @@ function ApiProvider({
     getApiState(api)
       .then(setState)
       .catch((err: Error) => {
-        // setError(err);
         setApiError(err.message);
       });
   };
 
   useEffect(() => {
+    if (!node) return;
+    const { url, options } = node;
     const provider = new WsProvider(url);
-    const types = {
-      Address: 'AccountId',
-      LookupSource: 'AccountId',
-      URC10: {
-        symbol: 'Vec<u8>',
-        name: 'Vec<u8>',
-        decimals: 'u8',
-        max_supply: 'u64',
-      },
-    };
 
-    api = new ApiPromise({ provider, types });
+    api = new ApiPromise({ provider, ...options });
 
     api.on('connected', handleConnected);
     api.on('disconnected', handleDisconnected);
@@ -77,7 +56,18 @@ function ApiProvider({
     setIsApiInitialized(true);
 
     return () => {
+      setIsApiInitialized(false);
+      setState({ isApiReady: false, isDevelopment: true });
+      setIsApiConnected(false);
+      setApiError(null);
       if (api) {
+        if (api.isConnected) {
+          try {
+            api.disconnect();
+          } catch (error) {
+            console.log(error);
+          }
+        }
         api.off('connected', handleConnected);
         api.off('disconnected', handleDisconnected);
         api.off('error', handleConnectError);

@@ -23,7 +23,7 @@ import {
   useApi,
   useCall,
   useChain,
-  usePotentialBalances,
+  useUrc10ModuleBalances,
 } from '@components/polkadot/hook';
 import { useError } from '@components/error';
 import { BalanceProps } from '@components/polkadot/context';
@@ -77,15 +77,15 @@ export default function BalancePage() {
       api.derive.balances.all,
     [address]
   );
-  const potentialAssetsBalance: Urc10Balance[] =
-    typeof address === 'string' ? usePotentialBalances(address) : [];
+  const urc10ModuleAssetsBalance: Urc10Balance[] =
+    typeof address === 'string' ? useUrc10ModuleBalances(address) : [];
 
-  const isPotentialAsset: boolean = useMemo(() => {
-    return potentialAssetsBalance.some((asset) => asset.assetId === assetId);
-  }, [assetId, potentialAssetsBalance]);
+  const isUrc10ModuleAsset: boolean = useMemo(() => {
+    return urc10ModuleAssetsBalance.some((asset) => asset.assetId === assetId);
+  }, [assetId, urc10ModuleAssetsBalance]);
 
   const thisBalance: BalanceProps | undefined = useMemo(() => {
-    if (!isPotentialAsset) {
+    if (!isUrc10ModuleAsset) {
       return {
         symbol: tokenSymbol && tokenSymbol[0],
         decimals: tokenDecimals && tokenDecimals[0] && Number(tokenDecimals[0]),
@@ -99,7 +99,7 @@ export default function BalancePage() {
           }),
       };
     }
-    const _po = potentialAssetsBalance.find((pb) => pb.assetId === assetId);
+    const _po = urc10ModuleAssetsBalance.find((pb) => pb.assetId === assetId);
     return (
       _po && {
         assetId: _po.assetId,
@@ -118,8 +118,8 @@ export default function BalancePage() {
     );
   }, [
     currentAccount,
-    isPotentialAsset,
-    potentialAssetsBalance,
+    isUrc10ModuleAsset,
+    urc10ModuleAssetsBalance,
     defaultAssetBalance,
     address,
     assetId,

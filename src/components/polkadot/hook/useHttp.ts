@@ -1,9 +1,9 @@
 import { useEffect, useState } from 'react';
 import useFetch from 'use-http';
 import {
-  PotentialAsset,
-  PotentialBalance,
-  PotentialBalancesResponse,
+  Urc10ModuleAsset,
+  Urc10ModuleBalance,
+  Urc10ModuleBalancesResponse,
   TransferParams,
   Urc10Asset,
   Urc10AssetResponse,
@@ -14,6 +14,8 @@ import { createTypeUnsafe } from '@polkadot/types';
 import QueryString from 'query-string';
 import { useError } from '@components/error';
 import { useApi } from './useApi';
+import { useSetting } from '@components/common/Setting';
+import { useNotice } from '@components/common';
 
 export function useHttp() {
   const hook = useFetch('http://221.122.102.163:4000');
@@ -27,57 +29,83 @@ export function useHttp() {
   return hook;
 }
 
-export function usePotentialAssets(): Urc10Asset[] {
+export function useUrc10ModuleAssets(): Urc10Asset[] {
+  const { node } = useSetting();
   const { get, response } = useHttp();
   const [assets, setAssets] = useState<Urc10Asset[]>([]);
+  const { showError } = useNotice();
 
   useEffect(() => {
-    getAssets();
-  }, []);
+    setAssets([]);
+    if (node.name === 'UECC' || node.url === 'ws://221.122.102.163:9944') {
+      getAssets();
+    }
+  }, [node]);
 
   async function getAssets() {
-    const { success, result }: Urc10AssetResponse = await get(`/urc10_assets`);
-    if (response.ok && success) {
-      setAssets(result.docs);
+    try {
+      const { success, result }: Urc10AssetResponse = await get(
+        `/urc10_assets`
+      );
+      if (response.ok && success) {
+        setAssets(result.docs);
+      }
+    } catch (err) {
+      showError((err as Error).message);
     }
   }
 
   return assets;
 }
 
-export function usePotentialAssetsByAddress(address: string | null) {
+export function useUrc10ModuleAssetsByAddress(
+  address: string | null
+): Urc10ModuleAsset[] {
+  const { node } = useSetting();
   const { get, response } = useHttp();
-  const [assets, setAssets] = useState<PotentialAsset[]>([]);
+  const [assets, setAssets] = useState<Urc10ModuleAsset[]>([]);
+  const { showError } = useNotice();
 
   useEffect(() => {
-    if (address) getAssets();
+    setAssets([]);
+    if (node.name === 'UECC' || node.url === 'ws://221.122.102.163:9944') {
+      if (address) getAssets();
+    }
   }, [address]);
 
   async function getAssets() {
-    const { success, result }: PotentialBalancesResponse = await get(
-      `/potential_balances?account=${address}`
-    );
-    if (response.ok && success) {
-      setAssets(result);
+    try {
+      const { success, result }: Urc10ModuleBalancesResponse = await get(
+        `/potential_balances?account=${address}`
+      );
+      if (response.ok && success) {
+        setAssets(result);
+      }
+    } catch (err) {
+      showError((err as Error).message);
     }
   }
 
   return assets;
 }
 
-export function usePotentialBalances(address: string | null) {
+export function useUrc10ModuleBalances(address: string | null): Urc10Balance[] {
+  const { node } = useSetting();
   const { api, isApiReady } = useApi();
-  const potentialAssets = usePotentialAssets();
+  const urc10ModuleAssets = useUrc10ModuleAssets();
   const [balances, setBalances] = useState<Urc10Balance[]>([]);
 
   useEffect(() => {
-    api && isApiReady && address && getBalances();
-  }, [potentialAssets, api, isApiReady, address]);
+    setBalances([]);
+    if (node.name === 'UECC' || node.url === 'ws://221.122.102.163:9944') {
+      api && isApiReady && address && getBalances();
+    }
+  }, [urc10ModuleAssets, api, isApiReady, address]);
 
   async function getBalances() {
     await api.isReady;
 
-    const keys = potentialAssets.map((asset) =>
+    const keys = urc10ModuleAssets.map((asset) =>
       createTypeUnsafe(api.registry, '(Hash, AccountId)', [
         [asset.assetId, address],
       ])
@@ -88,7 +116,7 @@ export function usePotentialBalances(address: string | null) {
     );
 
     setBalances(
-      potentialAssets.map((asset, index) => ({
+      urc10ModuleAssets.map((asset, index) => ({
         ...asset,
         balance: result[index],
       }))
@@ -98,19 +126,24 @@ export function usePotentialBalances(address: string | null) {
   return balances;
 }
 
-export function usePotentialBalancesByAddress(address: string | null) {
+export function useUrc10ModuleBalancesByAddress(
+  address: string | null
+): Urc10ModuleBalance[] {
+  const { node } = useSetting();
   const { api, isApiReady } = useApi();
-  const potentialAssets = usePotentialAssetsByAddress(address);
-  const [balances, setBalances] = useState<PotentialBalance[]>([]);
+  const urc10ModuleAssets = useUrc10ModuleAssetsByAddress(address);
+  const [balances, setBalances] = useState<Urc10ModuleBalance[]>([]);
 
   useEffect(() => {
-    api && isApiReady && getBalances();
-  }, [potentialAssets, api, isApiReady, address]);
+    if (node.name === 'UECC' || node.url === 'ws://221.122.102.163:9944') {
+      api && isApiReady && getBalances();
+    }
+  }, [urc10ModuleAssets, api, isApiReady, address]);
 
   async function getBalances() {
     await api.isReady;
 
-    const keys = potentialAssets.map((asset) =>
+    const keys = urc10ModuleAssets.map((asset) =>
       createTypeUnsafe(api.registry, '(Hash, AccountId)', [
         [asset.assetId, address],
       ])
@@ -121,7 +154,7 @@ export function usePotentialBalancesByAddress(address: string | null) {
     );
 
     setBalances(
-      potentialAssets.map((asset, index) => ({
+      urc10ModuleAssets.map((asset, index) => ({
         ...asset,
         balance: result[index],
       }))
@@ -131,12 +164,19 @@ export function usePotentialBalancesByAddress(address: string | null) {
   return balances;
 }
 
-export function usePotentialBalance(address: string | null, assetId: string) {
+export function useUrc10ModuleBalance(
+  address: string | null,
+  assetId: string
+): Codec | null {
+  const { node } = useSetting();
   const { api, isApiReady } = useApi();
-  const [balance, setBalance] = useState<Codec>();
+  const [balance, setBalance] = useState<Codec | null>(null);
 
   useEffect(() => {
-    api && isApiReady && address && assetId && getBalance();
+    setBalance(null);
+    if (node.name === 'UECC' || node.url === 'ws://221.122.102.163:9944') {
+      api && isApiReady && address && assetId && getBalance();
+    }
   }, [address, assetId, api, isApiReady]);
 
   async function getBalance() {
@@ -181,28 +221,34 @@ export function useTransfers({
   symbol = '',
   counterparty = '',
   direction,
-}: TransferParams) {
+}: TransferParams): Transfer[] {
+  const { node } = useSetting();
   const { get, response } = useHttp();
   const [transfers, setTransfers] = useState<Transfer[]>([]);
+  const { showError } = useNotice();
 
   useEffect(() => {
-    getTransfers();
-    return () => {
-      setTransfers([]);
-    };
-  }, [owner, symbol, counterparty, direction]);
+    setTransfers([]);
+    if (node.name === 'UECC' || node.url === 'ws://221.122.102.163:9944') {
+      !!get && getTransfers();
+    }
+  }, [owner, symbol, counterparty, direction, get]);
 
   async function getTransfers() {
-    // TODO: 翻页
-    const params = QueryString.stringify(
-      { owner, symbol, counterparty, direction, limit: 1000 },
-      { skipEmptyString: true, skipNull: true }
-    );
-    const { success, result }: TransfersResponse = await get(
-      `/transfers?${params}`
-    );
-    if (response.ok && success) {
-      setTransfers(result.docs);
+    try {
+      // TODO: 翻页
+      const params = QueryString.stringify(
+        { owner, symbol, counterparty, direction, limit: 1000 },
+        { skipEmptyString: true, skipNull: true }
+      );
+      const { success, result }: TransfersResponse = await get(
+        `/transfers?${params}`
+      );
+      if (response.ok && success) {
+        setTransfers(result.docs);
+      }
+    } catch (err) {
+      showError((err as Error).message);
     }
   }
 

@@ -19,7 +19,7 @@ import {
 import { SnackbarProvider } from 'notistack';
 import { Slide } from '@material-ui/core';
 import { ErrorProvider } from '@components/error';
-import { NoticeSnackBarProvider } from '@components/common';
+import { NoticeSnackBarProvider, SettingProvider } from '@components/common';
 import Layout from '@components/Layout';
 import { TransactionDialog, TransactionStatus } from '@components/balance';
 
@@ -55,29 +55,31 @@ export default function MyApp(props: AppProps) {
         >
           <NoticeSnackBarProvider>
             <ErrorProvider>
-              <QueueProvider>
-                <TransactionStatus>
-                  <ApiProvider>
-                    <ChainProvider>
-                      <AccountsProvider>
-                        <AddressesProvider>
-                          <BalancesProvider>
-                            <BlockAuthorsProvider>
-                              <EventsProvider>
-                                <TransactionDialog>
-                                  <Layout>
-                                    <Component {...pageProps} />
-                                  </Layout>
-                                </TransactionDialog>
-                              </EventsProvider>
-                            </BlockAuthorsProvider>
-                          </BalancesProvider>
-                        </AddressesProvider>
-                      </AccountsProvider>
-                    </ChainProvider>
-                  </ApiProvider>
-                </TransactionStatus>
-              </QueueProvider>
+              <SettingProvider>
+                <QueueProvider>
+                  <TransactionStatus>
+                    <ApiProvider>
+                      <ChainProvider>
+                        <AccountsProvider>
+                          <AddressesProvider>
+                            <BalancesProvider>
+                              <BlockAuthorsProvider>
+                                <EventsProvider>
+                                  <TransactionDialog>
+                                    <Layout>
+                                      <Component {...pageProps} />
+                                    </Layout>
+                                  </TransactionDialog>
+                                </EventsProvider>
+                              </BlockAuthorsProvider>
+                            </BalancesProvider>
+                          </AddressesProvider>
+                        </AccountsProvider>
+                      </ChainProvider>
+                    </ApiProvider>
+                  </TransactionStatus>
+                </QueueProvider>
+              </SettingProvider>
             </ErrorProvider>
           </NoticeSnackBarProvider>
         </SnackbarProvider>

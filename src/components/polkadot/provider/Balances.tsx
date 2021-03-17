@@ -10,7 +10,7 @@ import {
   useChain,
   Urc10Balance,
   useCall,
-  usePotentialBalances,
+  useUrc10ModuleBalances,
 } from '@components/polkadot/hook';
 import type { Children } from '@components/types';
 import { memo, ReactElement, useMemo } from 'react';
@@ -18,7 +18,6 @@ import type { DeriveBalancesAll } from '@polkadot/api-derive/types';
 import { formatBalance, isFunction } from '@polkadot/util';
 
 function BalancesProvider({ children }: Children): ReactElement<Children> {
-  const mountedRef = useIsMountedRef();
   const { api, isApiReady } = useApi();
   const { tokenDecimals, tokenSymbol } = useChain();
   const { currentAccount } = useAccounts();
@@ -30,7 +29,7 @@ function BalancesProvider({ children }: Children): ReactElement<Children> {
     [currentAccount]
   );
 
-  const potentialAssetsBalance: Urc10Balance[] = usePotentialBalances(
+  const urc10ModuleAssetsBalance: Urc10Balance[] = useUrc10ModuleBalances(
     currentAccount
   );
 
@@ -48,7 +47,7 @@ function BalancesProvider({ children }: Children): ReactElement<Children> {
           withUnit: false,
         }),
     };
-    const _potentialBalances: BalanceProps[] = potentialAssetsBalance.map(
+    const _urc10ModuleBalances: BalanceProps[] = urc10ModuleAssetsBalance.map(
       ({ assetId, symbol, decimals, balance }) => ({
         assetId,
         symbol,
@@ -65,11 +64,11 @@ function BalancesProvider({ children }: Children): ReactElement<Children> {
       })
     );
     return {
-      balances: [_defaultBalance, ..._potentialBalances],
+      balances: [_defaultBalance, ..._urc10ModuleBalances],
       defaultAssetBalance,
-      potentialAssetsBalance,
+      urc10ModuleAssetsBalance,
     };
-  }, [mountedRef, currentAccount, defaultAssetBalance, potentialAssetsBalance]);
+  }, [currentAccount, defaultAssetBalance, urc10ModuleAssetsBalance]);
 
   return (
     <BalancesContext.Provider value={value}>

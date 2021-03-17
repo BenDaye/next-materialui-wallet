@@ -5,6 +5,6 @@ export const BalancesContext: Context<BalancesProps> = createContext<BalancesPro
   {
     balances: [],
     // defaultAssetBalance: null,
-    potentialAssetsBalance: [],
+    urc10ModuleAssetsBalance: [],
   }
 );

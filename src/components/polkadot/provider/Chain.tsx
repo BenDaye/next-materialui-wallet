@@ -5,7 +5,14 @@ import { ChainContext, ChainProps } from '@components/polkadot/context';
 import { useApi } from '@components/polkadot/hook';
 import { DEFAULT_CHAIN_PROPS, getChainState } from '@components/polkadot/utils';
 import { useError } from '@components/error';
-import { Backdrop, Box, CircularProgress, Typography } from '@material-ui/core';
+import {
+  Backdrop,
+  Box,
+  Button,
+  CircularProgress,
+  Typography,
+} from '@material-ui/core';
+import { useSetting } from '@components/common/Setting';
 
 interface ChainProviderProps extends Children {
   store?: KeyringStore;
@@ -25,11 +32,10 @@ function ChainProvider({
   } = useApi();
   const { setError } = useError();
   const [state, setState] = useState<ChainProps>(DEFAULT_CHAIN_PROPS);
+  const { showNodeDialogAction } = useSetting();
 
   useEffect(() => {
-    api &&
-      isApiReady &&
-      getChainState(api, isDevelopment, store).then(setState).catch(setError);
+    getChainState(api, isDevelopment, store).then(setState).catch(setError);
   }, [api, isDevelopment, isApiReady]);
 
   if (!isApiInitialized) {
@@ -53,7 +59,12 @@ function ChainProvider({
   } else if (apiError) {
     return (
       <Backdrop open={true}>
-        <Box width="70%">
+        <Box
+          width="70%"
+          display="flex"
+          flexDirection="column"
+          alignItems="center"
+        >
           <Typography
             variant="body1"
             color="error"
@@ -62,6 +73,11 @@ function ChainProvider({
           >
             {apiError}
           </Typography>
+          <Box mt={2}>
+            <Button variant="contained" onClick={showNodeDialogAction}>
+              切换节点
+            </Button>
+          </Box>
         </Box>
       </Backdrop>
     );
@@ -100,14 +116,19 @@ function ChainProvider({
           >
             未知原因导致无法连接,请稍候尝试刷新页面。
           </Typography>
+          <Box mt={2}>
+            <Button variant="contained" onClick={showNodeDialogAction}>
+              切换节点
+            </Button>
+          </Box>
         </Box>
       </Backdrop>
     );
+  } else {
+    return (
+      <ChainContext.Provider value={state}>{children}</ChainContext.Provider>
+    );
   }
-
-  return (
-    <ChainContext.Provider value={state}>{children}</ChainContext.Provider>
-  );
 }
 
 export default memo(ChainProvider);

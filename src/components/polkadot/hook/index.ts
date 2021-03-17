@@ -17,9 +17,9 @@ export type {
   AddressIdentity,
   UseAccountInfo,
   StakerState,
-  PotentialAsset,
-  PotentialBalancesResponse,
-  PotentialBalance,
+  Urc10ModuleAsset,
+  Urc10ModuleBalancesResponse,
+  Urc10ModuleBalance,
   Urc10Asset,
   Urc10AssetResponseResult,
   Urc10AssetResponse,
@@ -37,11 +37,11 @@ export { useChain } from './useChain';
 export { useEvent } from './useEvents';
 export {
   useHttp,
-  usePotentialAssets,
-  usePotentialAssetsByAddress,
-  usePotentialBalances,
-  usePotentialBalancesByAddress,
-  usePotentialBalance,
+  useUrc10ModuleAssets,
+  useUrc10ModuleAssetsByAddress,
+  useUrc10ModuleBalances,
+  useUrc10ModuleBalancesByAddress,
+  useUrc10ModuleBalance,
   useTransfers,
 } from './useHttp';
 export { useIsMountedRef } from './useIsMountedRef';

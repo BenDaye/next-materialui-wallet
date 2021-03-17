@@ -44,7 +44,7 @@ export interface ChainProps extends ChainSystemInfo {
 export interface BalancesProps {
   balances: BalanceProps[];
   defaultAssetBalance?: DeriveBalancesAll;
-  potentialAssetsBalance: Urc10Balance[];
+  urc10ModuleAssetsBalance: Urc10Balance[];
 }
 
 export interface BalanceProps {
