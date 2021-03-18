@@ -1,4 +1,4 @@
-import { useChain } from '@components/polkadot/hook';
+import { useChain } from '@@/hook';
 import { Children } from '@components/types';
 import { Box, Container, TextField, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';

@@ -1,6 +1,6 @@
 import { AccountInfo, AccountInfoSkeleton } from '@components/account';
 import { PageHeader } from '@components/common';
-import { useAccounts } from '@components/polkadot/hook';
+import { useAccount } from '@@/hook';
 import {
   Toolbar,
   Box,
@@ -15,7 +15,7 @@ import { useRouter } from 'next/router';
 import React, { Fragment } from 'react';
 
 export default function AccountsPage() {
-  const { hasAccount, accounts } = useAccounts();
+  const { hasAccount, accounts } = useAccount();
   const router = useRouter();
   return (
     <>

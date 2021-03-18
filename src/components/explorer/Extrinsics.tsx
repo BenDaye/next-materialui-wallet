@@ -1,4 +1,4 @@
-import { KeyedEvent } from '@components/polkadot/context';
+import type { KeyedEvent } from '@components/polkadot/event/types';
 import { Children } from '@components/types';
 import type {
   BlockNumber,

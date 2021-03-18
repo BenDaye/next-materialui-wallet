@@ -1,6 +1,6 @@
 import React, { memo, ReactElement } from 'react';
 import type { Children } from '@components/types';
-import { useChain } from '@components/polkadot/hook';
+import { useChain } from '@@/hook';
 import {
   Avatar,
   List,

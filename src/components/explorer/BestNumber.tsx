@@ -1,4 +1,4 @@
-import { useApi, useCall } from '@components/polkadot/hook';
+import { useApi, useCall } from '@@/hook';
 import type { BlockNumber } from '@polkadot/types/interfaces';
 import { formatNumber, isFunction } from '@polkadot/util';
 import { TextField } from '@material-ui/core';

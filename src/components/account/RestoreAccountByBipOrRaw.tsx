@@ -1,6 +1,6 @@
 import React, { memo, ReactElement, useState } from 'react';
 import type { Children } from '@components/types';
-import { useApi, useChain } from '@components/polkadot/hook';
+import { useApi, useChain } from '@@/hook';
 import { PairType, RestoreSeedType } from './types';
 import { useForm } from 'react-hook-form';
 import {
@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import MenuDownIcon from 'mdi-material-ui/MenuDown';
-import { ButtonWithLoading, PageFooter, useNotice } from '@components/common';
+import { ButtonWithLoading, PageFooter } from '@components/common';
 import keyring from '@polkadot/ui-keyring';
 import {
   hdLedger,
@@ -24,7 +24,7 @@ import {
   mnemonicValidate,
 } from '@polkadot/util-crypto';
 import { isHex, u8aToHex } from '@polkadot/util';
-import { useError } from '@components/error';
+import { useError, useNotice } from '@@/hook';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
 import { CreateResult, KeyringJson$Meta } from '@polkadot/ui-keyring/types';

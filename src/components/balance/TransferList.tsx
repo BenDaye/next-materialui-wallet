@@ -1,6 +1,6 @@
 import React, { Fragment, memo, ReactElement } from 'react';
 import { Children } from '@components/types';
-import { useTransfers } from '@components/polkadot/hook';
+import { useTransfer } from '@@/hook';
 import {
   Divider,
   List,
@@ -29,7 +29,7 @@ function TransferList({
   counterparty,
   direction,
 }: TransferListProps): ReactElement<TransferListProps> | null {
-  const transfers = useTransfers({ owner, symbol, counterparty, direction });
+  const transfers = useTransfer({ owner, symbol, counterparty, direction });
   const theme = useTheme();
   if (!symbol) return null;
 

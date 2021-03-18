@@ -6,20 +6,12 @@ import Head from 'next/head';
 import { AppProps } from 'next/app';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import ThemeProvider from '@theme';
-import {
-  ApiProvider,
-  ChainProvider,
-  BlockAuthorsProvider,
-  EventsProvider,
-  AccountsProvider,
-  AddressesProvider,
-  BalancesProvider,
-  QueueProvider,
-} from '@components/polkadot/provider';
+import { PolkadotProvider } from '@components/polkadot/main';
 import { SnackbarProvider } from 'notistack';
 import { Slide } from '@material-ui/core';
-import { ErrorProvider } from '@components/error';
-import { NoticeSnackBarProvider, SettingProvider } from '@components/common';
+import { ErrorProvider } from '@components/error/provider';
+import { NoticeProvider } from '@components/notice/provider';
+import { SettingProvider } from '@components/setting/provider';
 import Layout from '@components/Layout';
 import { TransactionDialog, TransactionStatus } from '@components/balance';
 
@@ -53,35 +45,21 @@ export default function MyApp(props: AppProps) {
           autoHideDuration={3000}
           disableWindowBlurListener
         >
-          <NoticeSnackBarProvider>
+          <NoticeProvider>
             <ErrorProvider>
               <SettingProvider>
-                <QueueProvider>
+                <PolkadotProvider>
                   <TransactionStatus>
-                    <ApiProvider>
-                      <ChainProvider>
-                        <AccountsProvider>
-                          <AddressesProvider>
-                            <BalancesProvider>
-                              <BlockAuthorsProvider>
-                                <EventsProvider>
-                                  <TransactionDialog>
-                                    <Layout>
-                                      <Component {...pageProps} />
-                                    </Layout>
-                                  </TransactionDialog>
-                                </EventsProvider>
-                              </BlockAuthorsProvider>
-                            </BalancesProvider>
-                          </AddressesProvider>
-                        </AccountsProvider>
-                      </ChainProvider>
-                    </ApiProvider>
+                    <TransactionDialog>
+                      <Layout>
+                        <Component {...pageProps} />
+                      </Layout>
+                    </TransactionDialog>
                   </TransactionStatus>
-                </QueueProvider>
+                </PolkadotProvider>
               </SettingProvider>
             </ErrorProvider>
-          </NoticeSnackBarProvider>
+          </NoticeProvider>
         </SnackbarProvider>
       </ThemeProvider>
     </Fragment>

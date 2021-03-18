@@ -2,7 +2,7 @@ import { Box, Toolbar } from '@material-ui/core';
 
 import React from 'react';
 import { PageHeader } from '@components/common';
-import { useChain } from '@components/polkadot/hook';
+import { useChain } from '@@/hook';
 import { RestoreAccountParams } from '@components/account';
 
 export default function AuthRestorePage() {

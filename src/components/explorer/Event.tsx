@@ -7,7 +7,7 @@ import {
   Box,
   Typography,
 } from '@material-ui/core';
-import { KeyedEvent } from '@components/polkadot/context';
+import type { KeyedEvent } from '@components/polkadot/event/types';
 import { Children } from '@components/types';
 import { formatMeta } from '@utils/formatMeta';
 

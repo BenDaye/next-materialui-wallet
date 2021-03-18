@@ -1,5 +1,5 @@
 import { formatBalance, isFunction } from '@polkadot/util';
-import { useApi, useCall } from '@components/polkadot/hook';
+import { useApi, useCall } from '@@/hook';
 import { TextField } from '@material-ui/core';
 import React, { memo, ReactElement } from 'react';
 import { Skeleton } from '@material-ui/lab';

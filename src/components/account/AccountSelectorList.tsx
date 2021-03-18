@@ -1,17 +1,14 @@
 import React, { memo, ReactElement, useCallback } from 'react';
 import type { Children } from '@components/types';
-import {
-  UseAccountInfo,
-  useAccounts,
-  useChain,
-} from '@components/polkadot/hook';
+import { useAccount, useChain } from '@@/hook';
+import type { AccountFullProps } from '@components/polkadot/account/types';
 import { Box, Container } from '@material-ui/core';
 import styles from '@styles/AccountSelector.module.css';
 import AccountInfoSkeleton from './AccountInfoSkeleton';
 import AccountInfo from './AccountInfo';
 
 interface AccountSelectorListProps extends Children {
-  onSelect?: (info: UseAccountInfo) => void;
+  onSelect?: (info: AccountFullProps) => void;
 }
 
 function AccountSelectorList({
@@ -19,7 +16,7 @@ function AccountSelectorList({
   onSelect,
 }: AccountSelectorListProps): ReactElement<AccountSelectorListProps> {
   const { isChainReady } = useChain();
-  const { accounts, hasAccount, setCurrentAccount } = useAccounts();
+  const { accounts, hasAccount, setCurrentAccount } = useAccount();
 
   return (
     <>

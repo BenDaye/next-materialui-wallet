@@ -4,7 +4,7 @@ import {
   KusamaIcon,
   UeccIcon,
 } from '@components/common';
-import { useSetting } from '@components/common/Setting';
+import { useSetting } from '@@/hook';
 import {
   Box,
   Button,
@@ -19,7 +19,7 @@ import {
   Paper,
 } from '@material-ui/core';
 import React, { Fragment, ReactNode, useState } from 'react';
-import type { Node } from '@components/common';
+import type { Node } from '@components/setting/types';
 import CatIcon from 'mdi-material-ui/Cat';
 import HelpCircleIcon from 'mdi-material-ui/HelpCircle';
 import Image from 'material-ui-image';

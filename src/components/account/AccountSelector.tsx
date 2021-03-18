@@ -13,7 +13,8 @@ import MenuIcon from 'mdi-material-ui/Menu';
 
 import ChainList from '../wallet/ChainList';
 import { useRouter } from 'next/router';
-import { UseAccountInfo, useChain } from '@components/polkadot/hook';
+import { useChain } from '@@/hook';
+import type { AccountFullProps } from '@components/polkadot/account/types';
 import AccountSelectorList from './AccountSelectorList';
 
 interface AccountSelectorProps extends Children {}
@@ -26,7 +27,7 @@ function AccountSelector({
   const [open, setOpen] = useState<boolean>(false);
 
   const onSelectAccount = useCallback(
-    (info: UseAccountInfo) => setOpen(false),
+    (info: AccountFullProps) => setOpen(false),
     [isChainReady]
   );
   return (

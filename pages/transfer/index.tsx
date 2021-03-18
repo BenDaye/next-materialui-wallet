@@ -16,16 +16,17 @@ import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { formatBalance } from '@polkadot/util';
 import {
-  useAccounts,
+  useAccount,
   useApi,
-  useBalances,
+  useBalance,
   useChain,
   useIsMountedRef,
-} from '@components/polkadot/hook';
-import { BalanceProps } from '@components/polkadot/context';
+  useSortedAccounts,
+} from '@@/hook';
+import type { BalanceProps } from '@components/polkadot/balance/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
 import { assert } from '@polkadot/util';
-import { useQueue } from '@components/polkadot/hook/useQueue';
+import { useQueue } from '@@/hook';
 import { SubmittableResult } from '@polkadot/api';
 import ButtonWithLoading from '@components/common/ButtonWithLoading';
 import { PageHeader } from '@components/common';
@@ -44,8 +45,9 @@ export default function TransferPage() {
   const { isChainReady } = useChain();
   const mountedRef = useIsMountedRef();
   const { tokenSymbol } = useChain();
-  const { currentAccount, sortedAccounts, setCurrentAccount } = useAccounts();
-  const { balances } = useBalances();
+  const { currentAccount, accounts, setCurrentAccount } = useAccount();
+  const sortedAccounts = useSortedAccounts(accounts);
+  const balances = useBalance(currentAccount);
   const { queueExtrinsic } = useQueue();
   const [isSending, setIsSending] = useState<boolean>(false);
 
@@ -82,7 +84,7 @@ export default function TransferPage() {
 
   const isDefaultAssetBalance: boolean = useMemo(() => {
     if (!watch('symbol')) return true;
-    return theAssetBalance ? theAssetBalance.isDefault : true;
+    return theAssetBalance ? theAssetBalance.type === 'default' : true;
   }, [mountedRef, theAssetBalance, watch('symbol')]);
 
   const formatAmount: string | null = useMemo(() => {
@@ -203,13 +205,8 @@ export default function TransferPage() {
             margin="normal"
           >
             {sortedAccounts.map((account) => (
-              <option
-                key={account.account.address}
-                value={account.account.address}
-              >
-                {`${account.isDevelopment ? '[TEST] ' : ''}${
-                  account.account.meta.name
-                }`}
+              <option key={account.address} value={account.address}>
+                {`${account.isDevelopment ? '[TEST] ' : ''}${account.name}`}
               </option>
             ))}
           </TextField>
@@ -247,13 +244,8 @@ export default function TransferPage() {
             margin="normal"
           >
             {sortedAccounts.map((account) => (
-              <option
-                key={account.account.address}
-                value={account.account.address}
-              >
-                {`${account.isDevelopment ? '[TEST] ' : ''}${
-                  account.account.meta.name
-                }`}
+              <option key={account.address} value={account.address}>
+                {`${account.isDevelopment ? '[TEST] ' : ''}${account.name}`}
               </option>
             ))}
           </TextField>

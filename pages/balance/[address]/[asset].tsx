@@ -18,15 +18,15 @@ import type { DeriveBalancesAll } from '@polkadot/api-derive/types';
 import { formatBalance, isFunction } from '@polkadot/util';
 import styles from '@styles/Layout.module.css';
 import {
-  Urc10Balance,
-  useAccounts,
+  useAccount,
   useApi,
   useCall,
   useChain,
-  useUrc10ModuleBalances,
-} from '@components/polkadot/hook';
-import { useError } from '@components/error';
-import { BalanceProps } from '@components/polkadot/context';
+  useSortedAccounts,
+  useUrc10ModuleAssetBalance,
+} from '@@/hook';
+import { useError } from '@@/hook';
+import type { BalanceProps } from '@components/polkadot/balance/types';
 import { TransferList } from '@components/balance';
 import { getShortAddress } from '@utils/getShortAddress';
 import { getSortedAccountName } from '@utils/getSortedAccountName';
@@ -40,12 +40,9 @@ export default function BalancePage() {
   const { setError } = useError();
   const { tokenSymbol, tokenDecimals } = useChain();
   const [currentTabIndex, setCurrentTabIndex] = useState<number>(0);
-  const {
-    currentAccount,
-    isAccount,
-    hasAccount,
-    sortedAccounts,
-  } = useAccounts();
+  const { accounts, currentAccount, isAccount, hasAccount } = useAccount();
+
+  const sortedAccounts = useSortedAccounts(accounts);
 
   useEffect(() => {
     if (!address) {
@@ -60,9 +57,7 @@ export default function BalancePage() {
     if (!isAccount(_address)) {
       return getShortAddress(_address);
     }
-    const theAccount = sortedAccounts.find(
-      (ac) => ac.account.address === _address
-    );
+    const theAccount = sortedAccounts.find((ac) => ac.address === _address);
     return theAccount ? getSortedAccountName(theAccount) : '';
   }, [hasAccount, isAccount, sortedAccounts, address]);
 
@@ -77,8 +72,8 @@ export default function BalancePage() {
       api.derive.balances.all,
     [address]
   );
-  const urc10ModuleAssetsBalance: Urc10Balance[] =
-    typeof address === 'string' ? useUrc10ModuleBalances(address) : [];
+  const urc10ModuleAssetsBalance: BalanceProps[] =
+    typeof address === 'string' ? useUrc10ModuleAssetBalance(address) : [];
 
   const isUrc10ModuleAsset: boolean = useMemo(() => {
     return urc10ModuleAssetsBalance.some((asset) => asset.assetId === assetId);
@@ -87,16 +82,18 @@ export default function BalancePage() {
   const thisBalance: BalanceProps | undefined = useMemo(() => {
     if (!isUrc10ModuleAsset) {
       return {
-        symbol: tokenSymbol && tokenSymbol[0],
-        decimals: tokenDecimals && tokenDecimals[0] && Number(tokenDecimals[0]),
-        isDefault: true,
-        balanceFormat:
-          defaultAssetBalance &&
-          defaultAssetBalance.availableBalance &&
-          formatBalance(defaultAssetBalance.availableBalance, {
+        assetId: 'default',
+        symbol: tokenSymbol[0],
+        decimals: tokenDecimals[0],
+        type: 'default',
+        balance: defaultAssetBalance?.availableBalance,
+        balanceFormat: formatBalance(
+          defaultAssetBalance?.availableBalance || 0,
+          {
             withSiFull: true,
             withUnit: true,
-          }),
+          }
+        ),
       };
     }
     const _po = urc10ModuleAssetsBalance.find((pb) => pb.assetId === assetId);
@@ -105,7 +102,7 @@ export default function BalancePage() {
         assetId: _po.assetId,
         symbol: _po.symbol,
         decimals: _po.decimals,
-        isDefault: false,
+        type: 'urc10Module',
         balance: _po.balance,
         balanceFormat:
           _po.balance &&

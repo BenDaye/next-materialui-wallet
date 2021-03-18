@@ -1,6 +1,6 @@
 import React, { memo, ReactElement, useEffect, useState } from 'react';
 import type { Children } from '@components/types';
-import { useApi, useIsMountedRef } from '@components/polkadot/hook';
+import { useApi, useIsMountedRef } from '@@/hook';
 import BN from 'bn.js';
 import type {
   Codec,

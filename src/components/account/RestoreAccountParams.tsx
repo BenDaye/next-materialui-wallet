@@ -9,7 +9,7 @@ import React, {
   useState,
 } from 'react';
 import type { Children } from '@components/types';
-import { useApi, useChain } from '@components/polkadot/hook';
+import { useApi, useChain } from '@@/hook';
 import { PageFooter } from '@components/common';
 import {
   Button,

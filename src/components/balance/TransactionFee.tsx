@@ -1,11 +1,11 @@
 import React, { memo, ReactElement, useEffect, useState } from 'react';
 import type { Children } from '@components/types';
-import { useApi, useIsMountedRef } from '@components/polkadot/hook';
+import { useApi, useIsMountedRef } from '@@/hook';
 import { SubmittableExtrinsic } from '@polkadot/api/promise/types';
 import type { RuntimeDispatchInfo } from '@polkadot/types/interfaces';
 import { formatBalance, isFunction } from '@polkadot/util';
 import { TextField } from '@material-ui/core';
-import { useError } from '@components/error';
+import { useError } from '@@/hook';
 
 interface TransactionFeeProps extends Children {
   accountId?: string | null;

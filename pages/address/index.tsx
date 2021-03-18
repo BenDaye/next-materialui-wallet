@@ -1,7 +1,7 @@
 import { AccountInfo, AccountInfoSkeleton } from '@components/account';
 import SaveAddressButton from '@components/address/SaveAddressButton';
 import { PageHeader } from '@components/common';
-import { useAddresses } from '@components/polkadot/hook';
+import { useAddress } from '@@/hook';
 import {
   Toolbar,
   Box,
@@ -14,7 +14,7 @@ import { useRouter } from 'next/router';
 import React, { Fragment } from 'react';
 
 export default function AddressesPage() {
-  const { hasAddress, addresses } = useAddresses();
+  const { hasAddress, addresses } = useAddress();
   const router = useRouter();
   return (
     <>

@@ -1,5 +1,5 @@
 import { HeaderExtended } from '@polkadot/api-derive';
-import { useBlockAuthors } from '@components/polkadot/hook';
+import { useBlockAuthor } from '@@/hook';
 import {
   Box,
   Container,
@@ -15,7 +15,7 @@ import { formatNumber } from '@polkadot/util';
 import { useRouter } from 'next/router';
 
 function BlockExplorerProvider({ children }: Children): ReactElement<Children> {
-  const { lastHeaders } = useBlockAuthors();
+  const { lastHeaders } = useBlockAuthor();
   const router = useRouter();
   return (
     <>

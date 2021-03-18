@@ -8,11 +8,12 @@ import React, {
 } from 'react';
 import type { Children } from '@components/types';
 import {
-  UseAccountInfo,
-  useAccountInfo,
-  useAccounts,
+  useAccountFullByAddress,
+  useAccount,
   useChain,
-} from '@components/polkadot/hook';
+  useNotice,
+} from '@@/hook';
+import type { AccountFullProps } from '@components/polkadot/account/types';
 import {
   Checkbox,
   Chip,
@@ -37,7 +38,6 @@ import Identicon from '@polkadot/react-identicon';
 import { getShortAddress } from '@utils/getShortAddress';
 import ReactQr from 'qrcode.react';
 import useCopy from '@react-hook/copy';
-import { useNotice } from '@components/common';
 import AccountInfoSkeleton from './AccountInfoSkeleton';
 import QrcodeIcon from 'mdi-material-ui/Qrcode';
 
@@ -47,7 +47,7 @@ interface AccountInfoProps extends Children {
   showAddress?: boolean;
   showQrcode?: boolean;
   select?: boolean;
-  onSelect?: (info: UseAccountInfo) => void;
+  onSelect?: (info: AccountFullProps) => void;
   dense?: boolean;
   onlyItem?: boolean;
   showBadge?: boolean;
@@ -79,9 +79,9 @@ function AccountInfo({
   const { systemChain } = useChain();
   const { copy, copied } = useCopy(value || '');
   const { showSuccess } = useNotice();
-  const { currentAccount, setCurrentAccount } = useAccounts();
+  const { currentAccount, setCurrentAccount } = useAccount();
   const [showQr, setShowQr] = useState<boolean>(false);
-  const info = useAccountInfo(value);
+  const info = useAccountFullByAddress(value);
   const classes = useStyles();
 
   const selectClass: string | undefined = useMemo(() => {

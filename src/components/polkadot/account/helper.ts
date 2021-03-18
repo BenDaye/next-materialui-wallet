@@ -1,0 +1,18 @@
+export const IS_NONE = {
+  isCouncil: false,
+  isDevelopment: false,
+  isEditable: false,
+  isExternal: false,
+  isFavorite: false,
+  isHardware: false,
+  isInContacts: false,
+  isInjected: false,
+  isMultisig: false,
+  isNominator: false,
+  isOwned: false,
+  isProxied: false,
+  isSociety: false,
+  isSudo: false,
+  isTechCommittee: false,
+  isValidator: false,
+};

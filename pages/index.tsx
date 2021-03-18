@@ -1,41 +1,18 @@
-import { useAccounts, useIsMountedRef } from '@components/polkadot/hook';
+import { useAccount, useChain } from '@@/hook';
 import { Box } from '@material-ui/core';
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from 'react';
+import React, { useEffect } from 'react';
 import Image from 'next/image';
-import keyring from '@polkadot/ui-keyring';
 import { useRouter } from 'next/router';
 import styles from '@styles/Layout.module.css';
 
 export default function Home() {
   const router = useRouter();
-  const { hasAccount } = useAccounts();
-  const [loading, setLoading] = useState<boolean>(true);
-
-  const isKeyringLoaded: () => boolean = useCallback(() => {
-    try {
-      return !!keyring.keyring;
-    } catch {
-      return false;
-    }
-  }, []);
-
-  useEffect(() => {
-    new Promise((resolve) => {
-      setTimeout(() => {
-        resolve(true);
-      }, 3000);
-    }).then((v) => setLoading(false));
-  }, []);
+  const { hasAccount } = useAccount();
+  const { isChainReady } = useChain();
 
   useEffect(() => {
     const logo: HTMLElement = document.getElementById('logo') as HTMLElement;
-    if (logo && !loading) {
+    if (logo && isChainReady) {
       logo.classList.remove('animate__pulse', 'animate__infinite');
       logo.classList.add('animate__fadeOutUp');
 
@@ -44,10 +21,10 @@ export default function Home() {
     return () => {
       logo && logo.removeEventListener('animationend', redirect);
     };
-  }, [loading, hasAccount]);
+  }, [isChainReady, hasAccount]);
 
   function redirect() {
-    if (isKeyringLoaded() && hasAccount) {
+    if (hasAccount) {
       router.replace('/wallet');
     } else {
       router.replace('/explorer');

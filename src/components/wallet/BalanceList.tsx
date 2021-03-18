@@ -1,6 +1,6 @@
 import React, { memo, ReactElement } from 'react';
 import type { Children } from '@components/types';
-import { useAccounts, useBalances, useChain } from '@components/polkadot/hook';
+import { useAccount, useBalance, useChain } from '@@/hook';
 import {
   Box,
   createStyles,
@@ -15,7 +15,7 @@ import {
   Typography,
 } from '@material-ui/core';
 import { useRouter } from 'next/router';
-import type { BalanceProps } from '@components/polkadot/context';
+import type { BalanceProps } from '@components/polkadot/balance/types';
 import { Skeleton } from '@material-ui/lab';
 import BitcoinIcon from 'mdi-material-ui/Bitcoin';
 
@@ -39,8 +39,8 @@ function BalanceList({
 }: BalanceListProps): ReactElement<BalanceListProps> {
   const router = useRouter();
   const { isChainReady } = useChain();
-  const { currentAccount } = useAccounts();
-  const { balances } = useBalances();
+  const { currentAccount } = useAccount();
+  const balances = useBalance(currentAccount);
   const classes = useStyles();
 
   return (
@@ -50,11 +50,7 @@ function BalanceList({
           <Box mb={1} key={`balance: ${index}`}>
             <Paper
               onClick={() =>
-                router.push(
-                  `/balance/${currentAccount}/${
-                    b.isDefault ? 'default' : b.assetId
-                  }`
-                )
+                router.push(`/balance/${currentAccount}/${b.assetId}`)
               }
             >
               <List disablePadding>

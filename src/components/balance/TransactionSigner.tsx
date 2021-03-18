@@ -7,12 +7,8 @@ import React, {
   useState,
 } from 'react';
 import type { Children } from '@components/types';
-import {
-  useAccounts,
-  useApi,
-  useIsMountedRef,
-} from '@components/polkadot/hook';
-import { QueueTx } from '@components/polkadot/context';
+import { useAccount, useApi, useIsMountedRef } from '@@/hook';
+import type { QueueTx } from '@components/polkadot/queue/types';
 import {
   AddressFlags,
   AddressProxy,
@@ -50,7 +46,7 @@ function TransactionSigner({
   const { register, handleSubmit, watch, errors, getValues } = useForm({
     mode: 'all',
   });
-  const { accounts } = useAccounts();
+  const { accounts } = useAccount();
   const [multiAddress, setMultiAddress] = useState<string | null>(null);
   const [proxyAddress, setProxyAddress] = useState<string | null>(null);
   const [isMultiCall, setIsMultiCall] = useState(false);

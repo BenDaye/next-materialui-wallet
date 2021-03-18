@@ -1,4 +1,4 @@
-import { useError } from '@components/error';
+import { useError } from '@@/hook';
 import { Box } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react';

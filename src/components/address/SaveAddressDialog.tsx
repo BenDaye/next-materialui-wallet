@@ -1,6 +1,6 @@
 import React, { memo, ReactElement, useCallback, useState } from 'react';
 import type { Children } from '@components/types';
-import { useApi, useCall, useChain } from '@components/polkadot/hook';
+import { useApi, useCall, useChain } from '@@/hook';
 import {
   Box,
   TextField,
@@ -16,10 +16,10 @@ import { useForm } from 'react-hook-form';
 import keyring from '@polkadot/ui-keyring';
 import { isFunction } from '@polkadot/util';
 import type { DeriveAccountInfo } from '@polkadot/api-derive/types';
-import { useError } from '@components/error';
+import { useError } from '@@/hook';
 import { KeyringJson$Meta } from '@polkadot/ui-keyring/types';
 import { KeyringPair$Json } from '@polkadot/keyring/types';
-import { useNotice } from '@components/common';
+import { useNotice } from '@@/hook';
 
 interface SaveAddressDialogProps extends Children {
   show: boolean;

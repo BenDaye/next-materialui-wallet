@@ -1,6 +1,6 @@
 import { CreateAccountStepper } from '@components/account';
 import { PageHeader } from '@components/common';
-import { useChain } from '@components/polkadot/hook';
+import { useChain } from '@@/hook';
 import { Toolbar, Box } from '@material-ui/core';
 import React from 'react';
 

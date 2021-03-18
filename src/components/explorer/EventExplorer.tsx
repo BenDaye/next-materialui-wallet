@@ -1,4 +1,4 @@
-import { useEvent } from '@components/polkadot/hook';
+import { useEvent } from '@@/hook';
 import { Children } from '@components/types';
 import { Container } from '@material-ui/core';
 import React, { memo, ReactElement } from 'react';

@@ -1,16 +1,17 @@
-import { PageHeader, useNotice } from '@components/common';
+import { PageHeader } from '@components/common';
 import { useRouter } from 'next/router';
 import React, { ChangeEvent, useCallback, useMemo } from 'react';
 import Container from '@material-ui/core/Container';
 import { Box, Button, TextField } from '@material-ui/core';
-import { UseAccountInfo, useAccountInfo } from '@components/polkadot/hook';
+import { useAccountFullByAddress, useNotice } from '@@/hook';
+import type { AccountFullProps } from '@components/polkadot/account/types';
 
 export default function AddressByAddressPage() {
   const router = useRouter();
   const { address } = router.query;
   const { showSuccess } = useNotice();
 
-  const info: UseAccountInfo = useAccountInfo(
+  const info: AccountFullProps = useAccountFullByAddress(
     typeof address === 'string' ? address : null
   );
 

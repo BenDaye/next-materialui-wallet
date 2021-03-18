@@ -6,7 +6,7 @@ import React, {
   useState,
 } from 'react';
 import type { Children } from '@components/types';
-import { useApi, useChain } from '@components/polkadot/hook';
+import { useApi, useChain } from '@@/hook';
 import { Container, Fade, Paper, Slide } from '@material-ui/core';
 import {
   CreateAccountConfirm,
@@ -36,9 +36,9 @@ import {
 import { CreateResult, KeyringJson$Meta } from '@polkadot/ui-keyring/types';
 import { NOOP } from '@components/balance/util';
 import { useRouter } from 'next/router';
-import { useError } from '@components/error';
+import { useError } from '@@/hook';
 import { useSnackbar } from 'notistack';
-import { useNotice } from '@components/common';
+import { useNotice } from '@@/hook';
 
 interface CreateAccountStepperProps extends Children {
   seed?: string;

@@ -8,8 +8,7 @@ import React, {
   useState,
 } from 'react';
 import type { Children } from '@components/types';
-import { useApi } from '@components/polkadot/hook';
-import { useQueue } from '@components/polkadot/hook/useQueue';
+import { useApi, useQueue } from '@@/hook';
 import { ApiPromise, SubmittableResult } from '@polkadot/api';
 import {
   AVAIL_STATUS,
@@ -17,7 +16,7 @@ import {
   QueueTxMessageSetStatus,
   QueueTxResult,
   QueueTxStatus,
-} from '@components/polkadot/context';
+} from '@components/polkadot/queue/types';
 import { assert, isFunction } from '@polkadot/util';
 import { loggerFormat } from '@polkadot/util/logger';
 import type { DefinitionRpcExt } from '@polkadot/types/types';
@@ -35,7 +34,7 @@ import {
 import ButtonWithLoading from '@components/common/ButtonWithLoading';
 import { AddressProxy, ItemState } from './types';
 import { AccountSigner, NOOP, NO_FLAGS, unlockAccount } from './util';
-import { useError } from '@components/error';
+import { useError } from '@@/hook';
 import keyring from '@polkadot/ui-keyring';
 import { TransactionContent, TransactionSigner } from '.';
 import delay from '@utils/delay';

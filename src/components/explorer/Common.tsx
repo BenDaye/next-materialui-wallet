@@ -1,4 +1,4 @@
-import { useApi, useCall, useChain } from '@components/polkadot/hook';
+import { useApi, useCall, useChain } from '@@/hook';
 import { TextField } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { memo, ReactElement } from 'react';

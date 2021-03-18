@@ -7,15 +7,16 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { UseAccountInfo, useAccountInfo } from '@components/polkadot/hook';
-import { PageHeader, useNotice } from '@components/common';
+import { useAccountFullByAddress, useNotice } from '@@/hook';
+import type { AccountFullProps } from '@components/polkadot/account/types';
+import { PageHeader } from '@components/common';
 
 export default function AccountByAddressPage() {
   const router = useRouter();
   const { address } = router.query;
   const { showSuccess } = useNotice();
 
-  const info: UseAccountInfo = useAccountInfo(
+  const info: AccountFullProps = useAccountFullByAddress(
     typeof address === 'string' ? address : null
   );
 

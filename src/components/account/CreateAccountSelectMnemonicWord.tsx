@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import type { Children } from '@components/types';
-import { useApi } from '@components/polkadot/hook';
+import { useApi } from '@@/hook';
 import {
   AppBar,
   Box,

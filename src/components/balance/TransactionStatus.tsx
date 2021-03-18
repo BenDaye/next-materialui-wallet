@@ -1,9 +1,8 @@
 import { memo, ReactElement, useEffect, useState } from 'react';
 import type { Children } from '@components/types';
-import { QueueTx, STATUS_COMPLETE } from '@components/polkadot/context';
-import { useQueue } from '@components/polkadot/hook/useQueue';
-import { useSnackbar } from 'notistack';
-import { useNotice } from '@components/common';
+import { QueueTx, STATUS_COMPLETE } from '@components/polkadot/queue/types';
+import { useQueue } from '@@/hook';
+import { useNotice } from '@@/hook';
 
 interface TransactionStatusProps extends Children {}
 

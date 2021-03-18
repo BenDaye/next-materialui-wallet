@@ -1,7 +1,7 @@
 import React, { memo, ReactElement, useMemo } from 'react';
 import type { Children } from '@components/types';
-import { useApi } from '@components/polkadot/hook';
-import { QueueTx } from '@components/polkadot/context';
+import { useApi } from '@@/hook';
+import type { QueueTx } from '@components/polkadot/queue/types';
 import { Box, List, ListItem, ListItemText } from '@material-ui/core';
 import { formatMeta } from '@utils/formatMeta';
 import TransactionParams from './TransactionParams';

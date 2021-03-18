@@ -3,7 +3,10 @@
     "Proxied",
     "Staker",
     "Unlockable",
+    "materialui",
+    "roboto",
     "stqueue",
+    "svgr",
     "txqueue"
   ]
 }

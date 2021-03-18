@@ -1,12 +1,12 @@
 import React, { memo, ReactElement, useEffect, useState } from 'react';
 import type { Children } from '@components/types';
 import { useForm } from 'react-hook-form';
-import { ButtonWithLoading, PageFooter, useNotice } from '@components/common';
+import { ButtonWithLoading, PageFooter } from '@components/common';
 import { Box, Button, Container, TextField, Toolbar } from '@material-ui/core';
 import keyring from '@polkadot/ui-keyring';
-import { useChain } from '@components/polkadot/hook';
+import { useChain } from '@@/hook';
 import { KeyringPair } from '@polkadot/keyring/types';
-import { useError } from '@components/error';
+import { useError, useNotice } from '@@/hook';
 import { CreateResult } from '@polkadot/ui-keyring/types';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';

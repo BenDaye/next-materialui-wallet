@@ -2,13 +2,13 @@ import { Box, Container, IconButton, Typography } from '@material-ui/core';
 import ScanHelperIcon from 'mdi-material-ui/ScanHelper';
 
 import React from 'react';
-import { useAccounts } from '@components/polkadot/hook';
+import { useAccount } from '@@/hook';
 import { BalanceList } from '@components/wallet';
 import { AccountSelector, AccountInfo } from '@components/account';
 import { PageHeader } from '@components/common';
 
 export default function Wallet() {
-  const { currentAccount } = useAccounts();
+  const { currentAccount } = useAccount();
 
   return (
     <>
