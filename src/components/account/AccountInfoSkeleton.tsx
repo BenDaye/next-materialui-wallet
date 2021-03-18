@@ -1,5 +1,5 @@
 import React, { memo, ReactElement } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useChain } from '@@/hook';
 import {
   Avatar,
@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 
-interface AccountInfoSkeletonProps extends Children {
+interface AccountInfoSkeletonProps extends BaseProps {
   primary?: string;
   secondary?: string;
 }

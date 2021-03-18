@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useAccount, useApi, useIsMountedRef } from '@@/hook';
 import type { QueueTx } from '@components/polkadot/queue/types';
 import {
@@ -29,7 +29,7 @@ import {
 import Identicon from '@polkadot/react-identicon';
 import { AccountInfo } from '@components/account';
 
-interface TransactionSignerProps extends Children {
+interface TransactionSignerProps extends BaseProps {
   currentItem: QueueTx;
   requestAddress: string;
   onChange: (address: AddressProxy) => void;

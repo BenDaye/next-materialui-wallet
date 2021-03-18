@@ -7,7 +7,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useApi, useQueue } from '@@/hook';
 import { ApiPromise, SubmittableResult } from '@polkadot/api';
 import {
@@ -39,7 +39,7 @@ import keyring from '@polkadot/ui-keyring';
 import { TransactionContent, TransactionSigner } from '.';
 import delay from '@utils/delay';
 
-interface TransactionDialogProps extends Children {}
+interface TransactionDialogProps extends BaseProps {}
 
 async function submitRpc(
   api: ApiPromise,

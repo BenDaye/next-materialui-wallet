@@ -1,10 +1,10 @@
 import { memo, ReactElement, useEffect, useState } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { QueueTx, STATUS_COMPLETE } from '@components/polkadot/queue/types';
 import { useQueue } from '@@/hook';
 import { useNotice } from '@@/hook';
 
-interface TransactionStatusProps extends Children {}
+interface TransactionStatusProps extends BaseProps {}
 
 function filterTx(txqueue?: QueueTx[]): [QueueTx[], QueueTx[]] {
   const allTx = (txqueue || []).filter(

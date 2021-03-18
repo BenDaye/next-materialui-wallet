@@ -1,11 +1,11 @@
 import type {} from '@material-ui/lab/themeAugmentation';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { createMuiTheme, ThemeProvider as TP } from '@material-ui/core/styles';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { memo, ReactElement, useMemo } from 'react';
 import { orange, grey, blue } from '@material-ui/core/colors';
 
-function ThemeProvider({ children }: Children): ReactElement<Children> {
+function ThemeProvider({ children }: BaseProps): ReactElement<BaseProps> {
   // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
   const prefersDarkMode = true;
 

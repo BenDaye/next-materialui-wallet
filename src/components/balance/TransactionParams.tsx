@@ -1,5 +1,5 @@
 import React, { memo, ReactElement, useEffect, useState } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useApi, useIsMountedRef } from '@@/hook';
 import BN from 'bn.js';
 import type {
@@ -80,7 +80,7 @@ function extractState(
   return { hash, params, signature, signatureType, values };
 }
 
-interface TransactionParamsProps extends Children {
+interface TransactionParamsProps extends BaseProps {
   labelHash?: React.ReactNode;
   labelSignature?: React.ReactNode;
   mortality?: string;

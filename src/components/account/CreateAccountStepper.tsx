@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useApi, useChain } from '@@/hook';
 import { Container, Fade, Paper, Slide } from '@material-ui/core';
 import {
@@ -40,7 +40,7 @@ import { useError } from '@@/hook';
 import { useSnackbar } from 'notistack';
 import { useNotice } from '@@/hook';
 
-interface CreateAccountStepperProps extends Children {
+interface CreateAccountStepperProps extends BaseProps {
   seed?: string;
   type?: PairType;
 }

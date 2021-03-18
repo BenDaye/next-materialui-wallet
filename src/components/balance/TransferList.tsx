@@ -1,5 +1,5 @@
 import React, { Fragment, memo, ReactElement } from 'react';
-import { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useTransfer } from '@@/hook';
 import {
   Divider,
@@ -15,7 +15,7 @@ import Identicon from '@polkadot/react-identicon';
 import { formatNumber, formatBalance } from '@polkadot/util';
 import { getShortAddress } from '@utils/getShortAddress';
 
-interface TransferListProps extends Children {
+interface TransferListProps extends BaseProps {
   owner?: string | null;
   symbol?: string | null;
   counterparty?: string | null;

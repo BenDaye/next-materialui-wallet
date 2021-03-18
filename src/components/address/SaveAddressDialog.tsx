@@ -1,5 +1,5 @@
 import React, { memo, ReactElement, useCallback, useState } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useApi, useCall, useChain } from '@@/hook';
 import {
   Box,
@@ -21,7 +21,7 @@ import { KeyringJson$Meta } from '@polkadot/ui-keyring/types';
 import { KeyringPair$Json } from '@polkadot/keyring/types';
 import { useNotice } from '@@/hook';
 
-interface SaveAddressDialogProps extends Children {
+interface SaveAddressDialogProps extends BaseProps {
   show: boolean;
   onClose: () => void;
 }

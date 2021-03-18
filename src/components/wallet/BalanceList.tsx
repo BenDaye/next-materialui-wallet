@@ -1,5 +1,5 @@
 import React, { memo, ReactElement } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useAccount, useBalance, useChain } from '@@/hook';
 import {
   Box,
@@ -19,7 +19,7 @@ import type { BalanceProps } from '@components/polkadot/balance/types';
 import { Skeleton } from '@material-ui/lab';
 import BitcoinIcon from 'mdi-material-ui/Bitcoin';
 
-interface BalanceListProps extends Children {}
+interface BalanceListProps extends BaseProps {}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

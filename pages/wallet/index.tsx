@@ -10,6 +10,7 @@ import { PageHeader } from '@components/common';
 export default function Wallet() {
   const { currentAccount } = useAccount();
 
+  // TODO: 扫码按钮
   return (
     <>
       <PageHeader

@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useApi } from '@@/hook';
 import {
   AppBar,
@@ -28,7 +28,7 @@ import { Skeleton } from '@material-ui/lab';
 import { AddressState } from './types';
 import styles from '@styles/Layout.module.css';
 
-interface CreateAccountSelectMnemonicWordProps extends Children {
+interface CreateAccountSelectMnemonicWordProps extends BaseProps {
   params: AddressState;
   onChangeStep: (step: number) => void;
 }

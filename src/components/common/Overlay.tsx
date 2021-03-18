@@ -1,8 +1,8 @@
-import { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { Backdrop, Box } from '@material-ui/core';
 import React, { memo, ReactElement } from 'react';
 
-interface OverlayProps extends Children {}
+interface OverlayProps extends BaseProps {}
 
 function Overlay({ children }: OverlayProps): ReactElement<OverlayProps> {
   return (

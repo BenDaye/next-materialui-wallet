@@ -1,11 +1,15 @@
 import { useChain } from '@@/hook';
-import { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { Box, Container, TextField, Typography } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
 import React, { memo, ReactElement } from 'react';
 import { BestFinalized, BestNumber, Common, TotalIssuance } from './index';
 
-function ChainExplorerProvider({ children }: Children): ReactElement<Children> {
+interface ChainExplorerProviderProps extends BaseProps {}
+
+function ChainExplorerProvider({
+  children,
+}: ChainExplorerProviderProps): ReactElement<ChainExplorerProviderProps> {
   const {
     systemChain,
     systemName,

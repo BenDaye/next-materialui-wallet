@@ -1,5 +1,5 @@
 import React, { memo, ReactElement, useState } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useApi, useChain } from '@@/hook';
 import { PairType, RestoreSeedType } from './types';
 import { useForm } from 'react-hook-form';
@@ -29,7 +29,7 @@ import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
 import { CreateResult, KeyringJson$Meta } from '@polkadot/ui-keyring/types';
 
-interface RestoreAccountByBipOrRawProps extends Children {
+interface RestoreAccountByBipOrRawProps extends BaseProps {
   type: RestoreSeedType;
 }
 

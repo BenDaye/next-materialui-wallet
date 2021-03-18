@@ -13,8 +13,8 @@ import { HeaderExtended } from '@polkadot/api-derive';
 import React, { memo, ReactElement, ReactNode } from 'react';
 import { useRouter } from 'next/router';
 import CardContentItemValue from './CardContentItemValue';
-import { Children } from '@components/types';
-interface BlockProps extends Children {
+import type { BaseProps } from '@@/types';
+interface BlockProps extends BaseProps {
   header: HeaderExtended;
   showMoreIcon?: boolean;
   isLink?: boolean;

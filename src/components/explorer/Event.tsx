@@ -8,10 +8,10 @@ import {
   Typography,
 } from '@material-ui/core';
 import type { KeyedEvent } from '@components/polkadot/event/types';
-import { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { formatMeta } from '@utils/formatMeta';
 
-interface EventProps extends Children {
+interface EventProps extends BaseProps {
   event: KeyedEvent;
 }
 

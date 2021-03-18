@@ -1,9 +1,9 @@
 import React, { memo, ReactElement } from 'react';
-import { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { EventContext } from './context';
 import { useEventSubscription } from './hook';
 
-interface EventProviderProps extends Children {}
+interface EventProviderProps extends BaseProps {}
 
 function Event({
   children,

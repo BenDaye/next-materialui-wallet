@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useMemo,
 } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useApi } from '@@/hook';
 import {
   AppBar,
@@ -27,7 +27,7 @@ import Identicon from '@polkadot/react-identicon';
 import { useForm } from 'react-hook-form';
 import keyring from '@polkadot/ui-keyring';
 
-interface CreateAccountConfirmProps extends Children {
+interface CreateAccountConfirmProps extends BaseProps {
   params: AddressState;
   onConfirm: (data: ConfirmForm) => void;
   onChangeStep: (step: number) => void;

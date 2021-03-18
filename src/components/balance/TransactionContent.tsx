@@ -1,5 +1,5 @@
 import React, { memo, ReactElement, useMemo } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useApi } from '@@/hook';
 import type { QueueTx } from '@components/polkadot/queue/types';
 import { Box, List, ListItem, ListItemText } from '@material-ui/core';
@@ -7,7 +7,7 @@ import { formatMeta } from '@utils/formatMeta';
 import TransactionParams from './TransactionParams';
 import { TransactionFee } from '.';
 
-interface TransactionProps extends Children {
+interface TransactionProps extends BaseProps {
   currentItem: QueueTx;
 }
 

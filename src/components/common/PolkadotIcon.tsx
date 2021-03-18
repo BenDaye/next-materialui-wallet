@@ -1,9 +1,9 @@
 import React, { memo, ReactElement } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { SvgIcon } from '@material-ui/core';
-import { ReactComponent as Polkadot } from '../../../public/img/polkadot-circle.svg';
+import { ReactComponent as Polkadot } from '@public/img/polkadot-circle.svg';
 
-interface PolkadotIconProps extends Children {}
+interface PolkadotIconProps extends BaseProps {}
 
 function PolkadotIcon({
   children,

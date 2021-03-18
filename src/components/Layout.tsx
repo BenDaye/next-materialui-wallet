@@ -19,9 +19,9 @@ import React, {
   useState,
 } from 'react';
 import styles from '@styles/Layout.module.css';
-import { Children } from './types';
+import { BaseProps } from '@@/types';
 
-function Layout({ children }: Children): ReactElement<Children> | null {
+function Layout({ children }: BaseProps): ReactElement<BaseProps> | null {
   const router = useRouter();
   const mainRouters: String[] = [
     '/wallet',

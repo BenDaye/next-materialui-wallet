@@ -1,9 +1,9 @@
 import React, { memo, ReactElement } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { SvgIcon } from '@material-ui/core';
-import { ReactComponent as Kusama } from '../../../public/img/kusama-ksm-logo.svg';
+import { ReactComponent as Kusama } from '@public/img/kusama-ksm-logo.svg';
 
-interface KusamaIconProps extends Children {}
+interface KusamaIconProps extends BaseProps {}
 
 function KusamaIcon({
   children,

@@ -1,5 +1,5 @@
 import type { KeyedEvent } from '@components/polkadot/event/types';
-import { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import type {
   BlockNumber,
   Extrinsic as ExtrinsicType,
@@ -7,7 +7,7 @@ import type {
 import React, { memo, ReactElement } from 'react';
 import Extrinsic from './Extrinsic';
 
-interface ExtrinsicsProps extends Children {
+interface ExtrinsicsProps extends BaseProps {
   blockNumber?: BlockNumber;
   extrinsics?: ExtrinsicType[] | null;
   events?: KeyedEvent[];

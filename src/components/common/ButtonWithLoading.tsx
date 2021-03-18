@@ -1,9 +1,9 @@
 import React, { memo, ReactElement } from 'react';
 import { CircularProgress } from '@material-ui/core';
 import styles from '@styles/ButtonWithLoading.module.css';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 
-interface ButtonWithLoadingProps extends Children {
+interface ButtonWithLoadingProps extends BaseProps {
   loading?: boolean;
 }
 

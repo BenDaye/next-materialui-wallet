@@ -10,11 +10,15 @@ import {
 } from '@material-ui/core';
 import React, { memo, ReactElement } from 'react';
 import { Block } from '.';
-import { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { formatNumber } from '@polkadot/util';
 import { useRouter } from 'next/router';
 
-function BlockExplorerProvider({ children }: Children): ReactElement<Children> {
+interface BlockExplorerProviderProps extends BaseProps {}
+
+function BlockExplorerProvider({
+  children,
+}: BlockExplorerProviderProps): ReactElement<BlockExplorerProviderProps> {
   const { lastHeaders } = useBlockAuthor();
   const router = useRouter();
   return (

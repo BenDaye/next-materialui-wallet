@@ -1,5 +1,5 @@
 import React, { memo, ReactElement, ReactNode } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import {
   AppBar,
   Box,
@@ -10,7 +10,7 @@ import {
 import { useRouter } from 'next/router';
 import ChevronLeftIcon from 'mdi-material-ui/ChevronLeft';
 
-interface PageHeaderProps extends Children {
+interface PageHeaderProps extends BaseProps {
   showBack?: boolean;
   left?: ReactNode;
   right?: ReactNode;

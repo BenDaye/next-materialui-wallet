@@ -1,7 +1,7 @@
 import { memo, ReactElement } from 'react';
-import { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 
-interface BalanceListUrc10ModuleProps extends Children {}
+interface BalanceListUrc10ModuleProps extends BaseProps {}
 
 function BalanceListUrc10Module({
   children,

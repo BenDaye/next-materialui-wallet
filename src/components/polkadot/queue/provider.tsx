@@ -1,9 +1,9 @@
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { memo, ReactElement } from 'react';
 import { QueueContext } from './context';
 import { useQueueSubscription } from './hook';
 
-interface QueueProviderProps extends Children {}
+interface QueueProviderProps extends BaseProps {}
 
 function Queue({
   children,

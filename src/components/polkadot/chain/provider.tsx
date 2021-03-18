@@ -1,13 +1,13 @@
 import React, { memo, ReactElement, useEffect, useState } from 'react';
 import { KeyringStore } from '@polkadot/ui-keyring/types';
-import { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { ChainContext } from './context';
 import type { ChainContextProps } from './types';
 import { useApi } from '../api/hook';
 import { DEFAULT_CHAIN_PROPS, init } from './helper';
 import { useError } from '@@/hook';
 
-interface ChainProviderProps extends Children {
+interface ChainProviderProps extends BaseProps {
   store?: KeyringStore;
 }
 

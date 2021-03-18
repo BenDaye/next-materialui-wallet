@@ -2,13 +2,13 @@ import { ApiPromise, WsProvider } from '@polkadot/api';
 import React, { memo, ReactElement, useEffect, useMemo, useState } from 'react';
 import type { ApiContextProps } from './types';
 import { ApiContext } from './context';
-import { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useSetting } from '@@/hook';
 import { Overlay } from '@components/common';
 import { SwitchNodeButton } from '@components/setting/components/SwitchNodeButton';
 import { Box, CircularProgress, Typography } from '@material-ui/core';
 
-interface ApiProviderProps extends Children {}
+interface ApiProviderProps extends BaseProps {}
 
 let api: ApiPromise;
 

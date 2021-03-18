@@ -1,9 +1,9 @@
 import React, { memo, ReactElement, useEffect, useState } from 'react';
-import { Children } from '../types';
+import { BaseProps } from '../types';
 import { useSnackbar } from 'notistack';
 import { ErrorContext } from './context';
 
-function Error({ children }: Children): ReactElement<Children> {
+function Error({ children }: BaseProps): ReactElement<BaseProps> {
   const [error, setError] = useState<Error | null>(null);
   const { enqueueSnackbar } = useSnackbar();
 

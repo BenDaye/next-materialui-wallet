@@ -1,5 +1,5 @@
 import type { KeyedEvent } from '@components/polkadot/event/types';
-import { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import type {
   BlockNumber,
   Extrinsic as ExtrinsicType,
@@ -17,7 +17,7 @@ import MenuDownIcon from 'mdi-material-ui/MenuDown';
 import type { FunctionMetadataLatest } from '@polkadot/types/interfaces/metadata';
 import CardContentItemValue from './CardContentItemValue';
 
-interface ExtrinsicProps extends Children {
+interface ExtrinsicProps extends BaseProps {
   index: number;
   blockNumber?: BlockNumber;
   events?: KeyedEvent[];

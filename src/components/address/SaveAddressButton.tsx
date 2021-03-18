@@ -1,11 +1,11 @@
 import React, { memo, ReactElement, useCallback, useState } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useChain } from '@@/hook';
 import { IconButton } from '@material-ui/core';
 import AccountMultiplePlusIcon from 'mdi-material-ui/AccountMultiplePlus';
 import SaveAddressDialog from './SaveAddressDialog';
 
-interface SaveAddressButtonProps extends Children {}
+interface SaveAddressButtonProps extends BaseProps {}
 
 function SaveAddressButton({
   children,

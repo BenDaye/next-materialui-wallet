@@ -1,11 +1,11 @@
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import keyring from '@polkadot/ui-keyring';
 import { memo, ReactElement, useEffect, useMemo, useState } from 'react';
 import { useChain } from '../chain/hook';
 import { AddressContext } from './context';
 import type { AddressContextProps, AddressState } from './types';
 
-const Address = ({ children }: Children): ReactElement<Children> => {
+const Address = ({ children }: BaseProps): ReactElement<BaseProps> => {
   const { isChainReady } = useChain();
 
   const [

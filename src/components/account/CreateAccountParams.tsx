@@ -7,7 +7,7 @@ import React, {
   useEffect,
   useState,
 } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import {
   Accordion,
   AccordionDetails,
@@ -35,7 +35,7 @@ import { useForm } from 'react-hook-form';
 import { AddressState, CreateAccountParamsCallback } from './types';
 import styles from '@styles/Layout.module.css';
 
-interface CreateAccountParamsProps extends Children {
+interface CreateAccountParamsProps extends BaseProps {
   alert: {
     showScreenShootAlert: boolean;
     setShowScreenShootAlert: React.Dispatch<React.SetStateAction<boolean>>;

@@ -1,5 +1,5 @@
 import React, { memo, ReactElement, useCallback } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import {
   AppBar,
   Button,
@@ -11,7 +11,7 @@ import {
 } from '@material-ui/core';
 import styles from '@styles/Layout.module.css';
 
-interface CreateAccountIntroProps extends Children {
+interface CreateAccountIntroProps extends BaseProps {
   onChangeStep: (step: number) => void;
 }
 

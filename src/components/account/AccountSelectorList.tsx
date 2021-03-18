@@ -1,5 +1,5 @@
 import React, { memo, ReactElement, useCallback } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useAccount, useChain } from '@@/hook';
 import type { AccountFullProps } from '@components/polkadot/account/types';
 import { Box, Container } from '@material-ui/core';
@@ -7,7 +7,7 @@ import styles from '@styles/AccountSelector.module.css';
 import AccountInfoSkeleton from './AccountInfoSkeleton';
 import AccountInfo from './AccountInfo';
 
-interface AccountSelectorListProps extends Children {
+interface AccountSelectorListProps extends BaseProps {
   onSelect?: (info: AccountFullProps) => void;
 }
 

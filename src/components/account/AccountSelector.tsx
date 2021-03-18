@@ -1,5 +1,5 @@
 import React, { memo, ReactElement, useCallback, useState } from 'react';
-import { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import {
   AppBar,
   Box,
@@ -17,7 +17,7 @@ import { useChain } from '@@/hook';
 import type { AccountFullProps } from '@components/polkadot/account/types';
 import AccountSelectorList from './AccountSelectorList';
 
-interface AccountSelectorProps extends Children {}
+interface AccountSelectorProps extends BaseProps {}
 
 function AccountSelector({
   children,

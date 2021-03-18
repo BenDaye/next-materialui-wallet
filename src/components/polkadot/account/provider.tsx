@@ -1,11 +1,11 @@
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import keyring from '@polkadot/ui-keyring';
 import { memo, ReactElement, useEffect, useMemo, useState } from 'react';
 import { useChain } from '../chain/hook';
 import { AccountContext } from './context';
 import type { AccountContextProps, AccountState } from './types';
 
-const Account = ({ children }: Children): ReactElement<Children> => {
+const Account = ({ children }: BaseProps): ReactElement<BaseProps> => {
   const { isChainReady } = useChain();
 
   const [
@@ -44,6 +44,18 @@ const Account = ({ children }: Children): ReactElement<Children> => {
       subscribeAccounts.unsubscribe();
     };
   }, [isChainReady]);
+
+  useEffect(() => {
+    if (!currentAccount && hasAccount) {
+      setCurrentAccount(accounts[0]);
+    }
+    if (currentAccount && hasAccount && !isAccount(currentAccount)) {
+      setCurrentAccount(accounts[0]);
+    }
+    if (currentAccount && !hasAccount) {
+      setCurrentAccount(null);
+    }
+  }, [currentAccount, hasAccount, isAccount, isChainReady]);
 
   return (
     <AccountContext.Provider value={value}>{children}</AccountContext.Provider>

@@ -1,9 +1,9 @@
 import type { KeyedEvent } from '@components/polkadot/event/types';
-import { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import React, { memo, ReactElement } from 'react';
 import Event from './Event';
 
-interface EventsProps extends Children {
+interface EventsProps extends BaseProps {
   events?: KeyedEvent[];
 }
 

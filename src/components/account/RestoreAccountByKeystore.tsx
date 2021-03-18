@@ -1,5 +1,5 @@
 import React, { memo, ReactElement, useEffect, useState } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useForm } from 'react-hook-form';
 import { ButtonWithLoading, PageFooter } from '@components/common';
 import { Box, Button, Container, TextField, Toolbar } from '@material-ui/core';
@@ -11,7 +11,7 @@ import { CreateResult } from '@polkadot/ui-keyring/types';
 import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
 
-interface RestoreAccountByKeystoreProps extends Children {}
+interface RestoreAccountByKeystoreProps extends BaseProps {}
 
 interface RestoreAccountByKeystoreForm {
   keystore: string;

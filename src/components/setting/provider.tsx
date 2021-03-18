@@ -1,5 +1,5 @@
 import { NodeDialog } from './components/NodeDialog';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useRouter } from 'next/router';
 import React, {
   memo,
@@ -14,7 +14,7 @@ import { DEFAULT_NODES } from './helper';
 import { Node } from './types';
 import store from 'store';
 
-interface SettingProps extends Children {}
+interface SettingProps extends BaseProps {}
 
 function Setting({ children }: SettingProps): ReactElement<SettingProps> {
   const router = useRouter();

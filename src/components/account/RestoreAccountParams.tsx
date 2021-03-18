@@ -8,7 +8,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useApi, useChain } from '@@/hook';
 import { PageFooter } from '@components/common';
 import {
@@ -39,7 +39,7 @@ import {
   RestoreAccountByBipOrRaw,
 } from '@components/account';
 
-interface RestoreAccountParamsProps extends Children {}
+interface RestoreAccountParamsProps extends BaseProps {}
 
 interface AuthRestoreForm {
   type: RestoreSeedType;

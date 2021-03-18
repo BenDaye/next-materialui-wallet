@@ -1,9 +1,9 @@
 import React, { memo, ReactElement } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { AppBar } from '@material-ui/core';
 import styles from '@styles/Layout.module.css';
 
-interface PageFooterProps extends Children {}
+interface PageFooterProps extends BaseProps {}
 
 function PageFooter({
   children,

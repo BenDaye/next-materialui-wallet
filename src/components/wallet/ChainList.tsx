@@ -1,5 +1,5 @@
 import React, { memo, ReactElement } from 'react';
-import { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import styles from '@styles/AccountSelector.module.css';
 import {
   Box,
@@ -14,7 +14,7 @@ import Image from 'material-ui-image';
 import BitcoinIcon from 'mdi-material-ui/Bitcoin';
 import EthereumIcon from 'mdi-material-ui/Ethereum';
 
-interface ChainListProps extends Children {}
+interface ChainListProps extends BaseProps {}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({

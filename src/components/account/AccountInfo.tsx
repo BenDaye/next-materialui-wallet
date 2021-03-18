@@ -6,7 +6,7 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import {
   useAccountFullByAddress,
   useAccount,
@@ -41,7 +41,7 @@ import useCopy from '@react-hook/copy';
 import AccountInfoSkeleton from './AccountInfoSkeleton';
 import QrcodeIcon from 'mdi-material-ui/Qrcode';
 
-interface AccountInfoProps extends Children {
+interface AccountInfoProps extends BaseProps {
   value: string | null;
   showBalance?: boolean;
   showAddress?: boolean;

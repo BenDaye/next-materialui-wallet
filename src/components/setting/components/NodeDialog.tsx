@@ -1,5 +1,5 @@
 import React, { Fragment, memo, ReactElement, useState } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import {
   Box,
   Button,
@@ -20,7 +20,7 @@ import {
 } from '@material-ui/core';
 import type { Node } from '../types';
 
-interface NodeDialogProps extends Children {
+interface NodeDialogProps extends BaseProps {
   open: boolean;
   node: Node;
   nodes: Node[];

@@ -1,5 +1,5 @@
 import React, { memo, ReactElement, useEffect, useState } from 'react';
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { useApi, useIsMountedRef } from '@@/hook';
 import { SubmittableExtrinsic } from '@polkadot/api/promise/types';
 import type { RuntimeDispatchInfo } from '@polkadot/types/interfaces';
@@ -7,7 +7,7 @@ import { formatBalance, isFunction } from '@polkadot/util';
 import { TextField } from '@material-ui/core';
 import { useError } from '@@/hook';
 
-interface TransactionFeeProps extends Children {
+interface TransactionFeeProps extends BaseProps {
   accountId?: string | null;
   extrinsic?: SubmittableExtrinsic | null;
 }

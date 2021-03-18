@@ -1,4 +1,4 @@
-import type { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { memo, ReactElement } from 'react';
 import {
   QueueProvider,
@@ -10,7 +10,7 @@ import {
   EventProvider,
 } from './provider';
 
-interface PolkadotProviderProps extends Children {}
+interface PolkadotProviderProps extends BaseProps {}
 
 function Polkadot({
   children,

@@ -1,9 +1,9 @@
-import { Children } from '@components/types';
+import type { BaseProps } from '@@/types';
 import { memo, ReactElement } from 'react';
 import { BlockAuthorContext, ValidatorContext } from './context';
 import { useBlockAuthorSubscription, useValidatorSubscription } from './hook';
 
-interface BlockProviderProps extends Children {}
+interface BlockProviderProps extends BaseProps {}
 
 function Block({
   children,
