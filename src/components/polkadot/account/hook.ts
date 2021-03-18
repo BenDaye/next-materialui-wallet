@@ -75,6 +75,7 @@ export const useAccountBaseByAddress = (
 };
 
 export const useSortedAccounts = (value: string[]): AccountBaseProps[] => {
+  if (!value) return [];
   return value
     .map((v) => useAccountBaseByAddress(v))
     .filter((v): v is AccountBaseProps => !!v)

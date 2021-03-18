@@ -105,7 +105,7 @@ export const extractEvents = (result?: SubmittableResult): ActionStatus[] => {
             if (method === 'ContractExecution' && data.length === 2) {
               // see if we have info for this contract
               const [accountId, encoded] = data;
-              // TODO: do something
+              // NOTE: 暂时不管这个模块了
               return {
                 action: '[TODO]: decoded.event.identifier',
                 message: 'contract event',

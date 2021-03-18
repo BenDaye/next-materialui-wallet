@@ -19,7 +19,9 @@ import { formatBalance, isFunction } from '@polkadot/util';
 import styles from '@styles/Layout.module.css';
 import {
   useAccount,
+  useAccountBaseByAddress,
   useApi,
+  useBalance,
   useCall,
   useChain,
   useSortedAccounts,
@@ -36,91 +38,17 @@ export default function BalancePage() {
   const {
     query: { address, asset: assetId },
   } = router;
-  const { api, isApiReady } = useApi();
-  const { setError } = useError();
-  const { tokenSymbol, tokenDecimals } = useChain();
   const [currentTabIndex, setCurrentTabIndex] = useState<number>(0);
-  const { accounts, currentAccount, isAccount, hasAccount } = useAccount();
-
-  const sortedAccounts = useSortedAccounts(accounts);
-
-  useEffect(() => {
-    if (!address) {
-      setError(new TypeError('address is required'));
-      router.back();
-    }
-  }, [address, assetId]);
-
-  const title = useMemo(() => {
-    const _address = typeof address === 'string' ? address : null;
-    if (!_address) return '/';
-    if (!isAccount(_address)) {
-      return getShortAddress(_address);
-    }
-    const theAccount = sortedAccounts.find((ac) => ac.address === _address);
-    return theAccount ? getSortedAccountName(theAccount) : '';
-  }, [hasAccount, isAccount, sortedAccounts, address]);
-
-  const showBottomNavigation = useMemo(
-    () => typeof address === 'string' && isAccount(address),
-    [hasAccount, isAccount, sortedAccounts, address]
+  const accountBase = useAccountBaseByAddress(
+    typeof address === 'string' ? address : null
   );
 
-  const defaultAssetBalance = useCall<DeriveBalancesAll>(
-    isApiReady &&
-      isFunction(api.derive.balances.all) &&
-      api.derive.balances.all,
-    [address]
+  const balances = useBalance(typeof address === 'string' ? address : null);
+
+  const thisBalance = useMemo(
+    () => balances.find((b) => b.assetId === assetId),
+    [balances]
   );
-  const urc10ModuleAssetsBalance: BalanceProps[] =
-    typeof address === 'string' ? useUrc10ModuleAssetBalance(address) : [];
-
-  const isUrc10ModuleAsset: boolean = useMemo(() => {
-    return urc10ModuleAssetsBalance.some((asset) => asset.assetId === assetId);
-  }, [assetId, urc10ModuleAssetsBalance]);
-
-  const thisBalance: BalanceProps | undefined = useMemo(() => {
-    if (!isUrc10ModuleAsset) {
-      return {
-        assetId: 'default',
-        symbol: tokenSymbol[0],
-        decimals: tokenDecimals[0],
-        type: 'default',
-        balance: defaultAssetBalance?.availableBalance,
-        balanceFormat: formatBalance(
-          defaultAssetBalance?.availableBalance || 0,
-          {
-            withSiFull: true,
-            withUnit: true,
-          }
-        ),
-      };
-    }
-    const _po = urc10ModuleAssetsBalance.find((pb) => pb.assetId === assetId);
-    return (
-      _po && {
-        assetId: _po.assetId,
-        symbol: _po.symbol,
-        decimals: _po.decimals,
-        type: 'urc10Module',
-        balance: _po.balance,
-        balanceFormat:
-          _po.balance &&
-          formatBalance(_po.balance.toString(), {
-            withSiFull: true,
-            withUnit: _po.symbol,
-            decimals: _po.decimals,
-          }),
-      }
-    );
-  }, [
-    currentAccount,
-    isUrc10ModuleAsset,
-    urc10ModuleAssetsBalance,
-    defaultAssetBalance,
-    address,
-    assetId,
-  ]);
 
   const { owner, counterparty, direction } = useMemo(() => {
     const owner = typeof address === 'string' ? address : '';
@@ -132,7 +60,7 @@ export default function BalancePage() {
       default:
         return { owner, counterparty: null, direction: null };
     }
-  }, [address, thisBalance, currentTabIndex]);
+  }, [address, currentTabIndex]);
 
   return (
     <>
@@ -143,7 +71,7 @@ export default function BalancePage() {
           </IconButton>
           <Box flexGrow={1}>
             <Typography variant="subtitle1" align="center">
-              {title}
+              {accountBase?.name || ''}
             </Typography>
           </Box>
           <IconButton edge="end">
@@ -195,13 +123,13 @@ export default function BalancePage() {
       <Toolbar />
       {thisBalance && (
         <TransferList
-          symbol={thisBalance.symbol?.toString()}
+          symbol={thisBalance.symbol}
           owner={owner}
           counterparty={counterparty}
           direction={direction}
         />
       )}
-      {showBottomNavigation && (
+      {accountBase && (
         <>
           <Toolbar />
           <AppBar position="fixed" className={styles.bottomNavigation}>

@@ -1,18 +1,18 @@
 import type { ChainProperties, ChainType } from '@polkadot/types/interfaces';
 
 export interface ChainSystemInfo {
-  properties: ChainProperties;
+  // properties: ChainProperties;
   systemChain: string;
-  systemChainType: ChainType;
+  // systemChainType: ChainType;
   systemName: string;
   systemVersion: string;
-}
-
-export interface ChainContextProps extends ChainSystemInfo {
+  isDevelopment: boolean;
   ss58Format: number;
   tokenDecimals: number[];
   tokenSymbol: string[];
+}
+
+export interface ChainContextProps extends ChainSystemInfo {
   genesisHash: string;
   isChainReady: boolean;
-  isDevelopment: boolean;
 }

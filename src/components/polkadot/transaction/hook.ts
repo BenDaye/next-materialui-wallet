@@ -33,7 +33,7 @@ export const useTransfer = ({
       getTransfers();
     }
     return abort;
-  }, [node]);
+  }, [node, owner, symbol, counterparty, direction]);
 
   const getTransfers = async (): Promise<void> => {
     try {
@@ -42,9 +42,11 @@ export const useTransfer = ({
         { owner, symbol, counterparty, direction, limit: 1000 },
         { skipEmptyString: true, skipNull: true }
       );
-      const { success, result }: TransfersResponse = await get(
-        `/transfers?${params}`
-      );
+      const res: TransfersResponse = await get(`/transfers?${params}`);
+
+      if (!res) return;
+
+      const { success, result } = res;
 
       if (response.ok && success) {
         setTransfers(result.docs);

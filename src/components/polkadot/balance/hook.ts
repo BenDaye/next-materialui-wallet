@@ -16,40 +16,62 @@ import type { Codec } from '@polkadot/types/types';
 import { createTypeUnsafe } from '@polkadot/types';
 
 export const useBalance = (value: string | null): BalanceProps[] => {
-  const { node } = useSetting();
-  const { api, isApiReady } = useApi();
-  const { isChainReady, tokenDecimals, tokenSymbol } = useChain();
-
+  const defaultAssetBalance = useDefaultAssetBalance(value);
   const fungibleAssetBalance = useFungibleAssetBalance(value);
   const urc10ModuleAssetBalance = useUrc10ModuleAssetBalance(value);
 
-  const defaultAssetBalance = useCall<DeriveBalancesAll>(
-    api && isApiReady && api.derive.balances?.all,
-    [value]
-  );
-
   const balances: BalanceProps[] = useMemo(() => {
     return [
-      {
-        assetId: 'default',
-        symbol: tokenSymbol[0],
-        decimals: tokenDecimals[0],
-        type: 'default',
-        balance: defaultAssetBalance?.availableBalance,
-        balanceFormat: formatBalance(
-          defaultAssetBalance?.availableBalance || 0,
-          {
-            withSiFull: true,
-            withUnit: false,
-          }
-        ),
-      },
+      defaultAssetBalance,
       ...fungibleAssetBalance,
       ...urc10ModuleAssetBalance,
     ] as BalanceProps[];
   }, [defaultAssetBalance, fungibleAssetBalance, urc10ModuleAssetBalance]);
 
   return balances;
+};
+
+export const useDefaultAssetBalance = (value: string | null): BalanceProps => {
+  const { api, isApiReady } = useApi();
+  const { tokenDecimals, tokenSymbol } = useChain();
+  const [balance, setBalance] = useState<BalanceProps>({
+    assetId: 'default',
+    symbol: tokenSymbol[0],
+    decimals: tokenDecimals[0],
+    type: 'default',
+  });
+  const { showError } = useNotice();
+
+  useEffect(() => {
+    if (!api || !isApiReady || !value) return;
+    getBalance();
+  }, [api, isApiReady, value]);
+
+  const getBalance = async () => {
+    try {
+      assert(api, 'api_required');
+      assert(value, 'address_required');
+      await api.isReady;
+
+      const result = await api.derive.balances.all(value);
+
+      setBalance({
+        assetId: 'default',
+        symbol: tokenSymbol[0],
+        decimals: tokenDecimals[0],
+        type: 'default',
+        balance: result?.availableBalance,
+        balanceFormat: formatBalance(result?.availableBalance || 0, {
+          withSiFull: true,
+          withUnit: false,
+        }),
+      });
+    } catch (err) {
+      showError((err as Error).message);
+    }
+  };
+
+  return balance;
 };
 
 // TODO: 获取其他资产
@@ -82,9 +104,11 @@ export const useUrc10ModuleAssets = (): Urc10ModuleAsset[] => {
 
   const getAssets = async (): Promise<void> => {
     try {
-      const { success, result }: Urc10ModuleAssetResponse = await get(
-        '/urc10_assets'
-      );
+      const res: Urc10ModuleAssetResponse = await get('/urc10_assets');
+
+      if (!res) return;
+
+      const { success, result } = res;
 
       if (response.ok && success) {
         setAssets(result.docs);

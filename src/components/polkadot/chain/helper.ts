@@ -24,19 +24,13 @@ export const DEFAULT_AUX = [
   'Aux9',
 ];
 
-export const DEFAULT_CHAIN_PROPERTIES: ChainProperties = registry.createType(
-  'ChainProperties'
-);
-
 export const DEFAULT_CHAIN_TYPE: ChainType = registry.createType(
   'ChainType',
   'Live'
 );
 
 export const DEFAULT_CHAIN_PROPS: ChainContextProps = {
-  properties: DEFAULT_CHAIN_PROPERTIES,
   systemChain: '<unknown>',
-  systemChainType: DEFAULT_CHAIN_TYPE,
   systemName: '<unknown>',
   systemVersion: '<unknown>',
   ss58Format: 42,
@@ -72,7 +66,7 @@ export async function getChainSystemInfo(
     api.rpc.system.chain(),
     api.rpc.system.chainType
       ? api.rpc.system.chainType()
-      : Promise.resolve(registry.createType('ChainType', 'Live')),
+      : Promise.resolve(DEFAULT_CHAIN_TYPE),
     api.rpc.system.name(),
     api.rpc.system.version(),
   ]);
@@ -81,35 +75,6 @@ export async function getChainSystemInfo(
     tokenDecimals: chainProperties.tokenDecimals,
     tokenSymbol: chainProperties.tokenSymbol,
   });
-
-  return {
-    properties,
-    systemChain: systemChain.toString(),
-    systemChainType,
-    systemName: systemName.toString(),
-    systemVersion: systemVersion.toString(),
-  };
-}
-
-export async function init(
-  api: ApiPromise,
-  store?: KeyringStore
-): Promise<ChainContextProps> {
-  assert(api, 'api_required');
-  await api.isReady;
-
-  const {
-    properties,
-    systemChain,
-    systemChainType,
-    systemName,
-    systemVersion,
-  } = await getChainSystemInfo(api);
-
-  const isDevelopment =
-    systemChainType.isDevelopment ||
-    systemChainType.isLocal ||
-    isTestChain(systemChain);
 
   const ss58Format = properties.ss58Format.unwrapOr(DEFAULT_SS58).toNumber();
   const tokenDecimals = properties.tokenDecimals.unwrapOr([DEFAULT_DECIMALS]);
@@ -126,8 +91,41 @@ export async function init(
     })
   );
 
+  const isDevelopment =
+    systemChainType.isDevelopment ||
+    systemChainType.isLocal ||
+    isTestChain(systemChain.toString());
+
+  return {
+    systemChain: systemChain.toString(),
+    isDevelopment,
+    systemName: systemName.toString(),
+    systemVersion: systemVersion.toString(),
+    ss58Format,
+    tokenDecimals: (tokenDecimals as BN[]).map((b) => b.toNumber()),
+    tokenSymbol: tokenSymbol.map((s: any) => s.toString()),
+  };
+}
+
+export async function init(
+  api: ApiPromise,
+  store?: KeyringStore
+): Promise<ChainContextProps> {
+  assert(api, 'api_required');
+  await api.isReady;
+
+  const {
+    systemChain,
+    isDevelopment,
+    systemName,
+    systemVersion,
+    ss58Format,
+    tokenDecimals,
+    tokenSymbol,
+  } = await getChainSystemInfo(api);
+
   formatBalance.setDefaults({
-    decimals: (tokenDecimals as BN[]).map((b) => b.toNumber()),
+    decimals: tokenDecimals,
     unit: tokenSymbol[0].toString(),
   });
 
@@ -143,14 +141,12 @@ export async function init(
   setDeriveCache(api.genesisHash.toHex(), deriveMapCache);
 
   return {
-    properties,
     systemChain,
-    systemChainType,
     systemName,
     systemVersion,
     ss58Format,
-    tokenDecimals: (tokenDecimals as BN[]).map((b) => b.toNumber()),
-    tokenSymbol: tokenSymbol.map((s: any) => s.toString()),
+    tokenDecimals,
+    tokenSymbol,
     genesisHash: api.genesisHash.toString(),
     isChainReady: true,
     isDevelopment,
