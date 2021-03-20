@@ -1,34 +1,31 @@
-import { memo, ReactElement, useEffect, useState } from 'react';
+import React, {
+  memo,
+  ReactElement,
+  useState,
+  useEffect,
+  useMemo,
+  useCallback,
+} from 'react';
 import type { BaseProps } from '@@/types';
-import { QueueTx, STATUS_COMPLETE } from '@components/polkadot/queue/types';
-import { useQueue } from '@@/hook';
-import { useNotice } from '@@/hook';
+import { useQueue, useNotice } from '@@/hook';
+import { Box } from '@material-ui/core';
+import type { QueueTx } from '@components/polkadot/queue/types';
+import { filterTx } from './helper';
 
 interface TransactionStatusProps extends BaseProps {}
-
-function filterTx(txqueue?: QueueTx[]): [QueueTx[], QueueTx[]] {
-  const allTx = (txqueue || []).filter(
-    ({ status }) => !['completed', 'incomplete'].includes(status)
-  );
-
-  return [
-    allTx,
-    allTx.filter(({ status }) => STATUS_COMPLETE.includes(status)),
-  ];
-}
 
 function TransactionStatus({
   children,
 }: TransactionStatusProps): ReactElement<TransactionStatusProps> {
   const { txqueue } = useQueue();
-  const [[allTx, completedTx], setAllTx] = useState<[QueueTx[], QueueTx[]]>([
+  const { showError, showInfo, showWarning, showSuccess } = useNotice();
+  const [[allTx, completedTx], setTx] = useState<[QueueTx[], QueueTx[]]>([
     [],
     [],
   ]);
-  const { showInfo, showError } = useNotice();
 
   useEffect(() => {
-    setAllTx(filterTx(txqueue));
+    setTx(filterTx(txqueue));
   }, [txqueue]);
 
   useEffect(() => {
@@ -42,8 +39,12 @@ function TransactionStatus({
         }
       }
       const message = `${status}[${section}.${method}]`;
-      if (error || status === 'cancelled') {
+      if (error) {
         showError(message);
+      } else if (status === 'cancelled') {
+        showWarning(message);
+      } else if (status === 'inblock') {
+        showSuccess(message);
       } else {
         showInfo(message);
       }
@@ -53,4 +54,4 @@ function TransactionStatus({
   return <>{children}</>;
 }
 
-export default memo(TransactionStatus);
+export const TransactionStatusProvider = memo(TransactionStatus);

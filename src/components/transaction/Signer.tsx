@@ -1,33 +1,25 @@
 import React, {
   memo,
   ReactElement,
-  useCallback,
+  useState,
   useEffect,
   useMemo,
-  useState,
+  useCallback,
 } from 'react';
 import type { BaseProps } from '@@/types';
-import { useAccount, useApi, useIsMountedRef } from '@@/hook';
+import { useAccount, useApi, useNotice } from '@@/hook';
+import { Box, TextField } from '@material-ui/core';
 import type { QueueTx } from '@components/polkadot/queue/types';
-import {
+import type {
   AddressFlags,
   AddressProxy,
   MultiState,
   PasswordState,
   ProxyState,
 } from './types';
-import { extractExternal, queryForMultisig, queryForProxy } from './util';
 import { useForm } from 'react-hook-form';
-import TextField from '@material-ui/core/TextField';
-import {
-  Box,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-} from '@material-ui/core';
-import Identicon from '@polkadot/react-identicon';
 import { AccountInfo } from '@components/account';
+import { extractExternal, queryForMultisig, queryForProxy } from './helper';
 
 interface TransactionSignerProps extends BaseProps {
   currentItem: QueueTx;
@@ -42,10 +34,8 @@ function TransactionSigner({
   onChange,
 }: TransactionSignerProps): ReactElement<TransactionSignerProps> {
   const { api } = useApi();
-  const mountedRef = useIsMountedRef();
-  const { register, handleSubmit, watch, errors, getValues } = useForm({
-    mode: 'all',
-  });
+  const { showError } = useNotice();
+  const { register } = useForm({ mode: 'all' });
   const { accounts } = useAccount();
   const [multiAddress, setMultiAddress] = useState<string | null>(null);
   const [proxyAddress, setProxyAddress] = useState<string | null>(null);
@@ -74,12 +64,6 @@ function TransactionSigner({
     requestAddress,
   ]);
 
-  const _updatePassword = useCallback(
-    (signPassword: string, isUnlockCached: boolean) =>
-      setSignPassword({ isUnlockCached, signPassword }),
-    []
-  );
-
   const passwordValidate = (value: string): boolean | string => {
     setSignPassword({ isUnlockCached: false, signPassword: value });
     return true;
@@ -94,9 +78,9 @@ function TransactionSigner({
 
     currentItem.extrinsic &&
       queryForProxy(api, accounts, requestAddress, currentItem.extrinsic)
-        .then((info) => mountedRef.current && setProxyInfo(info))
+        .then((info) => setProxyInfo(info))
         .catch(console.error);
-  }, [accounts, api, currentItem, mountedRef, requestAddress]);
+  }, [accounts, api, currentItem, requestAddress]);
 
   useEffect((): void => {
     setMultiInfo(null);
@@ -105,13 +89,11 @@ function TransactionSigner({
       extractExternal(proxyAddress || requestAddress).isMultisig &&
       queryForMultisig(api, requestAddress, proxyAddress, currentItem.extrinsic)
         .then((info): void => {
-          if (mountedRef.current) {
-            setMultiInfo(info);
-            setIsMultiCall(info?.isMultiCall || false);
-          }
+          setMultiInfo(info);
+          setIsMultiCall(info?.isMultiCall || false);
         })
         .catch(console.error);
-  }, [proxyAddress, api, currentItem, mountedRef, requestAddress]);
+  }, [proxyAddress, api, currentItem, requestAddress]);
 
   useEffect((): void => {
     onChange({
@@ -138,7 +120,7 @@ function TransactionSigner({
   ]);
 
   return (
-    <>
+    <Box>
       <Box mt={1}>
         <AccountInfo value={requestAddress} dense />
       </Box>
@@ -154,8 +136,8 @@ function TransactionSigner({
         />
       )}
       {children}
-    </>
+    </Box>
   );
 }
 
-export default memo(TransactionSigner);
+export const TransactionSignerProvider = memo(TransactionSigner);

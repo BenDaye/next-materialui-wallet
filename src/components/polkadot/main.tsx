@@ -1,4 +1,8 @@
 import type { BaseProps } from '@@/types';
+import {
+  TransactionDialogProvider,
+  TransactionStatusProvider,
+} from '@components/transaction';
 import { memo, ReactElement } from 'react';
 import {
   QueueProvider,
@@ -22,7 +26,13 @@ function Polkadot({
           <BlockProvider>
             <EventProvider>
               <AccountProvider>
-                <AddressProvider>{children}</AddressProvider>
+                <AddressProvider>
+                  <TransactionStatusProvider>
+                    <TransactionDialogProvider>
+                      {children}
+                    </TransactionDialogProvider>
+                  </TransactionStatusProvider>
+                </AddressProvider>
               </AccountProvider>
             </EventProvider>
           </BlockProvider>

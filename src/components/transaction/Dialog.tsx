@@ -1,128 +1,51 @@
-import CloseIcon from 'mdi-material-ui/Close';
 import React, {
   memo,
   ReactElement,
-  useCallback,
+  useState,
   useEffect,
   useMemo,
-  useState,
+  useCallback,
 } from 'react';
 import type { BaseProps } from '@@/types';
-import { useApi, useQueue } from '@@/hook';
-import { ApiPromise, SubmittableResult } from '@polkadot/api';
+import { useApi, useChain, useNotice, useQueue } from '@@/hook';
 import {
-  AVAIL_STATUS,
-  QueueTx,
-  QueueTxMessageSetStatus,
-  QueueTxResult,
-  QueueTxStatus,
-} from '@components/polkadot/queue/types';
-import { assert, isFunction } from '@polkadot/util';
-import { loggerFormat } from '@polkadot/util/logger';
-import type { DefinitionRpcExt } from '@polkadot/types/types';
-import {
+  AppBar,
+  Box,
   Button,
   Dialog,
   DialogActions,
   DialogContent,
-  Typography,
-  AppBar,
-  Toolbar,
   IconButton,
-  Box,
+  Toolbar,
+  Typography,
 } from '@material-ui/core';
-import ButtonWithLoading from '@components/common/ButtonWithLoading';
-import { AddressProxy, ItemState } from './types';
-import { AccountSigner, NOOP, NO_FLAGS, unlockAccount } from './util';
-import { useError } from '@@/hook';
+import {
+  AccountSigner,
+  extractCurrent,
+  NO_FLAGS,
+  sendRpc,
+  unlockAccount,
+} from './helper';
+import { AddressProxy } from './types';
+import { NOOP } from '@utils/emptyFunction';
 import keyring from '@polkadot/ui-keyring';
-import { TransactionContent, TransactionSigner } from '.';
-import delay from '@utils/delay';
+import { QueueTxStatus } from '@components/polkadot/queue/types';
+import type { SubmittableResult } from '@polkadot/api';
+import { delay } from '@utils/delay';
+import { ButtonWithLoading } from '@components/common';
+import CloseIcon from 'mdi-material-ui/Close';
+import { assert } from '@polkadot/util';
+import { TransactionContentProvider } from './Content';
+import { TransactionSignerProvider } from './Signer';
 
 interface TransactionDialogProps extends BaseProps {}
-
-async function submitRpc(
-  api: ApiPromise,
-  { method, section }: DefinitionRpcExt,
-  values: any[]
-): Promise<QueueTxResult> {
-  try {
-    const rpc = api.rpc as Record<
-      string,
-      Record<string, (...params: unknown[]) => Promise<unknown>>
-    >;
-
-    assert(
-      isFunction(rpc[section] && rpc[section][method]),
-      `api.rpc.${section}.${method} does not exist`
-    );
-
-    const result = await rpc[section][method](...values);
-
-    console.log('submitRpc: result ::', loggerFormat(result));
-
-    return {
-      result,
-      status: 'sent',
-    };
-  } catch (error) {
-    console.error(error);
-
-    return {
-      error: error as Error,
-      status: 'error',
-    };
-  }
-}
-
-async function sendRpc(
-  api: ApiPromise,
-  queueSetTxStatus: QueueTxMessageSetStatus,
-  { id, rpc, values = [] }: QueueTx
-): Promise<void> {
-  if (rpc) {
-    queueSetTxStatus(id, 'sending');
-
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-    const { error, result, status } = await submitRpc(api, rpc, values);
-
-    queueSetTxStatus(id, status, result, error);
-  }
-}
-
-function extractCurrent(txqueue: QueueTx[]): ItemState {
-  const available = txqueue.filter(({ status }) =>
-    AVAIL_STATUS.includes(status)
-  );
-  const currentItem = available[0] || null;
-  let isRpc = false;
-  let isVisible = false;
-
-  if (currentItem) {
-    if (
-      currentItem.status === 'queued' &&
-      !(currentItem.extrinsic || currentItem.payload)
-    ) {
-      isRpc = true;
-    } else if (currentItem.status !== 'signing') {
-      isVisible = true;
-    }
-  }
-
-  return {
-    count: available.length,
-    currentItem,
-    isRpc,
-    isVisible,
-    requestAddress: (currentItem && currentItem.accountId) || null,
-  };
-}
 
 function TransactionDialog({
   children,
 }: TransactionDialogProps): ReactElement<TransactionDialogProps> {
   const { api } = useApi();
-  const { setError } = useError();
+  const { isChainReady } = useChain();
+  const { showError, showWarning } = useNotice();
   const { queueSetTxStatus, txqueue } = useQueue();
   const [isSending, setIsSending] = useState<boolean>(false);
 
@@ -158,17 +81,12 @@ function TransactionDialog({
   }, [currentItem, queueSetTxStatus]);
 
   const _unlock = useCallback(async () => {
-    // let passwordError: string | null = null;
-
-    if (senderInfo.signAddress) {
-      if (senderInfo.flags.isUnlockable) {
-        unlockAccount(senderInfo);
-      } else if (senderInfo.flags.isHardware) {
-        // TODO: isHardware
-      }
+    assert(senderInfo.signAddress, 'senderInfo[signerAddress]_required');
+    if (senderInfo.flags.isUnlockable) {
+      unlockAccount(senderInfo);
+    } else if (senderInfo.flags.isHardware) {
+      // TODO: isHardware
     }
-
-    // return !passwordError;
   }, [senderInfo]);
 
   const _onSendPayload = useCallback(() => {
@@ -253,12 +171,18 @@ function TransactionDialog({
     setIsSending(true);
     await delay();
 
+    if (!currentItem) {
+      setIsSending(false);
+      showWarning('currentItem_required');
+      return;
+    }
+
     _unlock()
       .then(() => {
         currentItem?.payload ? _onSendPayload() : _onSend();
       })
       .catch((error) => {
-        setError(error as Error);
+        showError((error as Error).message);
         setIsSending(false);
       });
   }, [queueSetTxStatus, currentItem, senderInfo]);
@@ -266,12 +190,7 @@ function TransactionDialog({
   return (
     <>
       {children}
-      <Dialog
-        open={!!currentItem && isVisible}
-        fullScreen
-        aria-labelledby="sign-dialog"
-        scroll="paper"
-      >
+      <Dialog open={!!currentItem && isVisible} fullScreen scroll="paper">
         <AppBar position="static" color="primary">
           <Toolbar>
             <Box flexGrow={1}>
@@ -283,9 +202,11 @@ function TransactionDialog({
           </Toolbar>
         </AppBar>
         <DialogContent>
-          {currentItem && <TransactionContent currentItem={currentItem} />}
-          {currentItem && requestAddress && (
-            <TransactionSigner
+          {!!currentItem && (
+            <TransactionContentProvider currentItem={currentItem} />
+          )}
+          {!!currentItem && requestAddress && (
+            <TransactionSignerProvider
               currentItem={currentItem}
               requestAddress={requestAddress}
               onChange={setSenderInfo}
@@ -293,11 +214,11 @@ function TransactionDialog({
           )}
         </DialogContent>
         <DialogActions>
-          <Box flexGrow={1} />
           <ButtonWithLoading loading={isSending}>
             <Button
               variant="contained"
               autoFocus
+              fullWidth
               color="secondary"
               disabled={isSending}
               onClick={_onConfirm}
@@ -311,4 +232,4 @@ function TransactionDialog({
   );
 }
 
-export default memo(TransactionDialog);
+export const TransactionDialogProvider = memo(TransactionDialog);

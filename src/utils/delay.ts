@@ -5,3 +5,5 @@ export default async function delay(duration: number = 100) {
     }, duration);
   });
 }
+
+export { delay };

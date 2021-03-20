@@ -13,7 +13,6 @@ import { ErrorProvider } from '@components/error/provider';
 import { NoticeProvider } from '@components/notice/provider';
 import { SettingProvider } from '@components/setting/provider';
 import Layout from '@components/Layout';
-import { TransactionDialog, TransactionStatus } from '@components/balance';
 
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props;
@@ -49,13 +48,9 @@ export default function MyApp(props: AppProps) {
             <ErrorProvider>
               <SettingProvider>
                 <PolkadotProvider>
-                  <TransactionStatus>
-                    <TransactionDialog>
-                      <Layout>
-                        <Component {...pageProps} />
-                      </Layout>
-                    </TransactionDialog>
-                  </TransactionStatus>
+                  <Layout>
+                    <Component {...pageProps} />
+                  </Layout>
                 </PolkadotProvider>
               </SettingProvider>
             </ErrorProvider>

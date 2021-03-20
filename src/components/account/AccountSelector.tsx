@@ -11,7 +11,7 @@ import {
 import AccountMultiplePlusIcon from 'mdi-material-ui/AccountMultiplePlus';
 import MenuIcon from 'mdi-material-ui/Menu';
 
-import ChainList from '../wallet/ChainList';
+import { NodeList } from '@components/wallet';
 import { useRouter } from 'next/router';
 import { useChain } from '@@/hook';
 import type { AccountFullProps } from '@components/polkadot/account/types';
@@ -54,7 +54,7 @@ function AccountSelector({
             </Toolbar>
           </AppBar>
           <Box display="flex" flexWrap="nowrap" width={1}>
-            <ChainList />
+            <NodeList />
             <AccountSelectorList onSelect={onSelectAccount} />
           </Box>
         </Box>

@@ -80,4 +80,4 @@ function TransferList({
   );
 }
 
-export default memo(TransferList);
+export const TransferListProvider = memo(TransferList);

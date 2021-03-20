@@ -29,7 +29,7 @@ import {
 } from '@@/hook';
 import { useError } from '@@/hook';
 import type { BalanceProps } from '@components/polkadot/balance/types';
-import { TransferList } from '@components/balance';
+import { TransferListProvider } from '@components/transfer/List';
 import { getShortAddress } from '@utils/getShortAddress';
 import { getSortedAccountName } from '@utils/getSortedAccountName';
 
@@ -122,7 +122,7 @@ export default function BalancePage() {
       <Toolbar variant="dense" />
       <Toolbar />
       {thisBalance && (
-        <TransferList
+        <TransferListProvider
           symbol={thisBalance.symbol}
           owner={owner}
           counterparty={counterparty}

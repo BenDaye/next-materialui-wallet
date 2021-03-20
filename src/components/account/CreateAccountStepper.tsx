@@ -34,7 +34,7 @@ import {
   DeriveValidationOutput,
 } from './types';
 import { CreateResult, KeyringJson$Meta } from '@polkadot/ui-keyring/types';
-import { NOOP } from '@components/balance/util';
+import { NOOP } from '@utils/emptyFunction';
 import { useRouter } from 'next/router';
 import { useError } from '@@/hook';
 import { useSnackbar } from 'notistack';
