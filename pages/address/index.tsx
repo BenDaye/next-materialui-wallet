@@ -1,5 +1,5 @@
 import { AccountInfo, AccountInfoSkeleton } from '@components/account';
-import SaveAddressButton from '@components/address/SaveAddressButton';
+import { SaveAddressButton } from '@components/address/SaveButton';
 import { PageHeader } from '@components/common';
 import { useAddress } from '@@/hook';
 import {

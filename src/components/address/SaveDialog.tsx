@@ -1,4 +1,10 @@
-import React, { memo, ReactElement, useCallback, useState } from 'react';
+import React, {
+  memo,
+  ReactElement,
+  useCallback,
+  useEffect,
+  useState,
+} from 'react';
 import type { BaseProps } from '@@/types';
 import { useApi, useCall, useChain } from '@@/hook';
 import {
@@ -31,10 +37,10 @@ interface SaveAddressForm {
   name: string;
 }
 
-function SaveAddressDialog({
+function SaveAddressDialogBase({
   children,
   show,
-  onClose,
+  onClose = () => {},
 }: SaveAddressDialogProps): ReactElement<SaveAddressDialogProps> | null {
   const { api, isApiReady } = useApi();
   const { isChainReady, genesisHash } = useChain();
@@ -58,9 +64,17 @@ function SaveAddressDialog({
     watch,
     errors,
     reset,
+    clearErrors,
   } = useForm<SaveAddressForm>({
     mode: 'onBlur',
   });
+
+  useEffect(() => {
+    if (show) {
+      reset();
+      clearErrors();
+    }
+  }, [show]);
 
   const onSubmit = ({ name }: SaveAddressForm) => {
     const _address = info?.accountId?.toString();
@@ -81,11 +95,6 @@ function SaveAddressDialog({
       setError(error);
       setLoading(false);
     }
-  };
-
-  const handleCancel = () => {
-    reset();
-    onClose && onClose();
   };
 
   const addressValidate = (value: string): boolean | string => {
@@ -159,15 +168,10 @@ function SaveAddressDialog({
           </DialogContent>
           <DialogActions>
             <Box flexGrow={1}></Box>
-            <Button onClick={handleCancel} color="default">
+            <Button onClick={onClose} color="default">
               取消
             </Button>
-            <Button
-              color="secondary"
-              variant="contained"
-              type="submit"
-              disabled={loading}
-            >
+            <Button color="secondary" type="submit" disabled={loading}>
               保存
             </Button>
           </DialogActions>
@@ -177,4 +181,4 @@ function SaveAddressDialog({
   );
 }
 
-export default memo(SaveAddressDialog);
+export const SaveAddressDialog = memo(SaveAddressDialogBase);

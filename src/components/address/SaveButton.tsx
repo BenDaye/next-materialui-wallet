@@ -3,11 +3,11 @@ import type { BaseProps } from '@@/types';
 import { useChain } from '@@/hook';
 import { IconButton } from '@material-ui/core';
 import AccountMultiplePlusIcon from 'mdi-material-ui/AccountMultiplePlus';
-import SaveAddressDialog from './SaveAddressDialog';
+import { SaveAddressDialog } from './SaveDialog';
 
 interface SaveAddressButtonProps extends BaseProps {}
 
-function SaveAddressButton({
+function SaveAddressButtonBase({
   children,
 }: SaveAddressButtonProps): ReactElement<SaveAddressButtonProps> | null {
   const { isChainReady } = useChain();
@@ -17,6 +17,10 @@ function SaveAddressButton({
     setOpen(true);
   }, []);
 
+  const onClose = useCallback(() => {
+    setOpen(false);
+  }, []);
+
   if (!isChainReady) return null;
 
   return (
@@ -24,14 +28,9 @@ function SaveAddressButton({
       <IconButton edge="end" onClick={handleClick} disabled={open}>
         <AccountMultiplePlusIcon />
       </IconButton>
-      <SaveAddressDialog
-        show={open}
-        onClose={() => {
-          setOpen(false);
-        }}
-      />
+      <SaveAddressDialog show={open} onClose={onClose} />
     </>
   );
 }
 
-export default memo(SaveAddressButton);
+export const SaveAddressButton = memo(SaveAddressButtonBase);
