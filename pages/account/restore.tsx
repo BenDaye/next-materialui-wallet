@@ -5,7 +5,7 @@ import { PageHeader } from '@components/common';
 import { useChain } from '@@/hook';
 import { RestoreAccountParams } from '@components/account';
 
-export default function AuthRestorePage() {
+export default function RestoreAccountPage() {
   const { isChainReady } = useChain();
   return (
     <>

@@ -16,6 +16,7 @@ import { useRouter } from 'next/router';
 import { useChain } from '@@/hook';
 import type { AccountFullProps } from '@components/polkadot/account/types';
 import AccountSelectorList from './AccountSelectorList';
+import { ImportAccountButton } from './ImportButton';
 
 interface AccountSelectorProps extends BaseProps {}
 
@@ -48,9 +49,10 @@ function AccountSelector({
               <Box flexGrow={1}>
                 <Typography variant="subtitle1">选择账户</Typography>
               </Box>
-              <IconButton edge="end" onClick={() => router.push('/auth')}>
+              {/* <IconButton edge="end" onClick={() => router.push('/auth')}>
                 <AccountMultiplePlusIcon />
-              </IconButton>
+              </IconButton> */}
+              <ImportAccountButton />
             </Toolbar>
           </AppBar>
           <Box display="flex" flexWrap="nowrap" width={1}>

@@ -1,8 +1,8 @@
-export { default as CreateAccountConfirm } from './CreateAccountConfirm';
-export { default as CreateAccountIntro } from './CreateAccountIntro';
-export { default as CreateAccountParams } from './CreateAccountParams';
-export { default as CreateAccountSelectMnemonicWord } from './CreateAccountSelectMnemonicWord';
-export { default as CreateAccountStepper } from './CreateAccountStepper';
+export { CreateAccountConfirm } from './create/Confirm';
+export { CreateAccountIntro } from './create/Intro';
+export { CreateAccountParams } from './create/Params';
+export { CreateAccountReminder } from './create/Reminder';
+export { CreateAccountStepper } from './create/Stepper';
 
 export { default as RestoreAccountParams } from './RestoreAccountParams';
 export { default as RestoreAccountByBipOrRaw } from './RestoreAccountByBipOrRaw';

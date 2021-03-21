@@ -9,7 +9,7 @@ import { NodeListProvider } from '@components/setting/components/NodeList';
 export default function NodePage() {
   const router = useRouter();
   const { node, setNode } = useSetting();
-  const [selectedNode, setSelectedNode] = useState<Node>(node);
+  const [selectedNode, setSelectedNode] = useState<Node>(() => node);
 
   return (
     <>

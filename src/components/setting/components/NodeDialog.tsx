@@ -26,7 +26,7 @@ function NodeDialogBase({
   nodes,
   onChange,
 }: NodeDialogProps): ReactElement<NodeDialogProps> {
-  const [selectedNode, setSelectedNode] = useState<Node>(node);
+  const [selectedNode, setSelectedNode] = useState<Node>(() => node);
   return (
     <>
       <Dialog open={open} scroll="paper" fullWidth>

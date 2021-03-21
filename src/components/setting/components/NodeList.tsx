@@ -23,10 +23,8 @@ import {
   makeStyles,
   Theme,
 } from '@material-ui/core';
-import CatIcon from 'mdi-material-ui/Cat';
-import HelpCircleIcon from 'mdi-material-ui/HelpCircle';
-import { PolkadotIcon, KusamaIcon, UeccIcon } from '@components/common';
 import { Node } from '../types';
+import { NodeIcon } from './NodeIcon';
 
 type NodeListVariant =
   | 'icon'
@@ -62,23 +60,8 @@ function NodeList({
   const { isChainReady } = useChain();
   const { showError } = useNotice();
   const { node, nodes } = useSetting();
-  const [selectedNode, setSelectedNode] = useState<Node>(node);
+  const [selectedNode, setSelectedNode] = useState<Node>(() => node);
   const classes = useStyles();
-
-  const getNodeIcon = (name?: string): ReactNode => {
-    switch (name) {
-      case 'Polkadot':
-        return <PolkadotIcon fontSize="large" />;
-      case 'Kusama':
-        return <KusamaIcon fontSize="large" />;
-      case 'UECC':
-        return <UeccIcon fontSize="large" />;
-      case 'Sycamore':
-        return <CatIcon fontSize="large" />;
-      default:
-        return <HelpCircleIcon fontSize="large" />;
-    }
-  };
 
   useEffect(() => {
     if (selectedNode) {
@@ -100,7 +83,9 @@ function NodeList({
               {(variant === 'full' ||
                 variant === 'icon' ||
                 variant === 'icon&primary') && (
-                <ListItemIcon>{getNodeIcon(n.name)}</ListItemIcon>
+                <ListItemIcon>
+                  <NodeIcon name={n.name} fontSize="large" />
+                </ListItemIcon>
               )}
               {(variant === 'full' || variant === 'primary&secondary') && (
                 <ListItemText primary={n.name} secondary={n.description} />
