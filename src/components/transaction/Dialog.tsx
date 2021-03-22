@@ -47,7 +47,7 @@ function TransactionDialog({
   const { isChainReady } = useChain();
   const { showError, showWarning } = useNotice();
   const { queueSetTxStatus, txqueue } = useQueue();
-  const [isSending, setIsSending] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const { count, currentItem, isRpc, isVisible, requestAddress } = useMemo(
     () => extractCurrent(txqueue),
@@ -71,7 +71,7 @@ function TransactionDialog({
   }, [api, isRpc, currentItem, queueSetTxStatus]);
 
   const _onCancel = useCallback(() => {
-    setIsSending(false);
+    setLoading(false);
     if (!currentItem) return;
     const { id, signerCb = NOOP, txFailedCb = NOOP } = currentItem;
 
@@ -99,7 +99,7 @@ function TransactionDialog({
 
       signerCb(id, { id, ...result });
       queueSetTxStatus(id, 'completed');
-      setIsSending(false);
+      setLoading(false);
     }
   }, [queueSetTxStatus, currentItem, senderInfo, api]);
 
@@ -162,17 +162,17 @@ function TransactionDialog({
         queueSetTxStatus(id, 'error', {}, error);
         txFailedCb(error);
       } finally {
-        setIsSending(false);
+        setLoading(false);
       }
     }
   }, [queueSetTxStatus, currentItem, senderInfo, api]);
 
   const _onConfirm = useCallback(async () => {
-    setIsSending(true);
+    setLoading(true);
     await delay();
 
     if (!currentItem) {
-      setIsSending(false);
+      setLoading(false);
       showWarning('currentItem_required');
       return;
     }
@@ -183,7 +183,7 @@ function TransactionDialog({
       })
       .catch((error) => {
         showError((error as Error).message);
-        setIsSending(false);
+        setLoading(false);
       });
   }, [queueSetTxStatus, currentItem, senderInfo]);
 
@@ -214,13 +214,13 @@ function TransactionDialog({
           )}
         </DialogContent>
         <DialogActions>
-          <ButtonWithLoading loading={isSending}>
+          <ButtonWithLoading loading={loading}>
             <Button
               variant="contained"
               autoFocus
               fullWidth
               color="secondary"
-              disabled={isSending}
+              disabled={loading}
               onClick={_onConfirm}
             >
               确认

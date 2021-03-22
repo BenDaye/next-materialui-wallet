@@ -49,7 +49,7 @@ export default function TransferPage() {
   const sortedAccounts = useSortedAccounts(accounts);
   const balances = useBalance(currentAccount);
   const { queueExtrinsic } = useQueue();
-  const [isSending, setIsSending] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
 
   const {
     register,
@@ -107,21 +107,21 @@ export default function TransferPage() {
 
   const _onFailed = useCallback(
     (result: SubmittableResult | null) => {
-      mountedRef.current && setIsSending(false);
+      mountedRef.current && setLoading(false);
     },
-    [mountedRef, setIsSending]
+    [mountedRef, setLoading]
   );
 
   const _onSuccess = useCallback(
     (result: SubmittableResult | null) => {
-      mountedRef.current && setIsSending(false);
+      mountedRef.current && setLoading(false);
     },
-    [mountedRef, setIsSending]
+    [mountedRef, setLoading]
   );
 
   const _onStart = useCallback(() => {
-    mountedRef.current && setIsSending(true);
-  }, [mountedRef, setIsSending]);
+    mountedRef.current && setLoading(true);
+  }, [mountedRef, setLoading]);
 
   const _onUpdate = useCallback(() => {
     // console.log('update');
@@ -315,14 +315,14 @@ export default function TransferPage() {
             </Box>
           )}
           <Box mt={4}>
-            <ButtonWithLoading loading={isSending}>
+            <ButtonWithLoading loading={loading}>
               <Button
                 variant="contained"
                 color="secondary"
                 fullWidth
                 size="large"
                 type="submit"
-                disabled={isSending}
+                disabled={loading}
               >
                 提交
               </Button>

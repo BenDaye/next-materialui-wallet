@@ -4,11 +4,9 @@ import { useForm } from 'react-hook-form';
 import { ButtonWithLoading, PageFooter } from '@components/common';
 import { Box, Button, Container, TextField, Toolbar } from '@material-ui/core';
 import keyring from '@polkadot/ui-keyring';
-import { useChain } from '@@/hook';
 import { KeyringPair } from '@polkadot/keyring/types';
-import { useError, useNotice } from '@@/hook';
+import { useNotice } from '@@/hook';
 import { CreateResult } from '@polkadot/ui-keyring/types';
-import { useSnackbar } from 'notistack';
 import { useRouter } from 'next/router';
 
 interface RestoreAccountByKeystoreProps extends BaseProps {}
@@ -19,56 +17,59 @@ interface RestoreAccountByKeystoreForm {
   name?: string;
 }
 
-function createFromJson(value: string): KeyringPair {
-  return keyring.createFromJson(JSON.parse(value));
-}
-
-function RestoreAccountByKeystore({
+function Keystore({
   children,
 }: RestoreAccountByKeystoreProps): ReactElement<RestoreAccountByKeystoreProps> {
-  const { setError } = useError();
   const router = useRouter();
-  const { showSuccess } = useNotice();
+  const { showSuccess, showError } = useNotice();
   const { register, handleSubmit, errors, setValue } = useForm({
     mode: 'onBlur',
   });
   const [pair, setPair] = useState<KeyringPair | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
-  const onSubmit = ({ password }: RestoreAccountByKeystoreForm) => {
+  const onSubmit = async ({ password }: RestoreAccountByKeystoreForm) => {
     if (!pair) return;
     setLoading(true);
 
-    // TODO: 写进队列里, 防止阻塞
-    new Promise((resolve, reject) => {
-      setTimeout(() => {
-        try {
-          const result: CreateResult = keyring.addPair(pair, password);
-          showSuccess(`账户[${result.json.meta?.name}]导入成功`);
-          router.push('/wallet');
-        } catch (error) {
-          setError(error);
-        } finally {
-          setLoading(false);
-          resolve(true);
-        }
-      }, 100);
+    await new Promise((resolve) => {
+      try {
+        const result: CreateResult = keyring.addPair(pair, password);
+        showSuccess(`账户[${result.json.meta?.name}]导入成功`);
+        router.push('/wallet');
+      } catch (err) {
+        showError((err as Error).message);
+      } finally {
+        setLoading(false);
+        resolve(true);
+      }
     });
   };
 
-  const validKeystore = (value: string): boolean | string => {
-    if (!value) return true;
-    try {
-      setPair(createFromJson(value));
-      return true;
-    } catch (error) {
+  const keystoreValidate = async (value: string): Promise<true | string> => {
+    if (!value) {
       setPair(null);
-      return (error as Error).message || 'UNEXPECTED_ERROR';
+      return Promise.resolve('keystore_required');
     }
+    return await new Promise<true | string>((resolve) => {
+      try {
+        const result = keyring.createFromJson(JSON.parse(value));
+        setPair(result);
+        return resolve(true);
+      } catch (err) {
+        setPair(null);
+        return resolve((err as Error).message);
+      }
+    });
   };
 
+  const passwordValidate = (value: string): true | string =>
+    keyring.isPassValid(value) || '无效的密码';
+
   useEffect(() => {
-    setValue('name', (pair && pair.meta?.name) || '');
+    if (pair) {
+      setValue('name', pair.meta?.name || '');
+    }
   }, [pair]);
 
   return (
@@ -79,8 +80,7 @@ function RestoreAccountByKeystore({
             name="keystore"
             label="加密 KeyStore(JSON)"
             inputRef={register({
-              required: 'KEYSTORE_REQUIRED',
-              validate: validKeystore,
+              validate: keystoreValidate,
             })}
             InputLabelProps={{ shrink: true }}
             variant="filled"
@@ -109,9 +109,7 @@ function RestoreAccountByKeystore({
             name="password"
             label="密码"
             inputRef={register({
-              required: 'PASSWORD_REQUIRED',
-              validate: (value) =>
-                keyring.isPassValid(value) || 'INVALID_PASSWORD',
+              validate: passwordValidate,
             })}
             InputLabelProps={{ shrink: true }}
             variant="filled"
@@ -146,4 +144,4 @@ function RestoreAccountByKeystore({
   );
 }
 
-export default memo(RestoreAccountByKeystore);
+export const RestoreAccountByKeystore = memo(Keystore);

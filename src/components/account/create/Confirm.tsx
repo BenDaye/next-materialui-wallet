@@ -62,7 +62,7 @@ function Confirm({
   const { register, errors, handleSubmit, getValues } = useForm<ConfirmForm>({
     mode: 'all',
   });
-  const [isSending, setIsSending] = useState<boolean>(false);
+  const [loading, setLoading] = useState<boolean>(false);
   const metaName: string = useMemo(() => meta.name || '', [meta]);
 
   const nameValidate = (value: string): true | string => {
@@ -88,13 +88,13 @@ function Confirm({
 
   const onError = (err: Error): void => {
     showError(err.message);
-    setIsSending(false);
+    setLoading(false);
   };
 
   const onConfirm = useCallback(
     (form: ConfirmForm) => {
       setPassword(form.password);
-      setIsSending(true);
+      setLoading(true);
       createAccount(
         seed,
         pairType,
@@ -204,7 +204,7 @@ function Confirm({
                 color="primary"
                 variant="contained"
                 type="submit"
-                disabled={isSending}
+                disabled={loading}
               >
                 创建
               </Button>

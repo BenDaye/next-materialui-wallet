@@ -11,7 +11,6 @@ export default function RestoreAccountPage() {
     <>
       <PageHeader title="导入账户" />
       <Box py={1}>{isChainReady && <RestoreAccountParams />}</Box>
-      <Toolbar />
     </>
   );
 }

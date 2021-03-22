@@ -4,9 +4,9 @@ export { CreateAccountParams } from './create/Params';
 export { CreateAccountReminder } from './create/Reminder';
 export { CreateAccountStepper } from './create/Stepper';
 
-export { default as RestoreAccountParams } from './RestoreAccountParams';
-export { default as RestoreAccountByBipOrRaw } from './RestoreAccountByBipOrRaw';
-export { default as RestoreAccountByKeystore } from './RestoreAccountByKeystore';
+export { RestoreAccountParams } from './restore/Params';
+export { RestoreAccountByBipOrRaw } from './restore/BipOrRaw';
+export { RestoreAccountByKeystore } from './restore/Keystore';
 
 export { default as AccountInfo } from './AccountInfo';
 export { default as AccountInfoSkeleton } from './AccountInfoSkeleton';

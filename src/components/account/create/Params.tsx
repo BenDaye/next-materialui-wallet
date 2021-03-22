@@ -125,7 +125,7 @@ function Params({
               </Box>
             </List>
 
-            <Accordion defaultExpanded>
+            <Accordion>
               <AccordionSummary expandIcon={<MenuDownIcon />}>
                 <Typography>高级选项</Typography>
               </AccordionSummary>
