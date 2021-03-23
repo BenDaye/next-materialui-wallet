@@ -1,10 +1,6 @@
-export { default as ChainExplorer } from './ChainExplorer';
-export { default as BlockExplorer } from './BlockExplorer';
-export { default as EventExplorer } from './EventExplorer';
-export { default as BestFinalized } from './BestFinalized';
-export { default as BestNumber } from './BestNumber';
-export { default as TotalIssuance } from './TotalIssuance';
-export { default as Common } from './Common';
+export { ChainExplorer } from './chain/Main';
+export { BlockExplorer } from './block/List';
+export { EventExplorer } from './event/List';
 export { default as Block } from './Block';
 export { default as BlockByHash } from './BlockByHash';
 export { default as BlockByNumber } from './BlockByNumber';
