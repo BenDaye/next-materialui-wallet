@@ -7,7 +7,7 @@ import { BalanceList } from '@components/wallet';
 import { AccountSelector, AccountInfo } from '@components/account';
 import { PageHeader } from '@components/common';
 
-export default function Wallet() {
+export default function WalletPage() {
   const { currentAccount } = useAccount();
 
   // TODO: 扫码按钮

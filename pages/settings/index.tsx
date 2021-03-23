@@ -19,7 +19,7 @@ import React from 'react';
 import { useRouter } from 'next/router';
 import { PageHeader } from '@components/common';
 
-export default function Settings() {
+export default function SettingsPage() {
   const router = useRouter();
   return (
     <>

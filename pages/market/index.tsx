@@ -1,8 +1,6 @@
-import { Box } from '@material-ui/core'
-import React from 'react'
+import { Box } from '@material-ui/core';
+import React from 'react';
 
-export default function Market() {
-  return (
-    <Box>Market</Box>
-  )
+export default function MarketPage() {
+  return <Box>Market</Box>;
 }

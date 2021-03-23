@@ -22,7 +22,7 @@ function Explorer({
   return (
     <Container>
       {events.map((event, index, array) => (
-        <EventListItem key={`event-${index}`} value={event} />
+        <EventListItem key={`event-${index}`} value={event} showBlock />
       ))}
     </Container>
   );

@@ -14,7 +14,7 @@ import {
 } from '@material-ui/core';
 import React, { ChangeEvent, useState } from 'react';
 
-export default function Explorer() {
+export default function ExplorerPage() {
   const [currentTabIndex, setCurrentTabIndex] = useState<number>(0);
   return (
     <>

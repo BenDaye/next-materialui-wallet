@@ -31,6 +31,8 @@ import { useRouter } from 'next/router';
 
 interface EventListItemProps extends BaseProps {
   value: KeyedEvent;
+  showBlock?: boolean;
+  elevation?: number;
 }
 
 const AccordionSummary = withStyles({
@@ -46,6 +48,8 @@ const AccordionSummary = withStyles({
 function ListItem({
   children,
   value,
+  showBlock = false,
+  elevation = 1,
 }: EventListItemProps): ReactElement<EventListItemProps> {
   const { isChainReady } = useChain();
   const { showError } = useNotice();
@@ -56,7 +60,7 @@ function ListItem({
   } = record;
 
   return (
-    <Accordion TransitionProps={{ unmountOnExit: true }}>
+    <Accordion TransitionProps={{ unmountOnExit: true }} elevation={elevation}>
       <AccordionSummary expandIcon={<MenuDownIcon />}>
         <List disablePadding>
           <MuiListItem disableGutters>
@@ -80,15 +84,19 @@ function ListItem({
           <EventListItemParams value={record.event} />
         </Box>
       </AccordionDetails>
-      <Divider />
-      <AccordionActions>
-        <Button
-          color="secondary"
-          onClick={() => router.push(`/block/${blockHash}`)}
-        >
-          {`${formatNumber(blockNumber)}-${indexes[0]}`}
-        </Button>
-      </AccordionActions>
+      {showBlock && (
+        <>
+          <Divider />
+          <AccordionActions>
+            <Button
+              color="secondary"
+              onClick={() => router.push(`/block/${blockHash}`)}
+            >
+              {`${formatNumber(blockNumber)}-${indexes[0]}`}
+            </Button>
+          </AccordionActions>
+        </>
+      )}
     </Accordion>
   );
 }
