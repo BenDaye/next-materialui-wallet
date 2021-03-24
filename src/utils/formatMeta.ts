@@ -34,5 +34,5 @@ export function formatMeta(meta?: Meta): string[] | null {
     .replace(/#(<weight>| <weight>).*<\/weight>/, '');
   const parts = splitParts(combined.replace(/\\/g, '').replace(/`/g, ''));
 
-  return parts;
+  return parts.map((p, i) => (i % 2 ? `[${p}]` : p));
 }

@@ -1,36 +1,33 @@
-import React, {
-  memo,
-  ReactElement,
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-} from 'react';
+import React, { memo, ReactElement, useMemo } from 'react';
 import type { ParamProps } from '../types';
 import { useChain } from '@@/hook';
-import { Box, List, ListItem, ListItemText } from '@material-ui/core';
+import { List, ListItem, ListItemText } from '@material-ui/core';
 
-function Unknown({
+function Moment({
   name,
   label,
   value: { isValid, value },
 }: ParamProps): ReactElement<ParamProps> | null {
   const { isChainReady } = useChain();
 
+  const moment: string = useMemo(() => {
+    if (!value) return '';
+    return new Date(Number(value.toString())).toLocaleString();
+  }, [value, isChainReady]);
+
   if (!isChainReady) return null;
   return (
     <List disablePadding dense>
       <ListItem disableGutters>
         <ListItemText
-          primary={label || name || 'Unknown'}
+          primary={label || name || 'Moment'}
           primaryTypographyProps={{
             variant: 'caption',
             color: 'textSecondary',
           }}
-          // TODO: 格式化json
-          secondary={value.toString()}
+          secondary={moment}
           secondaryTypographyProps={{
-            variant: 'body2',
+            variant: 'caption',
             color: 'textPrimary',
             className: 'word-break',
           }}
@@ -41,4 +38,4 @@ function Unknown({
   );
 }
 
-export default memo(Unknown);
+export default memo(Moment);

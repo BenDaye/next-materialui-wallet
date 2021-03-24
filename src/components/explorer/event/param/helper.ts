@@ -5,6 +5,7 @@ import type { ComponentMap, ParamProps, TypeToComponent } from '../types';
 
 import Account from './Account';
 import Balance from './Balance';
+import Moment from './Moment';
 import Unknown from './Unknown';
 
 const SPECIAL_TYPES = ['AccountId', 'AccountIndex', 'Address', 'Balance'];
@@ -25,7 +26,7 @@ const componentDef: TypeToComponent[] = [
   // { c: Hash512, t: ['H512'] },
   // { c: KeyValue, t: ['KeyValue'] },
   // { c: KeyValueArray, t: ['Vec<KeyValue>'] },
-  // { c: Moment, t: ['Moment', 'MomentOf'] },
+  { c: Moment, t: ['Moment', 'MomentOf'] },
   // { c: Null, t: ['Null'] },
   // { c: OpaqueCall, t: ['OpaqueCall'] },
   // { c: Option, t: ['Option'] },
@@ -96,6 +97,8 @@ export const fromDef = ({ displayName, info, sub, type }: TypeDef): string => {
 
 export const getComponent = (def: TypeDef): ComponentType<ParamProps> => {
   const type = fromDef(def);
+  console.log(type);
+
   const Component = components[type];
 
   return Component || Unknown;

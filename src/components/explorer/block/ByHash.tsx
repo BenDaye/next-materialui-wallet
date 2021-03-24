@@ -8,13 +8,22 @@ import React, {
 } from 'react';
 import type { BaseProps } from '@@/types';
 import { useChain, useNotice, useApi } from '@@/hook';
-import { Box } from '@material-ui/core';
+import {
+  Box,
+  List,
+  ListItem,
+  ListItemText,
+  Typography,
+} from '@material-ui/core';
 import { KeyedEvent } from '@components/polkadot/event/types';
 import type { EventRecord, SignedBlock } from '@polkadot/types/interfaces';
 import { HeaderExtended } from '@polkadot/api-derive';
 import { transformResult } from './helper';
 import { EventListItem } from '../event/ListItem';
 import { ExtrinsicItem } from './Extrinsic';
+import { Skeleton } from '@material-ui/lab';
+import { BlockItem } from './Item';
+import { BlockLog } from './Log';
 
 interface BlockByHashProps extends BaseProps {
   value: string;
@@ -30,6 +39,11 @@ function ByHash({
   const [events, setEvents] = useState<KeyedEvent[]>([]);
   const [block, setBlock] = useState<SignedBlock | null>(null);
   const [header, setHeader] = useState<HeaderExtended | null>(null);
+
+  const systemEvents: KeyedEvent[] = useMemo(
+    () => events.filter(({ record: { phase } }) => !phase.isApplyExtrinsic),
+    [events]
+  );
 
   useEffect(() => {
     if (!value) return;
@@ -49,16 +63,57 @@ function ByHash({
   if (!isChainReady) return null;
   return (
     <Box display="flex" flexDirection="column" className="word-break">
-      <Box mt={2}>
-        {block?.block.extrinsics.map((extrinsic, index) => (
-          <ExtrinsicItem
-            key={`extrinsic-${index}`}
-            index={index}
-            events={events}
-            blockNumber={header?.number.unwrap()}
-            extrinsic={extrinsic}
-          />
-        ))}
+      <Box pt={2}>
+        <Box mb={2}>
+          <Typography variant="subtitle1" gutterBottom>
+            信息
+          </Typography>
+          {header && <BlockItem value={header} />}
+        </Box>
+        <Box mb={2}>
+          <Typography variant="subtitle1" gutterBottom>
+            事件
+          </Typography>
+          {block?.block.extrinsics.map((extrinsic, index) => (
+            <ExtrinsicItem
+              key={`extrinsic-${index}`}
+              index={index}
+              events={events}
+              blockNumber={header?.number.unwrap()}
+              extrinsic={extrinsic}
+            />
+          ))}
+        </Box>
+        <Box mb={2}>
+          <Typography variant="subtitle1" gutterBottom>
+            系统事件
+          </Typography>
+          {systemEvents?.length ? (
+            systemEvents.map((e, i) => (
+              <EventListItem key={`system_event-${i}`} value={e} />
+            ))
+          ) : (
+            <List disablePadding>
+              <ListItem dense>
+                <ListItemText primary="暂无系统事件" />
+              </ListItem>
+            </List>
+          )}
+        </Box>
+        <Box mb={2}>
+          <Typography variant="subtitle1" gutterBottom>
+            日志
+          </Typography>
+          {header?.digest.logs.isEmpty ? (
+            <List disablePadding>
+              <ListItem dense>
+                <ListItemText primary="暂无日志" />
+              </ListItem>
+            </List>
+          ) : (
+            <BlockLog value={header?.digest.logs || []} />
+          )}
+        </Box>
       </Box>
     </Box>
   );
