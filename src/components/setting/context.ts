@@ -4,7 +4,7 @@ import { SettingContextProps, Node } from './types';
 
 export const SettingContext: Context<SettingContextProps> = createContext<SettingContextProps>(
   {
-    node: DEFAULT_NODES[0],
+    node: DEFAULT_NODES[1],
     nodes: DEFAULT_NODES,
     setNode: (node: Node) => {},
     showNodeDialogAction: () => {},
