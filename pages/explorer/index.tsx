@@ -1,8 +1,6 @@
-import {
-  BlockExplorer,
-  ChainExplorer,
-  EventExplorer,
-} from '@components/explorer';
+import { ChainExplorer } from '@components/chain';
+import { BlockExplorer } from '@components/block';
+import { EventExplorer } from '@components/event';
 import {
   AppBar,
   Box,

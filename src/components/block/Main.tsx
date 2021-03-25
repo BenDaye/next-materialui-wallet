@@ -19,6 +19,7 @@ import {
 import { formatNumber } from '@polkadot/util';
 import type { HeaderExtended } from '@polkadot/api-derive';
 import { useRouter } from 'next/router';
+import { BlockList } from './List';
 
 interface BlockExplorerProps extends BaseProps {}
 
@@ -34,29 +35,7 @@ function Explorer({
   return (
     <Container>
       <Paper>
-        <List disablePadding>
-          {lastHeaders.map((header: HeaderExtended, index, array) => (
-            <ListItem
-              button
-              key={header.number.toNumber()}
-              divider={index < array.length - 1}
-              onClick={() => router.push(`/block/${header.hash.toHex()}`)}
-            >
-              <ListItemText
-                primary={formatNumber(header.number.toNumber())}
-                primaryTypographyProps={{
-                  color: 'secondary',
-                }}
-                secondary={header.hash.toHex()}
-                secondaryTypographyProps={{
-                  className: 'text-overflow-ellipsis_one_line',
-                  variant: 'caption',
-                  component: 'p',
-                }}
-              />
-            </ListItem>
-          ))}
-        </List>
+        <BlockList value={lastHeaders} />
       </Paper>
     </Container>
   );

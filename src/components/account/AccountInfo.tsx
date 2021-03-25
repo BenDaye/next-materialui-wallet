@@ -49,6 +49,7 @@ interface AccountInfoProps extends BaseProps {
   select?: boolean;
   onSelect?: (info: AccountFullProps) => void;
   dense?: boolean;
+  disableGutters?: boolean;
   onlyItem?: boolean;
   showBadge?: boolean;
 }
@@ -73,6 +74,7 @@ function AccountInfo({
   select = false,
   onSelect,
   dense = false,
+  disableGutters = false,
   onlyItem = false,
   showBadge = false,
 }: AccountInfoProps): ReactElement<AccountInfoProps> | null {
@@ -117,64 +119,43 @@ function AccountInfo({
   if (!value) return <AccountInfoSkeleton />;
 
   const MainItem: ReactElement = (
-    <ListItem
-      button
-      onClick={handleClick}
-      divider={showAddress || showBalance}
-      dense={dense}
-    >
-      <ListItemAvatar>
-        <Identicon value={value} size={32} />
-      </ListItemAvatar>
-      <ListItemText
-        primary={formatName}
-        primaryTypographyProps={{
-          variant: dense ? 'body2' : 'body1',
-        }}
-        secondary={
-          select || !showAddress ? getShortAddress(value) : systemChain
-        }
-        secondaryTypographyProps={{ variant: 'caption' }}
-      />
-      <ListItemSecondaryAction>
-        {select ? (
-          <Checkbox
-            checked={value === currentAccount}
-            disabled={value === currentAccount}
-            onChange={() => setCurrentAccount(value)}
-          />
-        ) : showQrcode ? (
-          <QrcodeIcon onClick={() => setShowQr(true)} />
-        ) : showBadge ? (
-          value === currentAccount && (
-            <Chip label="当前账户" color="secondary" size="small" />
-          )
-        ) : null}
-      </ListItemSecondaryAction>
-    </ListItem>
-  );
-
-  if (onlyItem) {
-    return MainItem;
-  }
-
-  return (
     <>
-      <Paper className={selectClass}>
-        <List disablePadding={dense}>
-          {MainItem}
-          {showAddress && (
-            <ListItem dense>
-              <ListItemText primary="地址" />
-              <ListItemSecondaryAction>
-                <Typography color="textPrimary" variant="caption">
-                  {getShortAddress(value)}
-                </Typography>
-              </ListItemSecondaryAction>
-            </ListItem>
-          )}
-        </List>
-      </Paper>
+      <ListItem
+        button
+        onClick={handleClick}
+        divider={showAddress || showBalance}
+        dense={dense}
+        disableGutters={disableGutters}
+      >
+        <ListItemAvatar>
+          <Identicon value={value} size={32} />
+        </ListItemAvatar>
+        <ListItemText
+          primary={formatName}
+          primaryTypographyProps={{
+            variant: dense ? 'body2' : 'body1',
+          }}
+          secondary={
+            select || !showAddress ? getShortAddress(value) : systemChain
+          }
+          secondaryTypographyProps={{ variant: 'caption' }}
+        />
+        <ListItemSecondaryAction>
+          {select ? (
+            <Checkbox
+              checked={value === currentAccount}
+              disabled={value === currentAccount}
+              onChange={() => setCurrentAccount(value)}
+            />
+          ) : showQrcode ? (
+            <QrcodeIcon onClick={() => setShowQr(true)} />
+          ) : showBadge ? (
+            value === currentAccount && (
+              <Chip label="当前账户" color="secondary" size="small" />
+            )
+          ) : null}
+        </ListItemSecondaryAction>
+      </ListItem>
       <Dialog open={showQr} onClose={() => setShowQr(false)} fullWidth>
         <List>
           <ListItem dense>
@@ -214,6 +195,30 @@ function AccountInfo({
           </Button>
         </DialogActions>
       </Dialog>
+    </>
+  );
+
+  if (onlyItem) {
+    return MainItem;
+  }
+
+  return (
+    <>
+      <Paper className={selectClass}>
+        <List disablePadding={dense}>
+          {MainItem}
+          {showAddress && (
+            <ListItem dense>
+              <ListItemText primary="地址" />
+              <ListItemSecondaryAction>
+                <Typography color="textPrimary" variant="caption">
+                  {getShortAddress(value)}
+                </Typography>
+              </ListItemSecondaryAction>
+            </ListItem>
+          )}
+        </List>
+      </Paper>
     </>
   );
 }

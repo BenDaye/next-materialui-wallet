@@ -102,7 +102,20 @@ function Item({
             }}
           />
         </ListItem>
-        {author && <AccountInfo value={author.toString()} onlyItem dense />}
+        {author && (
+          <>
+            <ListItem dense>
+              <ListItemText
+                primary="作者"
+                primaryTypographyProps={{
+                  color: 'textSecondary',
+                  variant: 'caption',
+                }}
+              />
+            </ListItem>
+            <AccountInfo value={author.toString()} onlyItem dense />
+          </>
+        )}
       </List>
     </Paper>
   );

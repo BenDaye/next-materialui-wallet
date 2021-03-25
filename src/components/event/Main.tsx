@@ -9,7 +9,7 @@ import React, {
 import type { BaseProps } from '@@/types';
 import { useChain, useNotice, useEvent } from '@@/hook';
 import { Box, Container } from '@material-ui/core';
-import { EventListItem } from './ListItem';
+import { EventList } from './List';
 
 interface EventExplorerProps extends BaseProps {}
 
@@ -21,9 +21,7 @@ function Explorer({
   const events = useEvent();
   return (
     <Container>
-      {events.map((event, index, array) => (
-        <EventListItem key={`event-${index}`} value={event} showBlock />
-      ))}
+      <EventList value={events} showBlock />
     </Container>
   );
 }

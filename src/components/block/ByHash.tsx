@@ -19,8 +19,8 @@ import { KeyedEvent } from '@components/polkadot/event/types';
 import type { EventRecord, SignedBlock } from '@polkadot/types/interfaces';
 import { HeaderExtended } from '@polkadot/api-derive';
 import { transformResult } from './helper';
-import { EventListItem } from '../event/ListItem';
-import { ExtrinsicItem } from './Extrinsic';
+import { EventListItem } from '../event';
+import { ExtrinsicList } from '../extrinsic';
 import { Skeleton } from '@material-ui/lab';
 import { BlockItem } from './Item';
 import { BlockLog } from './Log';
@@ -68,21 +68,19 @@ function ByHash({
           <Typography variant="subtitle1" gutterBottom>
             信息
           </Typography>
-          {header && <BlockItem value={header} />}
+          {header ? <BlockItem value={header} /> : <Skeleton />}
         </Box>
         <Box mb={2}>
           <Typography variant="subtitle1" gutterBottom>
             事件
           </Typography>
-          {block?.block.extrinsics.map((extrinsic, index) => (
-            <ExtrinsicItem
-              key={`extrinsic-${index}`}
-              index={index}
-              events={events}
+          {block?.block.extrinsics && (
+            <ExtrinsicList
               blockNumber={header?.number.unwrap()}
-              extrinsic={extrinsic}
+              events={events}
+              value={block.block.extrinsics}
             />
-          ))}
+          )}
         </Box>
         <Box mb={2}>
           <Typography variant="subtitle1" gutterBottom>
