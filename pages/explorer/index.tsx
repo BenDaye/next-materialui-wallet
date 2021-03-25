@@ -10,25 +10,47 @@ import {
   TextField,
   Toolbar,
 } from '@material-ui/core';
-import React, { ChangeEvent, useState } from 'react';
+import React, { ChangeEvent, useCallback, useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { isHex } from '@polkadot/util';
+import { useRouter } from 'next/router';
+
+interface SearchForm {
+  searchKey: string;
+}
 
 export default function ExplorerPage() {
   const [currentTabIndex, setCurrentTabIndex] = useState<number>(0);
+  const { register, handleSubmit, errors } = useForm<SearchForm>({
+    mode: 'all',
+  });
+  const router = useRouter();
+
+  const searchKeyValidate = (value: string): true | string => {
+    return isHex(value) || !Number.isNaN(Number(value)) || '无效的区块号';
+  };
+
+  const onSubmit = useCallback(({ searchKey }: SearchForm) => {
+    router.push(`/block/${searchKey}`);
+  }, []);
   return (
     <>
       <AppBar position="fixed">
         <Toolbar>
           <Box flexGrow={1}>
-            <NoSsr>
+            <form onSubmit={handleSubmit(onSubmit)}>
               <TextField
-                id="query_block"
-                label="查询区块(哈希或高度)"
+                name="searchKey"
+                label={errors.searchKey?.message || '查询区块(哈希或高度)'}
+                inputRef={register({ validate: searchKeyValidate })}
                 variant="filled"
                 color="secondary"
                 fullWidth
                 margin="dense"
+                error={!!errors.searchKey}
+                type="search"
               />
-            </NoSsr>
+            </form>
           </Box>
         </Toolbar>
         <Box flexGrow={1}>
