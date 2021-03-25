@@ -1,14 +1,16 @@
-import { useAccount, useChain } from '@@/hook';
-import { Box } from '@material-ui/core';
+import { useAccount, useChain, useSetting } from '@@/hook';
+import { Box, Typography } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import Image from 'next/image';
 import { useRouter } from 'next/router';
 import styles from '@styles/Layout.module.css';
+import { NodeIcon } from '@components/setting/components/NodeIcon';
 
 export default function Home() {
   const router = useRouter();
   const { hasAccount } = useAccount();
   const { isChainReady } = useChain();
+  const { node } = useSetting();
 
   useEffect(() => {
     const logo: HTMLElement = document.getElementById('logo') as HTMLElement;
@@ -45,7 +47,9 @@ export default function Home() {
           id="logo"
           className="animate__animated animate__pulse animate__infinite"
         >
-          <Image src="/img/loading.png" alt="logo" height="80" width="80" />
+          <Typography variant="h1">
+            <NodeIcon name={node.name} fontSize="inherit" />
+          </Typography>
         </Box>
       </Box>
     </Box>

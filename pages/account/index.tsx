@@ -13,20 +13,14 @@ import {
 import AccountMultiplePlusIcon from 'mdi-material-ui/AccountMultiplePlus';
 import { useRouter } from 'next/router';
 import React, { Fragment } from 'react';
+import { ImportAccountButton } from '@components/account/ImportButton';
 
 export default function AccountsPage() {
   const { hasAccount, accounts } = useAccount();
   const router = useRouter();
   return (
     <>
-      <PageHeader
-        title="账户管理"
-        right={
-          <IconButton edge="end" onClick={() => router.push('/auth')}>
-            <AccountMultiplePlusIcon />
-          </IconButton>
-        }
-      />
+      <PageHeader title="账户管理" right={<ImportAccountButton />} />
       <Container>
         <Box display="flex" flexDirection="column" marginTop={1}>
           {hasAccount ? (
