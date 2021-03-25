@@ -169,7 +169,7 @@ export default function TransferPage() {
     [isDefaultAssetBalance, api, isApiReady]
   );
 
-  if (!isApiReady || !isChainReady) {
+  if (!api || !isApiReady || !isChainReady) {
     return (
       <Backdrop open={true}>
         <CircularProgress color="inherit" />
@@ -257,8 +257,7 @@ export default function TransferPage() {
               variant="filled"
               fullWidth
               InputLabelProps={{ shrink: true }}
-              // autoFocus
-              // defaultValue={0}
+              autoFocus
               error={!!errors.amount}
               helperText={
                 errors.amount?.message ||

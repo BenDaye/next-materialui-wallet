@@ -35,8 +35,8 @@ export const useAccountBaseByAddress = (
   const { isAccount } = useAccount();
   const { isAddress } = useAddress();
 
-  const type: AccountTypeInLocal = useMemo(() => {
-    if (!value || !isChainReady) return 'unknown';
+  const type: AccountTypeInLocal = useMemo((): AccountTypeInLocal => {
+    if (!value || !isChainReady || !isAccount || !isAddress) return 'unknown';
     try {
       return isAccount(value)
         ? 'isAccount'
@@ -48,7 +48,7 @@ export const useAccountBaseByAddress = (
     }
   }, [isChainReady, value, isAccount, isAddress]);
 
-  const keyringAddress: KeyringAddress | null = useMemo(() => {
+  const keyringAddress: KeyringAddress | null = useMemo((): KeyringAddress | null => {
     if (!value || !isChainReady || !type || type === 'unknown') return null;
     try {
       switch (type) {
@@ -74,10 +74,28 @@ export const useAccountBaseByAddress = (
     : null;
 };
 
+export const getAccount = (value: string | null): AccountBaseProps | null => {
+  if (!value) return null;
+  try {
+    const result = keyring.getAccount(value);
+    return result
+      ? {
+          ...result,
+          name: result.meta.name || '<unknown>',
+          shortAddress: getShortAddress(result.address),
+          isDevelopment: !!result.meta.isTesting,
+        }
+      : null;
+  } catch (error) {
+    return null;
+  }
+};
+
 export const useSortedAccounts = (value: string[]): AccountBaseProps[] => {
-  if (!value) return [];
+  const { isChainReady } = useChain();
+  if (!value || !isChainReady) return [];
   return value
-    .map((v) => useAccountBaseByAddress(v))
+    .map((v) => getAccount(v))
     .filter((v): v is AccountBaseProps => !!v)
     .sort((a, b) => (a.meta.whenCreated || 0) - (b.meta.whenCreated || 0));
 };
