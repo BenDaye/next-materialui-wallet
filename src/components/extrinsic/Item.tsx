@@ -22,6 +22,7 @@ import MenuDownIcon from 'mdi-material-ui/MenuDown';
 import type { KeyedEvent } from '@components/polkadot/event/types';
 import { EventParam, EventListItem } from '@components/event';
 import type { BlockNumber, Extrinsic } from '@polkadot/types/interfaces';
+import { IExtrinsic, IMethod } from '@polkadot/types/types';
 import { formatMeta } from '@utils/formatMeta';
 import type { Extracted, ParamDef } from './types';
 import { extractState, getEra } from './helper';
@@ -29,10 +30,13 @@ import { formatBalance, formatNumber } from '@polkadot/util';
 import { AccountInfo } from '@components/account';
 
 interface ExtrinsicItemProps extends BaseProps {
-  index: number;
+  index?: number;
   blockNumber?: BlockNumber;
   events?: KeyedEvent[];
-  extrinsic: Extrinsic;
+  extrinsic: IExtrinsic | IMethod;
+  defaultExpanded?: boolean;
+  withHash?: boolean;
+  withSignature?: boolean;
 }
 
 const AccordionSummary = withStyles({
@@ -51,6 +55,9 @@ function Item({
   blockNumber,
   events = [],
   extrinsic,
+  defaultExpanded,
+  withHash = false,
+  withSignature = false,
 }: ExtrinsicItemProps): ReactElement<ExtrinsicItemProps> {
   const { isChainReady } = useChain();
   const { showError } = useNotice();
@@ -71,31 +78,15 @@ function Item({
     values: [],
   });
 
-  const mortality: string | null = useMemo((): string | null => {
-    if (!extrinsic.isSigned) return null;
-    const era = getEra(extrinsic, blockNumber);
-
-    return era
-      ? `存在的, 起始 #{${formatNumber(era[0])}} 直至 #{${formatNumber(
-          era[1]
-        )}}`
-      : '持续的';
-  }, [blockNumber, extrinsic]);
-
-  const tip: string | null = useMemo((): string | null => {
-    if (!extrinsic.tip) return null;
-
-    const _tip = formatBalance(extrinsic.tip, { withSiFull: true });
-
-    return _tip === '0' ? null : _tip;
-  }, [extrinsic]);
-
   useEffect(() => {
-    setExtracted(extractState(extrinsic, true, true));
+    setExtracted(extractState(extrinsic, withHash, withSignature));
   }, [extrinsic]);
 
   return (
-    <Accordion TransitionProps={{ unmountOnExit: true }}>
+    <Accordion
+      TransitionProps={{ unmountOnExit: true }}
+      defaultExpanded={defaultExpanded}
+    >
       <AccordionSummary expandIcon={<MenuDownIcon />}>
         <List disablePadding>
           <ListItem disableGutters>
@@ -167,57 +158,7 @@ function Item({
                 />
               </ListItem>
             )}
-            {mortality && (
-              <ListItem disableGutters button>
-                <ListItemText
-                  primary="生命周期"
-                  primaryTypographyProps={{
-                    color: 'secondary',
-                  }}
-                  secondary={mortality}
-                  secondaryTypographyProps={{
-                    className: 'word-break',
-                    variant: 'caption',
-                    component: 'p',
-                    color: 'textPrimary',
-                  }}
-                />
-              </ListItem>
-            )}
-            {tip && (
-              <ListItem disableGutters button>
-                <ListItemText
-                  primary="小费"
-                  primaryTypographyProps={{
-                    color: 'secondary',
-                  }}
-                  secondary={tip}
-                  secondaryTypographyProps={{
-                    className: 'word-break',
-                    variant: 'caption',
-                    component: 'p',
-                    color: 'textPrimary',
-                  }}
-                />
-              </ListItem>
-            )}
-            {extrinsic.isSigned && (
-              <>
-                <ListItem disableGutters>
-                  <ListItemText
-                    primary="签名人"
-                    primaryTypographyProps={{
-                      color: 'secondary',
-                    }}
-                  />
-                </ListItem>
-                <AccountInfo
-                  value={extrinsic.signer.toString()}
-                  onlyItem
-                  disableGutters
-                />
-              </>
-            )}
+            {children}
           </List>
         </Box>
       </AccordionDetails>

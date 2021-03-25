@@ -133,6 +133,7 @@ function TransactionSigner({
           variant="filled"
           fullWidth
           type="password"
+          autoFocus
         />
       )}
       {children}

@@ -9,9 +9,6 @@ import type {
   ItemState,
   AddressFlags,
   AddressProxy,
-  Extracted,
-  Param,
-  Value,
   MultiState,
   ProxyState,
 } from './types';
@@ -27,10 +24,8 @@ import type {
   SignerPayloadJSON,
   SignerResult,
 } from '@polkadot/types/types';
-import { Enum, GenericCall, getTypeDef, Option, Vec } from '@polkadot/types';
-import type { IExtrinsic, IMethod } from '@polkadot/types/types';
+import { Option, Vec } from '@polkadot/types';
 import type {
-  ExtrinsicSignature,
   Multisig,
   ProxyDefinition,
   ProxyType,
@@ -169,47 +164,6 @@ export class AccountSigner implements Signer {
       });
     });
   }
-}
-
-function isExtrinsic(value: IExtrinsic | IMethod): value is IExtrinsic {
-  return !!(value as IExtrinsic).signature;
-}
-
-// This is no doubt NOT the way to do things - however there is no other option
-function getRawSignature(value: IExtrinsic): ExtrinsicSignature | undefined {
-  // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
-  return (value as any)._raw?.signature?.multiSignature as ExtrinsicSignature;
-}
-
-export function extractState(
-  value: IExtrinsic | IMethod,
-  withHash?: boolean,
-  withSignature?: boolean
-): Extracted {
-  const params = GenericCall.filterOrigin(value.meta).map(
-    ({ name, type }): Param => ({
-      name: name.toString(),
-      type: getTypeDef(type.toString()),
-    })
-  );
-  const values = value.args.map(
-    (value): Value => ({
-      isValid: true,
-      value,
-    })
-  );
-  const hash = withHash ? value.hash.toHex() : null;
-  let signature: string | null = null;
-  let signatureType: string | null = null;
-
-  if (withSignature && isExtrinsic(value) && value.isSigned) {
-    const raw = getRawSignature(value);
-
-    signature = value.signature.toHex();
-    signatureType = raw instanceof Enum ? raw.type : null;
-  }
-
-  return { hash, params, signature, signatureType, values };
 }
 
 export function recodeAddress(address: string | Uint8Array): string {
