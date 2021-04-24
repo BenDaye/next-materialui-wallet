@@ -18,7 +18,7 @@ export const useTransfer = ({
   const { node } = useSetting();
   const [transfers, setTransfers] = useState<TransferProps[]>([]);
   const { error, get, response, abort } = useFetch(
-    'http://221.122.102.163:4000'
+    'http://221.122.102.171:9949'
   );
   const { showWarning } = useNotice();
 
@@ -29,7 +29,7 @@ export const useTransfer = ({
   useEffect(() => {
     if (!node) return;
     setTransfers([]);
-    if (node.name === 'UECC' && node.url === 'ws://221.122.102.163:9944') {
+    if (node.name === 'UECC' && node.url === 'ws://221.122.102.171:9944') {
       getTransfers();
     }
     return abort;

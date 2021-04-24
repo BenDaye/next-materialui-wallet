@@ -85,7 +85,7 @@ export const useUrc10ModuleAssets = (): Urc10ModuleAsset[] => {
   const { node } = useSetting();
   const [assets, setAssets] = useState<Urc10ModuleAsset[]>([]);
   const { error, get, response, abort } = useFetch(
-    'http://221.122.102.163:4000'
+    'http://221.122.102.171:9949'
   );
   const { showWarning } = useNotice();
 
@@ -96,7 +96,7 @@ export const useUrc10ModuleAssets = (): Urc10ModuleAsset[] => {
   useEffect(() => {
     if (!node) return;
     setAssets([]);
-    if (node.name === 'UECC' && node.url === 'ws://221.122.102.163:9944') {
+    if (node.name === 'UECC' && node.url === 'ws://221.122.102.171:9944') {
       getAssets();
     }
     return abort;
@@ -111,7 +111,7 @@ export const useUrc10ModuleAssets = (): Urc10ModuleAsset[] => {
       const { success, result } = res;
 
       if (response.ok && success) {
-        setAssets(result.docs);
+        setAssets(result.docs.docs);
       }
     } catch (err) {
       showWarning((err as Error).message);
@@ -133,7 +133,7 @@ export const useUrc10ModuleAssetBalance = (
   useEffect(() => {
     if (!node) return;
     setBalances([]);
-    if (node.name === 'UECC' && node.url === 'ws://221.122.102.163:9944') {
+    if (node.name === 'UECC' && node.url === 'ws://221.122.102.171:9944') {
       getBalances();
     }
     return;

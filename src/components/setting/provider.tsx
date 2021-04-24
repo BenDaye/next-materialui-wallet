@@ -19,11 +19,11 @@ interface SettingProps extends BaseProps {}
 function Setting({ children }: SettingProps): ReactElement<SettingProps> {
   const router = useRouter();
   const [node, setNode] = useState<Node>(() =>
-    store.get('node', DEFAULT_NODES[1])
+    store.get('node', DEFAULT_NODES[0])
   );
   const [showNodeDialog, setShowNodeDialog] = useState<boolean>(false);
   useEffect(() => {
-    store.set('node', node || DEFAULT_NODES[1]);
+    store.set('node', node || DEFAULT_NODES[0]);
   }, [node]);
 
   const showNodeDialogAction = useCallback(() => {

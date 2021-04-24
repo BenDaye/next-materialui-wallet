@@ -21,6 +21,10 @@ export interface Urc10ModuleAsset {
   _id: string;
 }
 
+export interface Urc10ModuleAssetResponseResultDoc {
+  docs: Urc10ModuleAssetResponseResult
+}
+
 export interface Urc10ModuleAssetResponseResult {
   count: number;
   docs: Urc10ModuleAsset[];
@@ -28,5 +32,5 @@ export interface Urc10ModuleAssetResponseResult {
 
 export interface Urc10ModuleAssetResponse {
   success: boolean;
-  result: Urc10ModuleAssetResponseResult;
+  result: Urc10ModuleAssetResponseResultDoc;
 }

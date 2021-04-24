@@ -4,8 +4,8 @@ export const DEFAULT_NODES: Node[] = [
   {
     name: 'UECC',
     description:
-      'Created by Mr.Shan, a blockchain developer who is known as the once-in-a-century genius',
-    url: 'ws://221.122.102.163:9944',
+      'UECC Offical',
+    url: 'ws://221.122.102.171:9944',
     options: {
       types: {
         Address: 'AccountId',
