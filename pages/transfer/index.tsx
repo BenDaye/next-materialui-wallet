@@ -11,17 +11,18 @@ import {
   CircularProgress,
 } from '@material-ui/core';
 import ScanHelperIcon from 'mdi-material-ui/ScanHelper';
-import { useRouter } from 'next/router';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { formatBalance } from '@polkadot/util';
 import {
   useAccount,
+  useAddress,
   useApi,
   useBalance,
   useChain,
   useIsMountedRef,
   useSortedAccounts,
+  useSortedAddresses,
 } from '@@/hook';
 import type { BalanceProps } from '@components/polkadot/balance/types';
 import { SubmittableExtrinsic } from '@polkadot/api/types';
@@ -30,14 +31,23 @@ import { useQueue } from '@@/hook';
 import { SubmittableResult } from '@polkadot/api';
 import ButtonWithLoading from '@components/common/ButtonWithLoading';
 import { PageHeader } from '@components/common';
+import { Autocomplete } from '@material-ui/lab';
 
 interface TransferFormProps {
   senderId: string;
-  recipientId: string;
   symbol: string;
   amount: number;
   keepAlive?: boolean;
   isAll?: boolean;
+}
+
+interface RecipientAddress {
+  name: string;
+  address: string;
+  shortAddress: string;
+  group: string;
+  isDevelopment: boolean;
+  disable: boolean;
 }
 
 export default function TransferPage() {
@@ -47,9 +57,12 @@ export default function TransferPage() {
   const { tokenSymbol } = useChain();
   const { currentAccount, accounts, setCurrentAccount } = useAccount();
   const sortedAccounts = useSortedAccounts(accounts);
+  const { addresses } = useAddress();
+  const sortedAddresses = useSortedAddresses(addresses);
   const balances = useBalance(currentAccount);
   const { queueExtrinsic } = useQueue();
   const [loading, setLoading] = useState<boolean>(false);
+  const [recipient, setRecipient] = useState<RecipientAddress | null>(null);
 
   const {
     register,
@@ -65,6 +78,36 @@ export default function TransferPage() {
     const senderId = getValues('senderId');
     senderId && setCurrentAccount(senderId);
   }, [mountedRef, watch('senderId')]);
+
+  const recipientAddresses: RecipientAddress[] = useMemo(
+    () => [
+      ...sortedAccounts.map(
+        ({ name, address, shortAddress, isDevelopment }) => {
+          return {
+            name,
+            address,
+            shortAddress,
+            group: 'Account',
+            isDevelopment,
+            disable: address === currentAccount,
+          };
+        }
+      ),
+      ...sortedAddresses.map(
+        ({ name, address, shortAddress, isDevelopment }) => {
+          return {
+            name,
+            address,
+            shortAddress,
+            group: 'Address',
+            isDevelopment,
+            disable: false,
+          };
+        }
+      ),
+    ],
+    [mountedRef, accounts, addresses, currentAccount]
+  );
 
   const AssetBalanceOptions = useMemo(
     () =>
@@ -128,12 +171,9 @@ export default function TransferPage() {
   }, [mountedRef]);
 
   const onSubmit = useCallback(
-    ({
-      keepAlive,
-      amount,
-      senderId: accountId,
-      recipientId,
-    }: TransferFormProps) => {
+    ({ keepAlive, amount, senderId: accountId }: TransferFormProps) => {
+      assert(recipient, 'INVALID_RECIPIENT_ID');
+      const recipientId = recipient.address;
       let extrinsics: SubmittableExtrinsic<'promise'>[] | undefined;
 
       if (isDefaultAssetBalance) {
@@ -166,7 +206,7 @@ export default function TransferPage() {
         });
       });
     },
-    [isDefaultAssetBalance, api, isApiReady]
+    [isDefaultAssetBalance, api, isApiReady, recipient]
   );
 
   if (!api || !isApiReady || !isChainReady) {
@@ -206,7 +246,9 @@ export default function TransferPage() {
           >
             {sortedAccounts.map((account) => (
               <option key={account.address} value={account.address}>
-                {`${account.isDevelopment ? '[TEST] ' : ''}${account.name}`}
+                {`${
+                  account.isDevelopment ? '[TEST] ' : ''
+                }${account.name.toUpperCase()}`}
               </option>
             ))}
           </TextField>
@@ -229,26 +271,36 @@ export default function TransferPage() {
               {AssetBalanceOptions}
             </TextField>
           )}
-          <TextField
-            name="recipientId"
-            label="转账至此账户"
-            inputRef={register({ required: 'INVALID_RECIPIENT_ID' })}
-            select
-            SelectProps={{
-              native: true,
-            }}
-            variant="filled"
+          <Autocomplete
+            options={recipientAddresses}
+            getOptionLabel={(option) =>
+              `${
+                option.isDevelopment ? '[TEST] ' : ''
+              }${option.name.toUpperCase()} ${option.address}`
+            }
+            groupBy={(option) => option.group}
+            getOptionDisabled={(option) => option.disable}
+            freeSolo
             fullWidth
-            InputLabelProps={{ shrink: true }}
-            helperText="当交易被包含在区块内后，收款人将可使用已转账的金额。"
-            margin="normal"
-          >
-            {sortedAccounts.map((account) => (
-              <option key={account.address} value={account.address}>
-                {`${account.isDevelopment ? '[TEST] ' : ''}${account.name}`}
-              </option>
-            ))}
-          </TextField>
+            blurOnSelect
+            selectOnFocus
+            onChange={(event, newValue: RecipientAddress) => {
+              setRecipient(newValue);
+            }}
+            renderInput={(params) => (
+              <TextField
+                {...params}
+                name="recipientIdTest"
+                inputRef={register({ required: 'INVALID_RECIPIENT_ID' })}
+                label="转账至此账户"
+                variant="filled"
+                fullWidth
+                InputLabelProps={{ shrink: true }}
+                helperText="当交易被包含在区块内后，收款人将可使用已转账的金额。"
+                margin="normal"
+              />
+            )}
+          />
           {balances && tokenSymbol && (
             <TextField
               name="amount"

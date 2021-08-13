@@ -1,6 +1,6 @@
 import type {} from '@material-ui/lab/themeAugmentation';
 import useMediaQuery from '@material-ui/core/useMediaQuery';
-import { createMuiTheme, ThemeProvider as TP } from '@material-ui/core/styles';
+import { createTheme, ThemeProvider as TP } from '@material-ui/core/styles';
 import type { BaseProps } from '@@/types';
 import { memo, ReactElement, useMemo } from 'react';
 import { orange, grey, blue } from '@material-ui/core/colors';
@@ -11,7 +11,7 @@ function ThemeProvider({ children }: BaseProps): ReactElement<BaseProps> {
 
   const theme = useMemo(
     () =>
-      createMuiTheme({
+      createTheme({
         palette: {
           // type: prefersDarkMode ? 'dark' : 'light',
           // TODO: 暂时只做深色
