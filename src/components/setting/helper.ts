@@ -4,7 +4,7 @@ export const DEFAULT_NODES: Node[] = [
   {
     name: 'UECC',
     description:
-      'UECC Offical',
+      'UECC Official',
     url: 'ws://221.122.102.171:9944',
     options: {
       types: {
