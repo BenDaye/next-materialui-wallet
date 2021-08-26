@@ -6,9 +6,11 @@
     "dev": "NODE_OPTIONS='--inspect' next dev",
     "build": "next build",
     "start": "next start -p 80",
+    "build:env": "docker build -f env.Dockerfile -t registry.cn-shenzhen.aliyuncs.com/zingy9217/next-materialui-wallet-env .",
     "build:pkg": "docker build -f pkg.Dockerfile -t registry.cn-shenzhen.aliyuncs.com/zingy9217/next-materialui-wallet-pkg:latest .",
-    "push:pkg": "dockposer push registry.cn-shenzhen.aliyuncs.com/zingy9217/next-materialui-wallet-pkg:latest",
     "build:docker": "dockposer build registry.cn-shenzhen.aliyuncs.com/zingy9217/next-materialui-wallet:{NPM_PACKAGE_VERSION}",
+    "push:env": "dockposer push registry.cn-shenzhen.aliyuncs.com/zingy9217/next-materialui-wallet-env",
+    "push:pkg": "dockposer push registry.cn-shenzhen.aliyuncs.com/zingy9217/next-materialui-wallet-pkg:latest",
     "push": "dockposer push registry.cn-shenzhen.aliyuncs.com/zingy9217/next-materialui-wallet:{NPM_PACKAGE_VERSION}"
   },
   "dependencies": {

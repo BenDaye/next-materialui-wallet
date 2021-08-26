@@ -1,4 +1,4 @@
-FROM registry.cn-shenzhen.aliyuncs.com/zingy9217/uecc-wallet-env:latest
+FROM registry.cn-shenzhen.aliyuncs.com/zingy9217/next-materialui-wallet-env:latest
 
 WORKDIR /root/app
 
