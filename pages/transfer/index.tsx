@@ -64,15 +64,10 @@ export default function TransferPage() {
   const [loading, setLoading] = useState<boolean>(false);
   const [recipient, setRecipient] = useState<RecipientAddress | null>(null);
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    errors,
-    getValues,
-  } = useForm<TransferFormProps>({
-    mode: 'onBlur',
-  });
+  const { register, handleSubmit, watch, errors, getValues } =
+    useForm<TransferFormProps>({
+      mode: 'onBlur',
+    });
 
   useEffect(() => {
     const senderId = getValues('senderId');
@@ -237,7 +232,7 @@ export default function TransferPage() {
             SelectProps={{
               native: true,
             }}
-            variant="filled"
+            variant="outlined"
             fullWidth
             defaultValue={currentAccount}
             InputLabelProps={{ shrink: true }}
@@ -261,7 +256,7 @@ export default function TransferPage() {
               SelectProps={{
                 native: true,
               }}
-              variant="filled"
+              variant="outlined"
               fullWidth
               defaultValue={tokenSymbol && tokenSymbol[0]}
               InputLabelProps={{ shrink: true }}
@@ -293,7 +288,7 @@ export default function TransferPage() {
                 name="recipientIdTest"
                 inputRef={register({ required: 'INVALID_RECIPIENT_ID' })}
                 label="转账至此账户"
-                variant="filled"
+                variant="outlined"
                 fullWidth
                 InputLabelProps={{ shrink: true }}
                 helperText="当交易被包含在区块内后，收款人将可使用已转账的金额。"
@@ -306,7 +301,7 @@ export default function TransferPage() {
               name="amount"
               label="转账金额"
               inputRef={register({ required: 'AMOUNT_REQUIRED', min: 0 })}
-              variant="filled"
+              variant="outlined"
               fullWidth
               InputLabelProps={{ shrink: true }}
               autoFocus
@@ -330,7 +325,7 @@ export default function TransferPage() {
           <TextField
             name="deposit"
             label="押金"
-            variant="filled"
+            variant="outlined"
             fullWidth
             InputLabelProps={{ shrink: true }}
             defaultValue={api.consts.balances.existentialDeposit}

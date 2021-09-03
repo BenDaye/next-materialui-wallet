@@ -2,36 +2,27 @@ import React, {
   memo,
   ReactElement,
   useState,
-  useEffect,
-  useMemo,
   useCallback,
   useContext,
 } from 'react';
 import type { BaseProps } from '@@/types';
-import { useChain, useNotice } from '@@/hook';
+import { useNotice } from '@@/hook';
 import {
   AppBar,
   Box,
   Button,
   Container,
   Fade,
-  List,
-  ListItem,
-  ListItemAvatar,
-  ListItemText,
-  Paper,
   TextField,
   Toolbar,
 } from '@material-ui/core';
 import styles from '@styles/Layout.module.css';
 import { CreateAccountContextProps } from './types';
 import { CreateAccountContext } from './context';
-import Identicon from '@polkadot/react-identicon';
 import { useForm } from 'react-hook-form';
-import keyring from '@polkadot/ui-keyring';
-import { createAccount } from './helper';
-import { CreateResult } from '@polkadot/ui-keyring/types';
 import { useRouter } from 'next/router';
+import useFetch from 'use-http';
+import { saveAccount } from '@components/php/account/helper';
 
 interface CreateAccountConfirmProps extends BaseProps {}
 
@@ -44,94 +35,67 @@ interface ConfirmForm {
 function Confirm({
   children,
 }: CreateAccountConfirmProps): ReactElement<CreateAccountConfirmProps> | null {
-  const { isChainReady } = useChain();
   const router = useRouter();
   const { showError, showSuccess } = useNotice();
-  const {
-    step,
-    setStep,
-    address,
-    seed,
-    pairType,
-    derivePath,
-    meta,
-    setMeta,
-    password,
-    setPassword,
-  } = useContext<CreateAccountContextProps>(CreateAccountContext);
+  const { step, setStep, mnemonic, chain_type } =
+    useContext<CreateAccountContextProps>(CreateAccountContext);
   const { register, errors, handleSubmit, getValues } = useForm<ConfirmForm>({
     mode: 'all',
   });
   const [loading, setLoading] = useState<boolean>(false);
-  const metaName: string = useMemo(() => meta.name || '', [meta]);
+  const { post, response } = useFetch('/chain');
 
   const nameValidate = (value: string): true | string => {
-    setMeta({ ...meta, name: value.trim() });
     return !!value || '必填';
   };
 
   const passwordValidate = (value: string): true | string =>
-    keyring.isPassValid(value) || '无效的密码';
+    (value.length > 8 && value.length < 32) || '无效的密码';
 
   const passwordConfirmValidate = (value: string): true | string =>
-    (keyring.isPassValid(value) && value === getValues('password')) ||
-    '密码不一致';
+    value === getValues('password') || '密码不一致';
 
   const prevStep = useCallback(() => {
     setStep(3);
   }, []);
 
-  const onSuccess = (result: CreateResult): void => {
-    showSuccess(`账户[${result.json.meta.name}]已创建`);
+  const onSuccess = ({ name, uuid, address }: any): void => {
+    saveAccount({ name, uuid, address, chain_type });
+    showSuccess(`账户[${name}]已创建`);
     router.back();
   };
 
-  const onError = (err: Error): void => {
-    showError(err.message);
+  const onError = (err: any): void => {
+    showError(err.toString());
     setLoading(false);
   };
 
-  const onConfirm = useCallback(
-    (form: ConfirmForm) => {
-      setPassword(form.password);
-      setLoading(true);
-      createAccount(
-        seed,
-        pairType,
-        derivePath,
-        meta,
-        form.password,
-        onSuccess,
-        onError
-      );
-    },
-    [seed, pairType, derivePath, meta]
-  );
+  const onConfirm = async ({ name, password }: ConfirmForm) => {
+    setLoading(true);
+    try {
+      const res = await post(`/importAccount`, {
+        name,
+        password,
+        mnemonic,
+        chain_type,
+      });
 
-  if (!(step === 4 && isChainReady)) return null;
+      if (!res) return;
+
+      const { status, data, message } = res;
+
+      if (response.ok && status === 1) return onSuccess(data);
+      return onError(message);
+    } catch (err) {
+      showError((err as Error).message);
+    }
+  };
+
+  if (step !== 4) return null;
   return (
     <Fade in={step === 4}>
       <Container>
         <form onSubmit={handleSubmit(onConfirm)}>
-          <Paper>
-            <List dense>
-              <ListItem>
-                <ListItemAvatar>
-                  <Identicon value={address} size={32} />
-                </ListItemAvatar>
-                <ListItemText
-                  primary={metaName}
-                  primaryTypographyProps={{ variant: 'body2' }}
-                  secondary={address}
-                  secondaryTypographyProps={{
-                    variant: 'caption',
-                    className: 'word-break',
-                  }}
-                />
-              </ListItem>
-            </List>
-          </Paper>
-
           <Box mt={2}>
             <TextField
               name="name"
@@ -140,7 +104,7 @@ function Confirm({
               fullWidth
               margin="dense"
               InputLabelProps={{ shrink: true }}
-              variant="filled"
+              variant="outlined"
               error={!!errors.name}
               helperText={
                 errors.name?.message ||
@@ -154,7 +118,7 @@ function Confirm({
               fullWidth
               margin="dense"
               InputLabelProps={{ shrink: true }}
-              variant="filled"
+              variant="outlined"
               error={!!errors.password}
               helperText={
                 errors.password?.message ||
@@ -169,7 +133,7 @@ function Confirm({
               fullWidth
               margin="dense"
               InputLabelProps={{ shrink: true }}
-              variant="filled"
+              variant="outlined"
               error={!!errors.passwordConfirm}
               helperText={
                 errors.passwordConfirm?.message ||

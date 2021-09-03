@@ -43,10 +43,8 @@ function TransactionSigner({
   const [isProxyActive, setIsProxyActive] = useState(true);
   const [multiInfo, setMultiInfo] = useState<MultiState | null>(null);
   const [proxyInfo, setProxyInfo] = useState<ProxyState | null>(null);
-  const [
-    { isUnlockCached, signPassword },
-    setSignPassword,
-  ] = useState<PasswordState>({ isUnlockCached: false, signPassword: '' });
+  const [{ isUnlockCached, signPassword }, setSignPassword] =
+    useState<PasswordState>({ isUnlockCached: false, signPassword: '' });
 
   const [signAddress, flags] = useMemo((): [string, AddressFlags] => {
     const signAddress =
@@ -130,7 +128,7 @@ function TransactionSigner({
           label="密码"
           inputRef={register({ validate: passwordValidate })}
           margin="dense"
-          variant="filled"
+          variant="outlined"
           fullWidth
           type="password"
           autoFocus

@@ -58,16 +58,10 @@ function SaveAddressDialogBase({
     [address]
   );
 
-  const {
-    register,
-    handleSubmit,
-    watch,
-    errors,
-    reset,
-    clearErrors,
-  } = useForm<SaveAddressForm>({
-    mode: 'onBlur',
-  });
+  const { register, handleSubmit, watch, errors, reset, clearErrors } =
+    useForm<SaveAddressForm>({
+      mode: 'onBlur',
+    });
 
   useEffect(() => {
     if (show) {
@@ -139,7 +133,7 @@ function SaveAddressDialogBase({
               multiline
               rowsMax={3}
               InputLabelProps={{ shrink: true }}
-              variant="filled"
+              variant="outlined"
               error={!!errors.address}
               helperText={
                 errors.address?.message ||
@@ -158,7 +152,7 @@ function SaveAddressDialogBase({
               fullWidth
               margin="dense"
               InputLabelProps={{ shrink: true }}
-              variant="filled"
+              variant="outlined"
               error={!!errors.name}
               helperText={
                 errors.name?.message ||

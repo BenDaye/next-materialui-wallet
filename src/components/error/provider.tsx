@@ -1,5 +1,5 @@
 import React, { memo, ReactElement, useEffect, useState } from 'react';
-import { BaseProps } from '../types';
+import { BaseProps } from '../../types';
 import { useSnackbar } from 'notistack';
 import { ErrorContext } from './context';
 

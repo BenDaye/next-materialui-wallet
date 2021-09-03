@@ -67,7 +67,7 @@ function TransactionFee({
           disabled
           margin="dense"
           fullWidth
-          variant="filled"
+          variant="outlined"
           InputLabelProps={{ shrink: true }}
         />
       </Skeleton>
@@ -81,7 +81,7 @@ function TransactionFee({
       disabled
       margin="dense"
       fullWidth
-      variant="filled"
+      variant="outlined"
       InputLabelProps={{ shrink: true }}
     />
   );

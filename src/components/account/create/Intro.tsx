@@ -1,17 +1,7 @@
-import React, {
-  memo,
-  ReactElement,
-  useState,
-  useEffect,
-  useMemo,
-  useCallback,
-  useContext,
-} from 'react';
+import React, { memo, ReactElement, useCallback, useContext } from 'react';
 import type { BaseProps } from '@@/types';
-import { useChain, useNotice } from '@@/hook';
 import {
   AppBar,
-  Box,
   Button,
   Container,
   Fade,
@@ -30,17 +20,14 @@ interface CreateAccountIntroProps extends BaseProps {}
 function Intro({
   children,
 }: CreateAccountIntroProps): ReactElement<CreateAccountIntroProps> | null {
-  const { isChainReady } = useChain();
-  const { showError } = useNotice();
-  const { step, setStep } = useContext<CreateAccountContextProps>(
-    CreateAccountContext
-  );
+  const { step, setStep } =
+    useContext<CreateAccountContextProps>(CreateAccountContext);
 
   const nextStep = useCallback(() => {
     setStep(2);
   }, []);
 
-  if (!(step === 1 && isChainReady)) return null;
+  if (step !== 1) return null;
   return (
     <Fade in={step === 1}>
       <Container>
@@ -49,7 +36,7 @@ function Intro({
             <ListItem>
               <ListItemText
                 primary="备份提示"
-                secondary="获得助记词等于拥有钱包资产所有权"
+                secondary="获得助记词等于拥有钱包资产所有权。"
               />
             </ListItem>
             <ListItem>

@@ -28,9 +28,10 @@ export default function AddressByAddressPage() {
     router.replace('/address');
   };
 
-  const handleClickForget = useCallback(() => info.onForget(onForgetSuccess), [
-    info,
-  ]);
+  const handleClickForget = useCallback(
+    () => info.onForget(onForgetSuccess),
+    [info]
+  );
 
   return (
     <>
@@ -43,7 +44,7 @@ export default function AddressByAddressPage() {
                 label="账户地址"
                 defaultValue={address}
                 margin="normal"
-                variant="filled"
+                variant="outlined"
                 multiline
                 disabled
               />
@@ -53,7 +54,7 @@ export default function AddressByAddressPage() {
                 <TextField
                   label="账户名称"
                   margin="normal"
-                  variant="filled"
+                  variant="outlined"
                   value={info.name}
                   onChange={handleChangeName}
                   onBlur={info.onSaveName}

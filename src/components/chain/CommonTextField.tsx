@@ -32,7 +32,7 @@ function Common({
         <TextField
           id={id}
           label={label}
-          variant="filled"
+          variant="outlined"
           color="secondary"
           fullWidth
           margin="dense"
@@ -48,7 +48,7 @@ function Common({
     <TextField
       id={id}
       label={label}
-      variant="filled"
+      variant="outlined"
       color="secondary"
       fullWidth
       margin="dense"

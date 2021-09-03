@@ -43,7 +43,7 @@ export default function ExplorerPage() {
                 name="searchKey"
                 label={errors.searchKey?.message || '查询区块(哈希或高度)'}
                 inputRef={register({ validate: searchKeyValidate })}
-                variant="filled"
+                variant="outlined"
                 color="secondary"
                 fullWidth
                 margin="dense"

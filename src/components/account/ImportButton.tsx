@@ -1,6 +1,12 @@
-import React, { memo, ReactElement, useState, useCallback } from 'react';
+import React, {
+  memo,
+  ReactElement,
+  useState,
+  useCallback,
+  useEffect,
+} from 'react';
 import type { BaseProps } from '@@/types';
-import { useSetting, useNotice } from '@@/hook';
+import { useSetting, useNotice, useIsMountedRef } from '@@/hook';
 import {
   Box,
   IconButton,
@@ -11,11 +17,22 @@ import {
   AppBar,
   Toolbar,
   Typography,
+  List,
+  Divider,
+  ListItem,
+  ListItemIcon,
+  ListItemText,
+  ListItemSecondaryAction,
+  Menu,
+  MenuItem,
 } from '@material-ui/core';
 import AccountMultiplePlusIcon from 'mdi-material-ui/AccountMultiplePlus';
 import CloseIcon from 'mdi-material-ui/Close';
+import ChevronRightIcon from 'mdi-material-ui/ChevronRight';
 import { useRouter } from 'next/router';
 import { NodeIcon } from '@components/setting/components/NodeIcon';
+import { getChainTypes } from '@components/php/chain/hook';
+import { Chain } from '@components/php/chain/types';
 
 interface ImportAccountButtonProps extends BaseProps {
   edge?: 'start' | 'end' | false;
@@ -28,7 +45,16 @@ function ImportAccountButtonBase({
   const { node } = useSetting();
   const { showError } = useNotice();
   const [showDialog, setShowDialog] = useState<boolean>(false);
+  const [showMenu, setShowMenu] = useState<boolean>(false);
+  const chains = getChainTypes();
+  const [anchorEl, setAnchorEl] = React.useState<any>(null);
+  const [chain_type, setChainType] = useState<String>('');
   const router = useRouter();
+  const mountedRef = useIsMountedRef();
+
+  useEffect(() => {
+    if (chains.length) setChainType(chains[0]?.name);
+  }, [mountedRef, chains]);
 
   const onShow = useCallback(() => {
     setShowDialog(true);
@@ -43,7 +69,7 @@ function ImportAccountButtonBase({
       <IconButton edge={edge} onClick={onShow}>
         <AccountMultiplePlusIcon />
       </IconButton>
-      <Dialog open={showDialog} fullScreen disableBackdropClick>
+      <Dialog open={showDialog} fullScreen>
         <AppBar position="static" color="transparent" elevation={0}>
           <Toolbar>
             <IconButton edge="start" onClick={onClose}>
@@ -52,19 +78,44 @@ function ImportAccountButtonBase({
           </Toolbar>
         </AppBar>
         <DialogContent>
-          <Box
-            display="flex"
-            flexDirection="column"
-            justifyContent="center"
-            alignItems="center"
-            flexGrow={1}
-            height="100%"
-          >
-            <Box className="animate__animated animate__pulse animate__infinite">
-              <Typography variant="h1">
-                <NodeIcon name={node.name} fontSize="inherit" />
-              </Typography>
-            </Box>
+          <Box height="100%">
+            <List>
+              <ListItem
+                button
+                onClick={(event) => {
+                  setAnchorEl(event.currentTarget);
+                  setShowMenu(true);
+                }}
+                selected
+              >
+                <ListItemText primary={chain_type} />
+                <ListItemSecondaryAction>
+                  <IconButton edge="end" aria-label="link">
+                    <ChevronRightIcon />
+                  </IconButton>
+                </ListItemSecondaryAction>
+              </ListItem>
+            </List>
+            <Menu
+              anchorEl={anchorEl}
+              keepMounted
+              open={showMenu}
+              onClose={() => setShowMenu(false)}
+            >
+              {chains.map((c: Chain) => (
+                <MenuItem
+                  key={c.name}
+                  selected={c.name === chain_type}
+                  onClick={() => {
+                    setAnchorEl(null);
+                    setChainType(c.name);
+                    setShowMenu(false);
+                  }}
+                >
+                  {c.full_name}
+                </MenuItem>
+              ))}
+            </Menu>
           </Box>
         </DialogContent>
         <DialogActions>
@@ -75,7 +126,7 @@ function ImportAccountButtonBase({
                 color="primary"
                 variant="contained"
                 onClick={() => {
-                  router.push('/account/create');
+                  router.push(`/account/create/${chain_type}`);
                 }}
               >
                 创建账户
@@ -87,7 +138,7 @@ function ImportAccountButtonBase({
                 color="primary"
                 variant="contained"
                 onClick={() => {
-                  router.push('/account/restore');
+                  router.push(`/account/restore/${chain_type}`);
                 }}
               >
                 导入账户

@@ -3,21 +3,21 @@ import useMediaQuery from '@material-ui/core/useMediaQuery';
 import { createTheme, ThemeProvider as TP } from '@material-ui/core/styles';
 import type { BaseProps } from '@@/types';
 import { memo, ReactElement, useMemo } from 'react';
-import { orange, grey, blue } from '@material-ui/core/colors';
+import { orange, grey, blue, yellow, common } from '@material-ui/core/colors';
 
 function ThemeProvider({ children }: BaseProps): ReactElement<BaseProps> {
   // const prefersDarkMode = useMediaQuery('(prefers-color-scheme: dark)');
-  const prefersDarkMode = true;
+  const prefersDarkMode = false;
 
   const theme = useMemo(
     () =>
       createTheme({
         palette: {
-          // type: prefersDarkMode ? 'dark' : 'light',
+          type: prefersDarkMode ? 'dark' : 'light',
           // TODO: 暂时只做深色
-          type: 'dark',
+          // type: 'dark',
           primary: {
-            main: prefersDarkMode ? grey[900] : blue[500],
+            main: prefersDarkMode ? grey[900] : yellow[500],
           },
           secondary: {
             main: prefersDarkMode ? orange[500] : grey[50],
@@ -28,7 +28,7 @@ function ThemeProvider({ children }: BaseProps): ReactElement<BaseProps> {
           MuiBottomNavigationAction: {
             root: {
               '&$selected': {
-                color: prefersDarkMode ? orange[500] : blue[500],
+                color: prefersDarkMode ? orange[500] : common['black'],
               },
             },
           },

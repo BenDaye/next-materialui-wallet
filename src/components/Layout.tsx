@@ -53,11 +53,11 @@ function Layout({ children }: BaseProps): ReactElement<BaseProps> | null {
                 value="/wallet"
                 icon={<WalletIcon />}
               />
-              <BottomNavigationAction
+              {/* <BottomNavigationAction
                 label="行情"
                 value="/market"
                 icon={<ChartScatterPlotHexbinIcon />}
-              />
+              /> */}
               <BottomNavigationAction
                 label="浏览"
                 value="/explorer"

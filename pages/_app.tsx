@@ -13,6 +13,7 @@ import { ErrorProvider } from '@components/error/provider';
 import { NoticeProvider } from '@components/notice/provider';
 import { SettingProvider } from '@components/setting/provider';
 import Layout from '@components/Layout';
+import { PhpProvider } from '@components/php/provider';
 
 export default function MyApp(props: AppProps) {
   const { Component, pageProps } = props;
@@ -28,7 +29,7 @@ export default function MyApp(props: AppProps) {
   return (
     <Fragment>
       <Head>
-        <title>Next Material-UI Wallet</title>
+        <title>UECC Wallet</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
@@ -46,13 +47,11 @@ export default function MyApp(props: AppProps) {
         >
           <NoticeProvider>
             <ErrorProvider>
-              <SettingProvider>
-                <PolkadotProvider>
-                  <Layout>
-                    <Component {...pageProps} />
-                  </Layout>
-                </PolkadotProvider>
-              </SettingProvider>
+              <PhpProvider>
+                <Layout>
+                  <Component {...pageProps} />
+                </Layout>
+              </PhpProvider>
             </ErrorProvider>
           </NoticeProvider>
         </SnackbarProvider>

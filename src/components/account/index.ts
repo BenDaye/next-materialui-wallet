@@ -5,8 +5,7 @@ export { CreateAccountReminder } from './create/Reminder';
 export { CreateAccountStepper } from './create/Stepper';
 
 export { RestoreAccountParams } from './restore/Params';
-export { RestoreAccountByBipOrRaw } from './restore/BipOrRaw';
-export { RestoreAccountByKeystore } from './restore/Keystore';
+export { RestoreAccountConfirm } from './restore/Confirm';
 
 export { default as AccountInfo } from './AccountInfo';
 export { default as AccountInfoSkeleton } from './AccountInfoSkeleton';

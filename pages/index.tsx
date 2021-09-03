@@ -1,20 +1,19 @@
-import { useAccount, useChain, useSetting } from '@@/hook';
+import { useIsMountedRef } from '@@/hook';
 import { Box, Typography } from '@material-ui/core';
 import React, { useEffect } from 'react';
-import Image from 'next/image';
 import { useRouter } from 'next/router';
 import styles from '@styles/Layout.module.css';
 import { NodeIcon } from '@components/setting/components/NodeIcon';
+import { useAccounts } from '@components/php/account/hook';
 
 export default function Home() {
   const router = useRouter();
-  const { hasAccount } = useAccount();
-  const { isChainReady } = useChain();
-  const { node } = useSetting();
+  const { hasAccount } = useAccounts();
+  const mountedRef = useIsMountedRef();
 
   useEffect(() => {
     const logo: HTMLElement = document.getElementById('logo') as HTMLElement;
-    if (logo && isChainReady) {
+    if (logo) {
       logo.classList.remove('animate__pulse', 'animate__infinite');
       logo.classList.add('animate__fadeOutUp');
 
@@ -23,7 +22,7 @@ export default function Home() {
     return () => {
       logo && logo.removeEventListener('animationend', redirect);
     };
-  }, [isChainReady, hasAccount]);
+  }, [mountedRef, hasAccount]);
 
   function redirect() {
     if (hasAccount) {
@@ -48,7 +47,7 @@ export default function Home() {
           className="animate__animated animate__pulse animate__infinite"
         >
           <Typography variant="h1">
-            <NodeIcon name={node.name} fontSize="inherit" />
+            <NodeIcon name="UECC" fontSize="inherit" />
           </Typography>
         </Box>
       </Box>
