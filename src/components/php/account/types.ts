@@ -7,8 +7,8 @@ export interface AccountState {
 }
 
 export interface AccountContextProps extends AccountState {
-  currentAccount: string | null;
-  setCurrentAccount: Dispatch<SetStateAction<string | null>>;
+  currentAccount: AccountBaseProps | null;
+  setCurrentAccount: Dispatch<SetStateAction<AccountBaseProps | null>>;
 }
 
 export interface AccountBaseProps {
@@ -27,7 +27,20 @@ export interface AccountProps extends AccountBaseProps {
   onChangePassword: (params: ChangePasswordParams) => void;
 }
 
-export interface ImportAccountParams {
+export interface CallbackParams {
+  onSuccess?: Function;
+  onError?: Function;
+}
+
+export interface GetAccountParams extends CallbackParams {
+  name?: string;
+  uuid?: string;
+  address?: string;
+}
+
+export interface SaveAccountParams extends AccountBaseProps, CallbackParams {}
+
+export interface ImportAccountParams extends CallbackParams {
   name: string;
   password: string;
   mnemonic?: string;
@@ -41,10 +54,9 @@ export interface ImportAccountResult {
   address: string;
 }
 
-export interface ExportAccountParams extends AccountBaseProps {
+export interface ExportAccountParams extends AccountBaseProps, CallbackParams {
   password: string;
   export_type: number;
-  chain_type: string;
 }
 
 export interface ExportAccountResult {
@@ -52,20 +64,20 @@ export interface ExportAccountResult {
   private_key: string;
 }
 
-export interface DeleteAccountParams extends AccountBaseProps {
+export interface DeleteAccountParams extends AccountBaseProps, CallbackParams {
   password: string;
 }
 
 export interface DeleteAccountResult {}
 
-export interface ChangeNameParams extends AccountBaseProps {}
+export interface ChangeNameParams extends AccountBaseProps, CallbackParams {}
 
-export interface ChangePasswordParams extends AccountBaseProps {
+export interface ChangePasswordParams extends AccountBaseProps, CallbackParams {
   password: string;
   new_password: string;
 }
 
-export interface GetAddressParams {
+export interface GetAddressParams extends CallbackParams {
   chain_type: string;
-  value: string;
+  value?: string;
 }

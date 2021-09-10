@@ -5,13 +5,10 @@
     "plugin:react/recommended",
     "plugin:prettier/recommended",
     "plugin:prettier/react",
-    "plugin:prettier/@typescript-eslint"
+    "plugin:prettier/@typescript-eslint",
+    "plugin:react-hooks/recommended"
   ],
-  "plugins": [
-    "@typescript-eslint",
-    "react",
-    "prettier"
-  ],
+  "plugins": ["@typescript-eslint", "react", "prettier"],
   "rules": {
     "react/react-in-jsx-scope": "off"
   },

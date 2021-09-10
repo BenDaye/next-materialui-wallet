@@ -1,12 +1,11 @@
 import { Context, createContext } from 'react';
-import { AccountContextProps } from './types';
+import { AccountBaseProps, AccountContextProps } from './types';
 
-export const AccountContext: Context<AccountContextProps> = createContext<AccountContextProps>(
-  {
+export const AccountContext: Context<AccountContextProps> =
+  createContext<AccountContextProps>({
     accounts: [],
     hasAccount: false,
     isAccount: (uuid: string) => false,
     currentAccount: null,
-    setCurrentAccount: (uuid: string | null) => {},
-  }
-);
+    setCurrentAccount: (account: AccountBaseProps | null) => {},
+  });

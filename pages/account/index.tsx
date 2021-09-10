@@ -29,7 +29,7 @@ export default function AccountsPage() {
                     <AccountInfo
                       value={account}
                       onlyItem
-                      onSelect={() => router.push(`/account/${account}`)}
+                      onSelect={() => router.push(`/account/${account.uuid}`)}
                       showBadge
                     />
                     {index < array.length - 1 && <Divider component="li" />}

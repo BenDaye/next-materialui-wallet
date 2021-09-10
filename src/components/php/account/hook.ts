@@ -1,5 +1,5 @@
 import { useIsMountedRef, useNotice } from '@@/hook';
-import { useCallback, useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 import useFetch from 'use-http';
 import { AccountContext } from './context';
 import {
@@ -12,173 +12,105 @@ import {
   DeleteAccountResult,
   ExportAccountParams,
   ExportAccountResult,
+  GetAccountParams,
   GetAddressParams,
   ImportAccountParams,
   ImportAccountResult,
 } from './types';
 import store from 'store';
+import { NOOP } from '@utils/emptyFunction';
+import { getAccount } from './helper';
 
 export const useAccounts = (): AccountContextProps =>
   useContext<AccountContextProps>(AccountContext);
 
-export const useAccount = (uuid: string): AccountProps => {
-  const [name, setName] = useState<string>('');
-  const [address, setAddress] = useState<string>('');
-  const [chain_type, setChainType] = useState<string>('');
-  const [mnemonic, setMnemonic] = useState<string>('');
-  const [private_key, setPrivateKey] = useState<string>('');
+export const useAccount = ({
+  uuid,
+  name,
+  address,
+}: GetAccountParams): AccountProps | undefined => {
+  const [account, setAccount] = useState<AccountBaseProps | undefined>(() =>
+    getAccount({ uuid, name, address })
+  );
   const mountedRef = useIsMountedRef();
 
   useEffect(() => {
-    const account = store.get(uuid);
-    if (!account) return;
-  }, [mountedRef, uuid]);
+    setAccount(getAccount({ uuid, name, address }));
+  }, [mountedRef, uuid, name, address]);
 
   const onExport = useCallback(
     (params: ExportAccountParams) => {
       return exportAccount(params);
     },
-    [uuid]
+    [account]
   );
 
   const onDelete = useCallback(
     (params: DeleteAccountParams) => {
       return deleteAccount(params);
     },
-    [uuid]
+    [account]
   );
 
   const onChangeName = useCallback(
     (params: ChangeNameParams) => {
       return changeName(params);
     },
-    [uuid]
+    [account]
   );
 
   const onChangePassword = useCallback(
     (params: ChangePasswordParams) => {
       return changePassword(params);
     },
-    [uuid]
+    [account]
   );
 
-  return {
-    name,
-    address,
-    chain_type,
-    uuid,
-    mnemonic,
-    private_key,
-    onExport,
-    onDelete,
-    onChangeName,
-    onChangePassword,
-  };
+  if (account) {
+    return {
+      ...account,
+      onExport,
+      onDelete,
+      onChangeName,
+      onChangePassword,
+    };
+  }
 };
 
-export const getMnemonic = (): string => {
-  const { error, get, response } = useFetch('http://168.63.250.198:1323/chain');
-  const [account, setAccount] = useState<string>('');
-  const mountedRef = useIsMountedRef();
-  const { showError } = useNotice();
+export const getMnemonic = (): string | undefined => {
+  const { error, loading, data } = useFetch(
+    '/chain/getMnemonic',
+    undefined,
+    []
+  );
 
-  useEffect(() => {
-    error && showError((error as Error).message);
-  }, [error]);
-
-  useEffect(() => {
-    action();
-  }, [mountedRef]);
-
-  const action = async (): Promise<void> => {
-    try {
-      const res = await get(`/getMnemonic`);
-
-      if (!res) return;
-
-      const { status, data } = res;
-
-      if (response.ok && status === 1) setAccount(data.mnemonic);
-    } catch (err) {
-      showError((err as Error).message);
-    }
-  };
-
-  return account;
+  if (error || loading) return;
+  return data.data.mnemonic;
 };
 
 export const getAddressByMnemonic = ({
   value,
   chain_type,
-}: GetAddressParams): string => {
-  const { error, get, response } = useFetch('http://168.63.250.198:1323/chain');
-  const [account, setAccount] = useState<string>('');
-  const mountedRef = useIsMountedRef();
-  const { showError } = useNotice();
+}: GetAddressParams): string | undefined => {
+  const { error, loading, data } = useFetch(
+    `/chain/mnemonicToAddress?mnemonic=${value}&chain_type=${chain_type}`
+  );
 
-  useEffect(() => {
-    error && showError((error as Error).message);
-  }, [error]);
-
-  useEffect(() => {
-    if (!value || !chain_type) return;
-    action();
-  }, [mountedRef, value, chain_type]);
-
-  const action = async (): Promise<void> => {
-    try {
-      const res = await get(
-        `/mnemonicToAddress?mnemonic=${value}&chain_type=${chain_type}`
-      );
-
-      if (!res) return;
-
-      const { status, data } = res;
-
-      if (response.ok && status === 1) setAccount(data.address);
-    } catch (err) {
-      showError((err as Error).message);
-    }
-  };
-
-  return account;
+  if (error || loading) return;
+  return data.data.address;
 };
 
 export const getAddressByPrivateKey = ({
   value,
   chain_type,
-}: GetAddressParams): string => {
-  const { error, get, response } = useFetch('http://168.63.250.198:1323/chain');
-  const [account, setAccount] = useState<string>('');
-  const mountedRef = useIsMountedRef();
-  const { showError } = useNotice();
-
-  useEffect(() => {
-    error && showError((error as Error).message);
-  }, [error]);
-
-  useEffect(() => {
-    if (!value || !chain_type) return;
-    action();
-  }, [mountedRef, value, chain_type]);
-
-  const action = async (): Promise<void> => {
-    try {
-      const res = await get(
-        `/privateToAddress?private_key=${value}&chain_type=${chain_type}`
-      );
-
-      if (!res) return;
-
-      const { status, data } = res;
-
-      if (response.ok && status === 1) setAccount(data.address);
-    } catch (err) {
-      showError((err as Error).message);
-    }
-  };
-
-  return account;
+}: GetAddressParams): string | undefined => {
+  const { error, loading, data } = useFetch(
+    `/chain/privateToAddress?private_key=${value}&chain_type=${chain_type}`,
+    undefined,
+    []
+  );
+  if (error || loading) return;
+  return data?.address;
 };
 
 export const importAccount = ({
@@ -238,45 +170,20 @@ export const exportAccount = ({
   chain_type,
   uuid,
 }: ExportAccountParams): ExportAccountResult => {
-  const { error, get, response } = useFetch('http://168.63.250.198:1323/chain');
-  const [account, setAccount] = useState<ExportAccountResult>({
-    mnemonic: '',
-    private_key: '',
-  });
-
-  const { showError } = useNotice();
-
-  useEffect(() => {
-    if (!chain_type || !export_type || !password || !uuid) return;
-    action();
-  }, [chain_type, uuid, password, chain_type]);
-
-  useEffect(() => {
-    error && showError((error as Error).message);
-  }, [error]);
-
-  const action = async (): Promise<void> => {
-    try {
-      const res = await get(
-        `/exportAccount?exportType=${export_type}&password=${password}&chain_type=${chain_type}&uuid=${uuid}`
-      );
-
-      if (!res) return;
-
-      const { status, data } = res;
-
-      if (response.ok && status === 1) setAccount(data);
-    } catch (err) {
-      showError((err as Error).message);
-    }
-  };
-
-  return account;
+  const { error, loading, data } = useFetch(
+    `/chain/exportAccount?exportType=${export_type}&password=${password}&chain_type=${chain_type}&uuid=${uuid}`,
+    undefined,
+    []
+  );
+  if (error || loading) return { mnemonic: '', private_key: '' };
+  return data;
 };
 
 export const deleteAccount = ({
   uuid,
   password,
+  onSuccess = NOOP,
+  onError = NOOP,
 }: DeleteAccountParams): DeleteAccountResult => {
   const { error, post, response } = useFetch(
     'http://168.63.250.198:1323/chain'
@@ -310,72 +217,61 @@ export const deleteAccount = ({
   return account;
 };
 
-export const changeName = ({ name, uuid }: ChangeNameParams): void => {
-  const { error, post, response } = useFetch(
-    'http://168.63.250.198:1323/chain'
+export const changeName = ({
+  name,
+  uuid,
+  onSuccess = NOOP,
+  onError = NOOP,
+}: ChangeNameParams): void => {
+  const { error } = useFetch(
+    '/chain/changeName',
+    {
+      method: 'post',
+      data: { name, uuid },
+    },
+    []
   );
-  const [account, setAccount] = useState();
-  const { showError } = useNotice();
-  const mountedRef = useIsMountedRef();
+  if (error) onError(error);
+  onSuccess();
+};
+
+export const useAccountName = ({
+  name,
+  uuid,
+  onSuccess = NOOP,
+  onError = NOOP,
+}: ChangeNameParams): void => {
+  const { post, abort, response } = useFetch('/chain/changeName');
 
   useEffect(() => {
-    error && showError((error as Error).message);
-  }, [error]);
+    const request = async () => {
+      const { status } = await post('', { name, uuid });
+      if (!response.ok) return;
+      if (status === 1) onSuccess(uuid, name);
+    };
 
-  useEffect(() => {
-    action();
-  }, [mountedRef]);
-
-  const action = async (): Promise<void> => {
-    try {
-      const res = await post(`/changeName`, { uuid, name });
-
-      if (!res) return;
-
-      const { status, data } = res;
-
-      if (response.ok && status === 1) setAccount(data);
-    } catch (err) {
-      showError((err as Error).message);
-    }
-  };
+    request();
+    return () => {
+      abort();
+    };
+  }, [name, uuid]);
 };
 
 export const changePassword = ({
   password,
   new_password,
   uuid,
+  onSuccess = NOOP,
+  onError = NOOP,
 }: ChangePasswordParams): void => {
-  const { error, post, response } = useFetch(
-    'http://168.63.250.198:1323/chain'
+  const { error } = useFetch(
+    '/chain/changePassword',
+    {
+      method: 'post',
+      data: { password, new_password, uuid },
+    },
+    []
   );
-  const [account, setAccount] = useState();
-  const { showError } = useNotice();
-  const mountedRef = useIsMountedRef();
-
-  useEffect(() => {
-    error && showError((error as Error).message);
-  }, [error]);
-
-  useEffect(() => {
-    action();
-  }, [mountedRef]);
-
-  const action = async (): Promise<void> => {
-    try {
-      const res = await post(`/changePassword`, {
-        uuid,
-        password,
-        new_password,
-      });
-
-      if (!res) return;
-
-      const { status, data } = res;
-
-      if (response.ok && status === 1) setAccount(data);
-    } catch (err) {
-      showError((err as Error).message);
-    }
-  };
+  if (error) onError(error);
+  onSuccess();
 };

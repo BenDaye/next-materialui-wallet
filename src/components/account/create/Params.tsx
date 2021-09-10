@@ -27,8 +27,8 @@ interface CreateAccountParamsProps extends BaseProps {}
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     mnemonic: {
-      backgroundColor: theme.palette.error.dark,
-      color: theme.palette.primary.main,
+      backgroundColor: theme.palette.primary.main,
+      color: theme.palette.text.primary,
     },
   })
 );
@@ -38,7 +38,6 @@ function Params({
 }: CreateAccountParamsProps): ReactElement<CreateAccountParamsProps> | null {
   const { step, setStep, mnemonic } =
     useContext<CreateAccountContextProps>(CreateAccountContext);
-  const { showError } = useNotice();
   const classes = useStyles();
 
   const prevStep = useCallback(() => {
@@ -99,6 +98,7 @@ function Params({
               color="primary"
               variant="contained"
               onClick={nextStep}
+              disabled={!mnemonic}
             >
               下一步
             </Button>

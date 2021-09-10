@@ -31,7 +31,7 @@ import CloseIcon from 'mdi-material-ui/Close';
 import ChevronRightIcon from 'mdi-material-ui/ChevronRight';
 import { useRouter } from 'next/router';
 import { NodeIcon } from '@components/setting/components/NodeIcon';
-import { getChainTypes } from '@components/php/chain/hook';
+import { useChain } from '@components/php/chain/hook';
 import { Chain } from '@components/php/chain/types';
 
 interface ImportAccountButtonProps extends BaseProps {
@@ -46,7 +46,7 @@ function ImportAccountButtonBase({
   const { showError } = useNotice();
   const [showDialog, setShowDialog] = useState<boolean>(false);
   const [showMenu, setShowMenu] = useState<boolean>(false);
-  const chains = getChainTypes();
+  const { chains } = useChain();
   const [anchorEl, setAnchorEl] = React.useState<any>(null);
   const [chain_type, setChainType] = useState<String>('');
   const router = useRouter();

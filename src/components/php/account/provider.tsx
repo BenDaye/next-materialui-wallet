@@ -1,9 +1,10 @@
 import { useIsMountedRef } from '@@/hook';
 import type { BaseProps } from '@@/types';
 import { memo, ReactElement, useEffect, useMemo, useState } from 'react';
+import useFetch from 'use-http';
 import { AccountContext } from './context';
 import { getAccounts } from './helper';
-import { AccountContextProps, AccountState } from './types';
+import { AccountBaseProps, AccountContextProps, AccountState } from './types';
 
 const Account = ({ children }: BaseProps): ReactElement<BaseProps> => {
   const [{ accounts, hasAccount, isAccount }, setState] =
@@ -12,7 +13,9 @@ const Account = ({ children }: BaseProps): ReactElement<BaseProps> => {
       hasAccount: false,
       isAccount: () => false,
     });
-  const [currentAccount, setCurrentAccount] = useState<string | null>(null);
+  const [currentAccount, setCurrentAccount] = useState<AccountBaseProps | null>(
+    null
+  );
   const mountedRef = useIsMountedRef();
 
   const value = useMemo<AccountContextProps>(
@@ -27,7 +30,7 @@ const Account = ({ children }: BaseProps): ReactElement<BaseProps> => {
   );
 
   useEffect(() => {
-    const accountsInStore = getAccounts();
+    const accountsInStore = getAccounts({});
     setState({
       accounts: accountsInStore,
       hasAccount: accountsInStore.length > 0,

@@ -80,3 +80,6 @@ export const useToggle = (
 
   return [isActive, _toggleActive, _setActive];
 };
+
+export const useDebug = (): boolean =>
+  process.env.NODE_ENV === 'development' || !!process.env.DEBUG;

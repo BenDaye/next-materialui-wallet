@@ -23,6 +23,7 @@ import { useForm } from 'react-hook-form';
 import { useRouter } from 'next/router';
 import useFetch from 'use-http';
 import { saveAccount } from '@components/php/account/helper';
+import { ImportAccountResult } from '@components/php/account/types';
 
 interface CreateAccountConfirmProps extends BaseProps {}
 
@@ -42,15 +43,14 @@ function Confirm({
   const { register, errors, handleSubmit, getValues } = useForm<ConfirmForm>({
     mode: 'all',
   });
-  const [loading, setLoading] = useState<boolean>(false);
-  const { post, response } = useFetch('/chain');
+  const { loading, post, response } = useFetch();
 
   const nameValidate = (value: string): true | string => {
     return !!value || '必填';
   };
 
   const passwordValidate = (value: string): true | string =>
-    (value.length > 8 && value.length < 32) || '无效的密码';
+    (value.length > 8 && value.length < 32) || '8~32位字符（大小写字母、数字）';
 
   const passwordConfirmValidate = (value: string): true | string =>
     value === getValues('password') || '密码不一致';
@@ -59,36 +59,28 @@ function Confirm({
     setStep(3);
   }, []);
 
-  const onSuccess = ({ name, uuid, address }: any): void => {
-    saveAccount({ name, uuid, address, chain_type });
-    showSuccess(`账户[${name}]已创建`);
-    router.back();
-  };
-
-  const onError = (err: any): void => {
-    showError(err.toString());
-    setLoading(false);
+  const onSuccess = ({ name, uuid, address }: ImportAccountResult): void => {
+    saveAccount({
+      name,
+      uuid,
+      address,
+      chain_type,
+      onSuccess: () => {
+        showSuccess(`账户[${name}]已创建`);
+        router.push('/account');
+      },
+    });
   };
 
   const onConfirm = async ({ name, password }: ConfirmForm) => {
-    setLoading(true);
-    try {
-      const res = await post(`/importAccount`, {
-        name,
-        password,
-        mnemonic,
-        chain_type,
-      });
-
-      if (!res) return;
-
-      const { status, data, message } = res;
-
-      if (response.ok && status === 1) return onSuccess(data);
-      return onError(message);
-    } catch (err) {
-      showError((err as Error).message);
-    }
+    const { status, data } = await post('/chain/importAccount', {
+      name,
+      password,
+      mnemonic,
+      chain_type,
+    });
+    if (!response.ok) return;
+    if (status === 1) onSuccess(data);
   };
 
   if (step !== 4) return null;
