@@ -6,7 +6,7 @@ import { CreateAccountParams } from './Params';
 import { CreateAccountIntro } from './Intro';
 import { CreateAccountReminder } from './Reminder';
 import { CreateAccountConfirm } from './Confirm';
-import { getMnemonic } from '@components/php/account/hook';
+import { useMnemonic } from '@components/php/account/hook';
 import { useRouter } from 'next/router';
 
 interface CreateAccountStepperProps extends BaseProps {}
@@ -17,7 +17,7 @@ function Stepper({
   const [step, setStep] = useState<number>(1);
   const router = useRouter();
   const { chain } = router.query;
-  const mnemonic = getMnemonic();
+  const mnemonic = useMnemonic();
   const chain_type = useMemo((): string => chain?.toString() || '', [chain]);
 
   const value: CreateAccountContextProps = useMemo(

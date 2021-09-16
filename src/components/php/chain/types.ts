@@ -5,10 +5,10 @@ export interface Chain {
   full_name: string;
   decimals: string;
   image: string;
+  activated?: boolean;
 }
 
 export interface ChainContextProps {
   chains: Chain[];
-  currentChain: Chain | null;
-  setCurrentChain: Dispatch<SetStateAction<Chain | null>>;
+  setChains: Dispatch<SetStateAction<Chain[]>>;
 }

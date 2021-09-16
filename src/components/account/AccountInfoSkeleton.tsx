@@ -1,6 +1,5 @@
 import React, { memo, ReactElement } from 'react';
 import type { BaseProps } from '@@/types';
-import { useChain } from '@@/hook';
 import {
   Avatar,
   List,
@@ -10,6 +9,7 @@ import {
   Paper,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
+import { useChain } from '@components/php/chain/hook';
 
 interface AccountInfoSkeletonProps extends BaseProps {
   primary?: string;
@@ -21,12 +21,12 @@ function AccountInfoSkeleton({
   primary = '[尚未添加账户]',
   secondary = '请您添加账户',
 }: AccountInfoSkeletonProps): ReactElement<AccountInfoSkeletonProps> {
-  const { isChainReady } = useChain();
+  const { chains } = useChain();
 
-  if (isChainReady) {
+  if (chains.length) {
     return (
       <Paper>
-        <List>
+        <List dense>
           <ListItem>
             <ListItemAvatar>
               <Avatar>N</Avatar>
@@ -44,7 +44,7 @@ function AccountInfoSkeleton({
   }
   return (
     <Paper>
-      <List>
+      <List dense>
         <ListItem>
           <ListItemAvatar>
             <Skeleton variant="circle">

@@ -1,22 +1,33 @@
-import React, { memo, ReactElement, useCallback } from 'react';
+import React, { memo, ReactElement, useCallback, useMemo } from 'react';
 import type { BaseProps } from '@@/types';
-import { useAccount, useChain } from '@@/hook';
-import type { AccountFullProps } from '@components/polkadot/account/types';
 import { Box, Container } from '@material-ui/core';
 import styles from '@styles/AccountSelector.module.css';
 import AccountInfoSkeleton from './AccountInfoSkeleton';
 import AccountInfo from './AccountInfo';
+import { AccountProps } from '@components/php/account/types';
+import { useAccounts, useAccountsByType } from '@components/php/account/hook';
+import { useChain } from '@components/php/chain/hook';
 
 interface AccountSelectorListProps extends BaseProps {
-  onSelect?: (info: AccountFullProps) => void;
+  onSelect?: (info: AccountProps) => void;
+  toDetails?: boolean;
+  select?: boolean;
 }
 
 function AccountSelectorList({
   children,
   onSelect,
+  toDetails = true,
+  select = false,
 }: AccountSelectorListProps): ReactElement<AccountSelectorListProps> {
-  const { isChainReady } = useChain();
-  const { accounts, hasAccount, setCurrentAccount } = useAccount();
+  const { chains } = useChain();
+  const currentChain = useMemo(() => chains.find((c) => c.activated), [chains]);
+  const { accounts, hasAccount } = useAccounts();
+  const _accounts = useMemo(() => {
+    return hasAccount && currentChain
+      ? accounts.filter((a) => a.chain_type === currentChain.name)
+      : [];
+  }, [currentChain, accounts, hasAccount]);
 
   return (
     <>
@@ -28,18 +39,20 @@ function AccountSelectorList({
       >
         <Container>
           <Box className="width-fill-available">
-            {hasAccount ? (
-              accounts.map((account) => (
-                <Box key={`account: ${account}`} mb={1}>
+            {_accounts.length ? (
+              _accounts.map((account) => (
+                <Box key={`account: ${account.uuid}`} mb={1}>
                   <AccountInfo
                     value={account}
                     dense
-                    select
+                    showAddress
+                    toDetails={toDetails}
+                    select={select}
                     onSelect={onSelect}
                   />
                 </Box>
               ))
-            ) : (
+            ) : hasAccount ? null : (
               <AccountInfoSkeleton />
             )}
           </Box>

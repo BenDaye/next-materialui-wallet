@@ -34,7 +34,7 @@ function Bip({
   const { chain } = router.query;
   const chain_type = useMemo((): string => chain?.toString() || '', [chain]);
 
-  const { isAccount, accounts } = useAccounts();
+  const { isAccount, accounts, updateAllAccounts } = useAccounts();
   const { showSuccess, showError } = useNotice();
   const { register, handleSubmit, errors, getValues } =
     useForm<RestoreAccountConfirmForm>({
@@ -45,6 +45,7 @@ function Bip({
 
   const onSuccess = ({ name, uuid, address }: any): void => {
     saveAccount({ name, uuid, address, chain_type });
+    updateAllAccounts();
     showSuccess(`账户[${name}]已创建`);
     router.back();
   };
@@ -144,7 +145,8 @@ function Bip({
   };
 
   const passwordValidate = (value: string): true | string =>
-    (value.length > 8 && value.length < 32) || '8~32位字符（大小写字母、数字）';
+    (value.length >= 8 && value.length <= 32) ||
+    '8~32位字符（大小写字母、数字）';
 
   const passwordConfirmValidate = (value: string): true | string =>
     value === getValues('password') || '密码不一致';

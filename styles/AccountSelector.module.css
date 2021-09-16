@@ -1,6 +1,6 @@
 .content {
-  min-height: 40vh;
   max-height: 60vh;
+  height: 60vh;
   overflow-y: scroll;
   overflow-x: hidden;
 }

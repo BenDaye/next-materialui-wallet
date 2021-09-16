@@ -1,24 +1,17 @@
-import {
-  AccountBaseProps,
-  CallbackParams,
-  GetAccountParams,
-  SaveAccountParams,
-} from './types';
+import { AccountProps, GetAccountParams, SaveAccountParams } from './types';
 import store from 'store';
 import { NOOP } from '@utils/emptyFunction';
+import { CallbackParams } from '../types';
 
 export const getAccounts = ({
   onSuccess = NOOP,
   onError = NOOP,
-}: CallbackParams): AccountBaseProps[] => {
-  const accounts: AccountBaseProps[] = [];
+}: CallbackParams): AccountProps[] => {
+  const accounts: AccountProps[] = [];
 
   try {
     store.each((value, key) => {
-      if (key.startsWith('account:')) {
-        const uuid = key.replace('account:', '');
-        accounts.push({ ...value, uuid });
-      }
+      if (key.startsWith('account:')) accounts.push(value);
     });
     onSuccess(accounts);
   } catch (err) {
@@ -28,26 +21,34 @@ export const getAccounts = ({
   return accounts;
 };
 
+export const getUuid = ({
+  uuid,
+  name,
+  address,
+}: GetAccountParams): string | undefined => {
+  if (!uuid && !name && !address) return;
+  return (
+    uuid ||
+    getAccounts({}).find((a) => a.name === name)?.uuid ||
+    getAccounts({}).find((a) => a.address === address)?.uuid
+  );
+};
+
 export const getAccount = ({
   name,
   uuid,
   address,
   onSuccess = NOOP,
   onError = NOOP,
-}: GetAccountParams): AccountBaseProps | undefined => {
-  if (!name && !uuid && !address) return;
-  let account;
+}: GetAccountParams): AccountProps | undefined => {
+  const _uuid = getUuid({ uuid, name, address });
 
   try {
-    if (uuid) {
-      account = store.get(`account:${uuid}`);
-    } else if (name) {
-      account = getAccounts({}).find((a) => a.name === name);
-    } else {
-      account = getAccounts({}).find((a) => a.address === address);
+    if (_uuid) {
+      const info = store.get(`account:${_uuid}`);
+      onSuccess(info);
+      return info;
     }
-    onSuccess(account);
-    return account;
   } catch (err) {
     onError(err);
   }
@@ -58,8 +59,7 @@ export const saveAccount = ({
   uuid,
   address,
   chain_type,
-  mnemonic,
-  private_key,
+  activated,
   onSuccess = NOOP,
   onError = NOOP,
 }: SaveAccountParams): void => {
@@ -71,8 +71,7 @@ export const saveAccount = ({
       uuid,
       address,
       chain_type,
-      mnemonic,
-      private_key,
+      activated,
     });
     onSuccess();
   } catch (err) {
@@ -81,24 +80,41 @@ export const saveAccount = ({
 };
 
 export const deleteAccount = ({
+  uuid,
+  name,
+  address,
+  onSuccess = NOOP,
+  onError = NOOP,
+}: GetAccountParams): void => {
+  const _uuid = getUuid({ uuid, name, address });
+
+  try {
+    if (!_uuid) return;
+    store.remove(`account:${_uuid}`);
+    onSuccess();
+  } catch (err) {
+    onError(err);
+  }
+};
+
+export const activateAccount = ({
   name,
   uuid,
   address,
   onSuccess = NOOP,
   onError = NOOP,
 }: GetAccountParams): void => {
-  if (!name && !uuid && !address) return;
+  const _uuid = getUuid({ uuid, name, address });
 
   try {
-    if (uuid) {
-      store.remove(`account:${uuid}`);
-    } else if (name) {
-      const _uuid = getAccounts({}).find((a) => a.name === name)?.uuid;
-      if (_uuid) store.remove(`account:${_uuid}`);
-    } else {
-      const _uuid = getAccounts({}).find((a) => a.address === address)?.uuid;
-      if (_uuid) store.remove(`account:${_uuid}`);
-    }
+    if (!_uuid) return;
+    store.each((value, key) => {
+      if (key.startsWith(`account:${_uuid}`)) {
+        saveAccount({ ...value, activated: true });
+      } else {
+        saveAccount({ ...value, activated: false });
+      }
+    });
     onSuccess();
   } catch (err) {
     onError(err);

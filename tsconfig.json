@@ -28,22 +28,7 @@
       "@theme": ["src/theme"],
       "@@/*": ["src/*"]
     },
-    "types": [
-      "@types/node",
-      "@types/react",
-      "@polkadot/types",
-      "@polkadot/types/create",
-      "@polkadot/types/types",
-      "@polkadot/types/interfaces",
-      "@polkadot/types/interfaces/metadata",
-      "@polkadot/types/interfaces/runtime",
-      "@polkadot/api",
-      "@polkadot/api/promise",
-      "@polkadot/api-derive",
-      "@polkadot/api-derive/type",
-      "@polkadot/keyring",
-      "@polkadot/ui-keyring"
-    ]
+    "types": ["@types/node", "@types/react"]
   },
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules"]

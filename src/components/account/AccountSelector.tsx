@@ -8,29 +8,27 @@ import {
   Toolbar,
   Typography,
 } from '@material-ui/core';
-import AccountMultiplePlusIcon from 'mdi-material-ui/AccountMultiplePlus';
 import MenuIcon from 'mdi-material-ui/Menu';
 
-import { NodeList } from '@components/wallet';
-import { useRouter } from 'next/router';
-import { useChain } from '@@/hook';
-import type { AccountFullProps } from '@components/polkadot/account/types';
+import { ChainList } from '@components/wallet/ChainList';
 import AccountSelectorList from './AccountSelectorList';
 import { ImportAccountButton } from './ImportButton';
+import { useChain } from '@components/php/chain/hook';
+import { AccountProps } from '@components/php/account/types';
 
 interface AccountSelectorProps extends BaseProps {}
 
 function AccountSelector({
   children,
 }: AccountSelectorProps): ReactElement<AccountSelectorProps> {
-  const router = useRouter();
-  const { isChainReady } = useChain();
   const [open, setOpen] = useState<boolean>(false);
+  const { chains } = useChain();
 
   const onSelectAccount = useCallback(
-    (info: AccountFullProps) => setOpen(false),
-    [isChainReady]
+    (info: AccountProps) => setOpen(false),
+    [chains]
   );
+
   return (
     <>
       <IconButton
@@ -38,7 +36,7 @@ function AccountSelector({
         color="inherit"
         aria-label="menu"
         onClick={() => setOpen(true)}
-        disabled={!isChainReady}
+        disabled={!chains.length}
       >
         <MenuIcon />
       </IconButton>
@@ -53,8 +51,12 @@ function AccountSelector({
             </Toolbar>
           </AppBar>
           <Box display="flex" flexWrap="nowrap" width={1}>
-            <NodeList />
-            <AccountSelectorList onSelect={onSelectAccount} />
+            <ChainList />
+            <AccountSelectorList
+              onSelect={onSelectAccount}
+              toDetails={false}
+              select
+            />
           </Box>
         </Box>
       </Drawer>

@@ -1,6 +1,3 @@
-import { ChainExplorer } from '@components/chain';
-import { BlockExplorer } from '@components/block';
-import { EventExplorer } from '@components/event';
 import {
   AppBar,
   Box,
@@ -12,7 +9,6 @@ import {
 } from '@material-ui/core';
 import React, { ChangeEvent, useCallback, useState } from 'react';
 import { useForm } from 'react-hook-form';
-import { isHex } from '@polkadot/util';
 import { useRouter } from 'next/router';
 
 interface SearchForm {
@@ -27,7 +23,7 @@ export default function ExplorerPage() {
   const router = useRouter();
 
   const searchKeyValidate = (value: string): true | string => {
-    return isHex(value) || !Number.isNaN(Number(value)) || '无效的区块号';
+    return !Number.isNaN(Number(value)) || '无效的区块号';
   };
 
   const onSubmit = useCallback(({ searchKey }: SearchForm) => {
@@ -68,17 +64,6 @@ export default function ExplorerPage() {
       </AppBar>
       <Toolbar />
       <Toolbar />
-      <Box flexGrow={1} py={1}>
-        <Box hidden={currentTabIndex !== 0}>
-          <ChainExplorer />
-        </Box>
-        <Box hidden={currentTabIndex !== 1}>
-          <BlockExplorer />
-        </Box>
-        <Box hidden={currentTabIndex !== 2}>
-          <EventExplorer />
-        </Box>
-      </Box>
     </>
   );
 }

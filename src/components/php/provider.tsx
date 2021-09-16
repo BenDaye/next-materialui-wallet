@@ -4,6 +4,7 @@ import { memo, ReactElement, useCallback, useMemo } from 'react';
 import { AccountProvider } from './account/provider';
 import { IncomingOptions, Provider as HttpProvider } from 'use-http';
 import { ChainProvider } from './chain/provider';
+import { AddressProvider } from './address/provider';
 
 interface PhpProviderProps extends BaseProps {}
 
@@ -19,7 +20,7 @@ function Php({ children }: PhpProviderProps): ReactElement<PhpProviderProps> {
 
   const handleRequest = useCallback(
     async ({ options, url, path, route }) => {
-      debug && console.log('DEBUG', url, route, path);
+      debug && console.log('DEBUG', url, path, route);
       return options;
     },
     [debug]
@@ -50,7 +51,9 @@ function Php({ children }: PhpProviderProps): ReactElement<PhpProviderProps> {
   return (
     <HttpProvider url={url} options={options}>
       <ChainProvider>
-        <AccountProvider>{children}</AccountProvider>
+        <AccountProvider>
+          <AddressProvider>{children}</AddressProvider>
+        </AccountProvider>
       </ChainProvider>
     </HttpProvider>
   );

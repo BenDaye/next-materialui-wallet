@@ -2,13 +2,14 @@ import { Box, Container, IconButton, Typography } from '@material-ui/core';
 import ScanHelperIcon from 'mdi-material-ui/ScanHelper';
 
 import React from 'react';
-import { useAccount } from '@@/hook';
 import { BalanceList } from '@components/wallet';
 import { AccountSelector, AccountInfo } from '@components/account';
 import { PageHeader } from '@components/common';
+import { useAccounts, useCurrentAccount } from '@components/php/account/hook';
 
 export default function WalletPage() {
-  const { currentAccount } = useAccount();
+  const { accounts } = useAccounts();
+  const currentAccount = useCurrentAccount(accounts);
 
   // TODO: 扫码按钮
   return (

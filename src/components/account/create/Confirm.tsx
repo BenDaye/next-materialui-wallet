@@ -50,7 +50,8 @@ function Confirm({
   };
 
   const passwordValidate = (value: string): true | string =>
-    (value.length > 8 && value.length < 32) || '8~32位字符（大小写字母、数字）';
+    (value.length >= 8 && value.length <= 32) ||
+    '8~32位字符（大小写字母、数字）';
 
   const passwordConfirmValidate = (value: string): true | string =>
     value === getValues('password') || '密码不一致';

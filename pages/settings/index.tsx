@@ -2,19 +2,15 @@ import {
   Box,
   Container,
   Divider,
-  IconButton,
   List,
   ListItem,
   ListItemIcon,
-  ListItemSecondaryAction,
   ListItemText,
   Paper,
-  Toolbar,
   Typography,
 } from '@material-ui/core';
 import AccountMultipleIcon from 'mdi-material-ui/AccountMultiple';
 import ContactsIcon from 'mdi-material-ui/Contacts';
-import BroadcastIcon from 'mdi-material-ui/Broadcast';
 import React from 'react';
 import { useRouter } from 'next/router';
 import { PageHeader } from '@components/common';
@@ -47,18 +43,6 @@ export default function SettingsPage() {
                   <ContactsIcon />
                 </ListItemIcon>
                 <ListItemText primary="地址管理" />
-              </ListItem>
-            </List>
-          </Paper>
-        </Box>
-        <Box display="flex" flexDirection="column" marginTop={1}>
-          <Paper>
-            <List>
-              <ListItem button onClick={() => router.push('/settings/node')}>
-                <ListItemIcon>
-                  <BroadcastIcon />
-                </ListItemIcon>
-                <ListItemText primary="节点管理" />
               </ListItem>
             </List>
           </Paper>

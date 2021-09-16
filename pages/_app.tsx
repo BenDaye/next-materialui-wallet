@@ -6,12 +6,10 @@ import Head from 'next/head';
 import { AppProps } from 'next/app';
 import CssBaseline from '@material-ui/core/CssBaseline';
 import ThemeProvider from '@theme';
-import { PolkadotProvider } from '@components/polkadot/main';
 import { SnackbarProvider } from 'notistack';
 import { Slide } from '@material-ui/core';
 import { ErrorProvider } from '@components/error/provider';
 import { NoticeProvider } from '@components/notice/provider';
-import { SettingProvider } from '@components/setting/provider';
 import Layout from '@components/Layout';
 import { PhpProvider } from '@components/php/provider';
 

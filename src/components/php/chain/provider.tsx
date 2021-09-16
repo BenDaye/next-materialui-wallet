@@ -1,7 +1,8 @@
 import type { BaseProps } from '@@/types';
 import { Overlay } from '@components/common';
+import { NodeIcon } from '@components/common/NodeIcon';
 import { CircularProgress, Typography, Box } from '@material-ui/core';
-import React, { memo, ReactElement, useMemo, useState } from 'react';
+import React, { memo, ReactElement, useEffect, useMemo, useState } from 'react';
 import useFetch from 'use-http';
 import { ChainContext } from './context';
 import { ChainContextProps, Chain as ChainProps } from './types';
@@ -11,20 +12,21 @@ interface ChainProviderProps extends BaseProps {}
 function Chain({
   children,
 }: ChainProviderProps): ReactElement<ChainProviderProps> | null {
-  const [currentChain, setCurrentChain] = useState<ChainProps | null>(null);
   const { error, loading, data } = useFetch(
     '/chain/getChainType',
-    undefined,
+    { retries: 3 },
     []
   );
 
-  const chains = useMemo<ChainProps[]>((): ChainProps[] => {
-    return data ? data.data : [];
+  const [chains, setChains] = useState<ChainProps[]>([]);
+
+  useEffect(() => {
+    if (data) setChains(data.data);
   }, [data]);
 
   const value = useMemo<ChainContextProps>(
-    (): ChainContextProps => ({ chains, currentChain, setCurrentChain }),
-    [chains, currentChain]
+    (): ChainContextProps => ({ chains, setChains }),
+    [chains]
   );
 
   if (error) {
@@ -45,8 +47,22 @@ function Chain({
   } else if (loading) {
     return (
       <Overlay>
-        <Box>
-          <CircularProgress color="secondary" />
+        <Box
+          display="flex"
+          flexDirection="column"
+          justifyContent="center"
+          alignItems="center"
+          marginTop={1}
+          flexGrow={1}
+        >
+          <Box
+            id="logo"
+            className="animate__animated animate__pulse animate__infinite"
+          >
+            <Typography variant="h1">
+              <NodeIcon name="UECC" fontSize="inherit" />
+            </Typography>
+          </Box>
         </Box>
       </Overlay>
     );
@@ -60,7 +76,7 @@ function Chain({
             className="word-break"
             align="center"
           >
-            暂无可用的链,请稍候重试
+            暂无可用的链，请稍候重试。
           </Typography>
         </Box>
       </Overlay>

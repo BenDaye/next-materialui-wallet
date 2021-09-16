@@ -3,8 +3,8 @@ import { Box, Typography } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styles from '@styles/Layout.module.css';
-import { NodeIcon } from '@components/setting/components/NodeIcon';
 import { useAccounts } from '@components/php/account/hook';
+import { NodeIcon } from '@components/common/NodeIcon';
 
 export default function Home() {
   const router = useRouter();

@@ -4,3 +4,9 @@ export interface BalanceProps {
   decimals: string;
   balance: string;
 }
+
+export interface GetBalanceParams {
+  chain_type: string;
+  uuid: string;
+  address: string;
+}

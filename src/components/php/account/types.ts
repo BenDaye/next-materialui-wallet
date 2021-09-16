@@ -1,35 +1,26 @@
-import { Dispatch, SetStateAction } from 'react';
+import { CallbackParams } from '../types';
 
 export interface AccountState {
-  accounts: AccountBaseProps[];
+  accounts: AccountProps[];
   hasAccount: boolean;
   isAccount: (address: string) => boolean;
 }
 
 export interface AccountContextProps extends AccountState {
-  currentAccount: AccountBaseProps | null;
-  setCurrentAccount: Dispatch<SetStateAction<AccountBaseProps | null>>;
+  activateAccount: (params: ActivateAccountParams) => void;
+  deleteAccount: (params: DeleteAccountParams) => void;
+  updateAccount: (account: AccountProps) => void;
+  updateAccounts: (accounts: AccountProps[]) => void;
+  updateAllAccounts: () => void;
+  importAccount: () => void;
 }
 
-export interface AccountBaseProps {
+export interface AccountProps {
   uuid: string;
   address: string;
   name: string;
   chain_type: string;
-  mnemonic?: string;
-  private_key?: string;
-}
-
-export interface AccountProps extends AccountBaseProps {
-  onExport: (params: ExportAccountParams) => ExportAccountResult;
-  onDelete: (params: DeleteAccountParams) => DeleteAccountResult;
-  onChangeName: (params: ChangeNameParams) => void;
-  onChangePassword: (params: ChangePasswordParams) => void;
-}
-
-export interface CallbackParams {
-  onSuccess?: Function;
-  onError?: Function;
+  activated?: boolean;
 }
 
 export interface GetAccountParams extends CallbackParams {
@@ -38,46 +29,15 @@ export interface GetAccountParams extends CallbackParams {
   address?: string;
 }
 
-export interface SaveAccountParams extends AccountBaseProps, CallbackParams {}
+export interface ActivateAccountParams extends GetAccountParams {}
+export interface DeleteAccountParams extends GetAccountParams {}
 
-export interface ImportAccountParams extends CallbackParams {
-  name: string;
-  password: string;
-  mnemonic?: string;
-  private_key?: string;
-  chain_type: string;
-}
+export interface SaveAccountParams extends AccountProps, CallbackParams {}
 
-export interface ImportAccountResult {
-  uuid: string;
-  name: string;
-  address: string;
-}
-
-export interface ExportAccountParams extends AccountBaseProps, CallbackParams {
-  password: string;
-  export_type: number;
-}
-
-export interface ExportAccountResult {
-  mnemonic: string;
-  private_key: string;
-}
-
-export interface DeleteAccountParams extends AccountBaseProps, CallbackParams {
-  password: string;
-}
-
-export interface DeleteAccountResult {}
-
-export interface ChangeNameParams extends AccountBaseProps, CallbackParams {}
-
-export interface ChangePasswordParams extends AccountBaseProps, CallbackParams {
-  password: string;
-  new_password: string;
-}
-
-export interface GetAddressParams extends CallbackParams {
+export interface GetAddressByParams extends CallbackParams {
   chain_type: string;
   value?: string;
 }
+
+export interface GetAddressByMnemonic extends GetAddressByParams {}
+export interface GetAddressByPrivateKey extends GetAddressByParams {}

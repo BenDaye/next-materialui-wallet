@@ -33,19 +33,24 @@ import useCopy from '@react-hook/copy';
 import AccountInfoSkeleton from './AccountInfoSkeleton';
 import QrcodeIcon from 'mdi-material-ui/Qrcode';
 import { useAccounts } from '@components/php/account/hook';
-import { AccountBaseProps } from '@components/php/account/types';
+import { AccountProps } from '@components/php/account/types';
+import { saveAccount } from '@components/php/account/helper';
+import { useRouter } from 'next/router';
+import { useBalance } from '@components/php/balance/hook';
 
 interface AccountInfoProps extends BaseProps {
-  value: AccountBaseProps;
+  value?: AccountProps;
+  toDetails?: boolean;
   showBalance?: boolean;
   showAddress?: boolean;
   showQrcode?: boolean;
   select?: boolean;
-  onSelect?: (value: AccountBaseProps) => void;
+  onSelect?: (value: AccountProps) => void;
   dense?: boolean;
   disableGutters?: boolean;
   onlyItem?: boolean;
   showBadge?: boolean;
+  divider?: boolean;
 }
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -62,6 +67,7 @@ const useStyles = makeStyles((theme: Theme) =>
 function AccountInfo({
   children,
   value,
+  toDetails = true,
   showBalance = false,
   showAddress = false,
   showQrcode = false,
@@ -71,86 +77,77 @@ function AccountInfo({
   disableGutters = false,
   onlyItem = false,
   showBadge = false,
+  divider = false,
 }: AccountInfoProps): ReactElement<AccountInfoProps> | null {
+  if (!value) return <AccountInfoSkeleton />;
+  const router = useRouter();
+  const { accounts, activateAccount } = useAccounts();
+  const balance = useBalance({
+    chain_type: value?.chain_type || '',
+    uuid: value?.uuid || '',
+    address: value?.address || '',
+  });
   const { copy, copied } = useCopy(value?.address || '');
   const { showSuccess } = useNotice();
-  const { currentAccount, setCurrentAccount } = useAccounts();
   const [showQr, setShowQr] = useState<boolean>(false);
   const classes = useStyles();
 
   const selectClass: string | undefined = useMemo(() => {
     if (!!select) {
-      return value.uuid === currentAccount
-        ? classes.selected
-        : classes.unselected;
+      return value.activated ? classes.selected : classes.unselected;
     }
     return;
-  }, [value, currentAccount, select, classes]);
-
-  const formatName: string = useMemo(
-    () => (value ? `[${value.chain_type}] ${value.name}` : ''),
-    [value]
-  );
+  }, [value, select, classes]);
 
   useEffect(() => {
     copied && showSuccess('已复制地址到剪贴板');
   }, [copied]);
 
   const handleClick = useCallback(() => {
-    if (showQrcode) {
+    if (toDetails) {
+      router.push(`/account/${value.uuid}`);
+    } else if (showQrcode) {
       setShowQr(true);
     } else if (select) {
-      setCurrentAccount(value.uuid);
+      activateAccount(value);
     }
     onSelect && onSelect(value);
-  }, [value, onSelect, showQrcode]);
-
-  if (!value) return <AccountInfoSkeleton />;
+  }, [value, onSelect, showQrcode, toDetails, select]);
 
   const MainItem: ReactElement = (
     <>
       <ListItem
         button
         onClick={handleClick}
-        divider={showAddress || showBalance}
+        divider={divider}
         dense={dense}
         disableGutters={disableGutters}
       >
         <ListItemText
-          primary={formatName}
+          primary={value.name}
           primaryTypographyProps={{
             variant: dense ? 'body2' : 'body1',
           }}
-          secondary={
-            select || !showAddress
-              ? value.chain_type
-              : getShortAddress(value.address)
-          }
+          secondary={getShortAddress(value.address)}
           secondaryTypographyProps={{ variant: 'caption' }}
         />
         <ListItemSecondaryAction>
-          {select ? (
-            <Checkbox
-              checked={value.uuid === currentAccount}
-              disabled={value.uuid === currentAccount}
-              onChange={() => setCurrentAccount(value.uuid)}
-            />
-          ) : showQrcode ? (
-            <QrcodeIcon onClick={() => setShowQr(true)} />
-          ) : showBadge ? (
-            value.uuid === currentAccount && (
-              <Chip label="当前账户" color="secondary" size="small" />
-            )
-          ) : null}
+          {showQrcode ? <QrcodeIcon onClick={() => setShowQr(true)} /> : null}
+          {showBadge
+            ? value.activated && (
+                <Chip label="当前账户" color="secondary" size="small" />
+              )
+            : null}
+          {showBalance ? <Typography>{balance.balance}</Typography> : null}
         </ListItemSecondaryAction>
       </ListItem>
       <Dialog open={showQr} onClose={() => setShowQr(false)} fullWidth>
         <List>
           <ListItem dense>
             <ListItemText
-              primary={formatName}
+              primary={value.name}
               primaryTypographyProps={{ variant: 'subtitle1' }}
-              secondary={value.chain_type}
+              secondary={getShortAddress(value.address)}
               secondaryTypographyProps={{ variant: 'caption' }}
             />
           </ListItem>
@@ -165,17 +162,12 @@ function AccountInfo({
               )}
             </NoSsr>
             <Typography variant="body2" className="word-break">
-              {value}
+              {value.address}
             </Typography>
           </Box>
         </DialogContent>
         <DialogActions>
-          <Button
-            onClick={copy}
-            color="secondary"
-            fullWidth
-            variant="contained"
-          >
+          <Button onClick={copy} color="primary" fullWidth variant="contained">
             复制
           </Button>
         </DialogActions>
@@ -192,7 +184,7 @@ function AccountInfo({
       <Paper className={selectClass}>
         <List disablePadding={dense}>
           {MainItem}
-          {showAddress && (
+          {/* {showAddress && (
             <ListItem dense>
               <ListItemText primary="地址" />
               <ListItemSecondaryAction>
@@ -201,7 +193,7 @@ function AccountInfo({
                 </Typography>
               </ListItemSecondaryAction>
             </ListItem>
-          )}
+          )} */}
         </List>
       </Paper>
     </>

@@ -11,3 +11,5 @@ export { default as AccountInfo } from './AccountInfo';
 export { default as AccountInfoSkeleton } from './AccountInfoSkeleton';
 export { default as AccountSelector } from './AccountSelector';
 export { default as AccountSelectorList } from './AccountSelectorList';
+
+export { default as ImportAccountDialog } from './ImportDialog';
