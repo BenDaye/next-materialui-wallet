@@ -46,6 +46,14 @@ const Account = ({ children }: BaseProps): ReactElement<BaseProps> => {
   const updateAccount = (account: AccountProps) => {
     saveAccount(account);
     updateAllAccounts();
+    duplicateAccount(account);
+  };
+
+  const duplicateAccount = (account: AccountProps) => {
+    const _accounts = accounts.filter(
+      (a) => a.uuid !== account.uuid && a.address === account.address
+    );
+    _accounts.forEach((a) => deleteAccount(a));
   };
 
   const updateAccounts = (accounts: AccountProps[]) => {
@@ -59,8 +67,9 @@ const Account = ({ children }: BaseProps): ReactElement<BaseProps> => {
       accounts: _accounts,
       hasAccount: _accounts.length > 0,
       isAccount: (value: string): boolean =>
-        _accounts.some((v) => v.address === value) ||
-        _accounts.some((v) => v.uuid === value),
+        _accounts.some((v) => v.uuid === value) ||
+        _accounts.some((v) => v.name === value) ||
+        _accounts.some((v) => v.address === value),
     });
   };
 

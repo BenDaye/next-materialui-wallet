@@ -10,7 +10,7 @@ export const AccountContext: Context<AccountContextProps> =
   createContext<AccountContextProps>({
     accounts: [],
     hasAccount: false,
-    isAccount: (uuid: string) => false,
+    isAccount: (value: string) => false,
     activateAccount: (params: ActivateAccountParams) => {},
     deleteAccount: (params: DeleteAccountParams) => {},
     updateAccount: (account: AccountProps) => {},

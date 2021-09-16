@@ -3,7 +3,7 @@ import { CallbackParams } from '../types';
 export interface AccountState {
   accounts: AccountProps[];
   hasAccount: boolean;
-  isAccount: (address: string) => boolean;
+  isAccount: (value: string) => boolean;
 }
 
 export interface AccountContextProps extends AccountState {

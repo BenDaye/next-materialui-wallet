@@ -1,7 +1,5 @@
+import { useAccounts, useAddress, useAddresses, useNotice } from '@@/hook';
 import { BaseProps } from '@@/types';
-import { saveAccount } from '@components/php/account/helper';
-import { useAccount } from '@components/php/account/hook';
-import { useAddress, useAddresses } from '@components/php/address/hook';
 import { TextField } from '@material-ui/core';
 import React, {
   ChangeEvent,
@@ -20,15 +18,18 @@ function NameTextField({
   children,
   uuid,
 }: NameTextFieldProps): ReactElement<NameTextFieldProps> {
+  const { showWarning } = useNotice();
   const info = useAddress({ uuid });
-  const { updateAddress } = useAddresses();
+  const { isAccount } = useAccounts();
+  const { updateAddress, isAddress } = useAddresses();
   const [name, setName] = useState<string>(() => (info ? info.name : ''));
 
   const handleChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     setName(value);
 
-  const handleSave = useCallback(async () => {
-    if (!info) return;
+  const handleSave = useCallback(() => {
+    if (!info || info.name === name) return;
+    if (isAccount(name) || isAddress(name)) return showWarning('该名称已存在');
     updateAddress({ ...info, name });
   }, [info, name]);
 

@@ -54,6 +54,8 @@ const Address = ({ children }: BaseProps): ReactElement<BaseProps> => {
       addresses: _addresses,
       hasAddress: _addresses.length > 0,
       isAddress: (value: string): boolean =>
+        _addresses.some((v) => v.uuid === value) ||
+        _addresses.some((v) => v.name === value) ||
         _addresses.some((v) => v.address === value),
     });
   };

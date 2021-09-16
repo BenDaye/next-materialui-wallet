@@ -9,11 +9,12 @@ import type { BaseProps } from '@@/types';
 import { useForm } from 'react-hook-form';
 import { Box, Button, Container, TextField, Toolbar } from '@material-ui/core';
 import { ButtonWithLoading, PageFooter } from '@components/common';
-import { useNotice } from '@@/hook';
+import { useError, useNotice } from '@@/hook';
 import { useRouter } from 'next/router';
 import useFetch from 'use-http';
 import { saveAccount } from '@components/php/account/helper';
 import { useAccounts } from '@components/php/account/hook';
+import { GetAccountParams } from '@components/php/account/types';
 
 interface RestoreAccountConfirmProps extends BaseProps {
   type: 'mnemonic' | 'private_key';
@@ -34,25 +35,26 @@ function Bip({
   const { chain } = router.query;
   const chain_type = useMemo((): string => chain?.toString() || '', [chain]);
 
-  const { isAccount, accounts, updateAllAccounts } = useAccounts();
+  const [existedAddress, setExistedAddress] = useState<string>('');
+
+  const { isAccount, accounts, updateAccount } = useAccounts();
   const { showSuccess, showError } = useNotice();
+  const { setError } = useError();
   const { register, handleSubmit, errors, getValues } =
     useForm<RestoreAccountConfirmForm>({
       mode: 'onBlur',
     });
-  const [loading, setLoading] = useState<boolean>(false);
-  const { get, post, response } = useFetch('/chain');
+  const { get, post, response, loading } = useFetch('/chain');
 
-  const onSuccess = ({ name, uuid, address }: any): void => {
-    saveAccount({ name, uuid, address, chain_type });
-    updateAllAccounts();
+  const onSuccess = ({ name, uuid, address }: GetAccountParams): void => {
+    if (!name || !uuid || !address) return;
+    updateAccount({ uuid, name, address, activated: false, chain_type });
     showSuccess(`账户[${name}]已创建`);
     router.back();
   };
 
   const onError = (err: any): void => {
     showError(err.toString());
-    setLoading(false);
   };
 
   const getAddressByMnemonic = async (
@@ -103,22 +105,12 @@ function Bip({
 
   const onSubmit = useCallback(
     async ({ value, name, password }: RestoreAccountConfirmForm) => {
-      setLoading(true);
-
       const params =
         type === 'mnemonic'
           ? { name, password, mnemonic: value, chain_type }
           : { name, password, private_key: value, chain_type };
 
       try {
-        const address: string | null =
-          type === 'mnemonic'
-            ? await getAddressByMnemonic(value)
-            : await getAddressByPrivateKey(value);
-
-        if (!address) return;
-        if (isExistedAddress(address)) return onError('该钱包已存在');
-
         const res = await post(`/importAccount`, params);
 
         if (!res) return;
@@ -134,8 +126,21 @@ function Bip({
     [chain_type]
   );
 
-  const validValue = (value: string): boolean | string => {
-    return !!value || '必填';
+  const validValue = async (value: string): Promise<boolean | string> => {
+    if (!value) return '必填';
+    const address: string | null =
+      type === 'mnemonic'
+        ? await getAddressByMnemonic(value)
+        : await getAddressByPrivateKey(value);
+
+    if (!address) return `无效的${type === 'mnemonic' ? '助记词' : '私钥'}`;
+
+    if (isExistedAddress(address) && address !== existedAddress) {
+      setExistedAddress(address);
+      setError(Error('账号已存在，如您确认导入，将覆盖该账户。'));
+    }
+
+    return true;
   };
 
   const nameValidate = (value: string): true | string => {

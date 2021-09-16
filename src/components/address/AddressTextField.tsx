@@ -1,3 +1,4 @@
+import { useAccounts, useNotice } from '@@/hook';
 import { BaseProps } from '@@/types';
 import { useAddress, useAddresses } from '@components/php/address/hook';
 import { TextField } from '@material-ui/core';
@@ -17,15 +18,19 @@ function AddressTextField({
   children,
   uuid,
 }: AddressTextFieldProps): ReactElement<AddressTextFieldProps> {
+  const { showWarning } = useNotice();
   const info = useAddress({ uuid });
-  const { addresses, updateAddress } = useAddresses();
+  const { isAccount } = useAccounts();
+  const { isAddress, updateAddress } = useAddresses();
   const [address, setAddress] = useState<string>(() => info?.address || '');
 
   const handleChange = ({ target: { value } }: ChangeEvent<HTMLInputElement>) =>
     setAddress(value);
 
   const handleSave = useCallback(() => {
-    if (!info) return;
+    if (!info || info.address === address) return;
+    if (isAccount(address) || isAddress(address))
+      return showWarning('该地址已存在');
     updateAddress({ ...info, address });
   }, [info, address]);
 

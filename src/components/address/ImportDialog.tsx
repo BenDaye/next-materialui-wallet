@@ -10,10 +10,15 @@ import {
   AppBar,
   Toolbar,
   Typography,
-  MenuItem,
 } from '@material-ui/core';
 import { useForm } from 'react-hook-form';
-import { useAddresses, useNotice, useChain, useCurrentChain } from '@@/hook';
+import {
+  useAddresses,
+  useNotice,
+  useChain,
+  useCurrentChain,
+  useAccounts,
+} from '@@/hook';
 import { v4 as uuidV4 } from 'uuid';
 
 interface ImportAddressDialogProps extends BaseProps {
@@ -34,8 +39,9 @@ function ImportAddressDialog({
 }: ImportAddressDialogProps): ReactElement<ImportAddressDialogProps> | null {
   const { chains } = useChain();
   const currentChain = useCurrentChain();
-  const { updateAddress } = useAddresses();
-  const { showSuccess, showError } = useNotice();
+  const { isAccount } = useAccounts();
+  const { updateAddress, isAddress } = useAddresses();
+  const { showSuccess, showError, showWarning } = useNotice();
   const [loading, setLoading] = useState<boolean>(false);
 
   const { register, handleSubmit, errors, reset, clearErrors } =
@@ -52,6 +58,12 @@ function ImportAddressDialog({
     const _name = name.trim();
     const _address = address.trim();
     if (!_address || !_name || !chain_type) return;
+
+    if (isAccount(_address) || isAddress(_address))
+      return showWarning('该地址已存在');
+    if (isAccount(_name) || isAddress(_name))
+      return showWarning('该名称已存在');
+
     setLoading(true);
     try {
       updateAddress({

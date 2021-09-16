@@ -36,6 +36,7 @@ function Error({ children }: BaseProps): ReactElement<BaseProps> {
 
   useEffect(() => {
     if (nextError) setOpen(true);
+    else setOpen(false);
   }, [nextError]);
 
   const handleClose = (_: any, reason: 'backdropClick' | 'escapeKeyDown') => {
@@ -43,6 +44,7 @@ function Error({ children }: BaseProps): ReactElement<BaseProps> {
   };
 
   const handleConfirm = useCallback(() => {
+    setOpen(false);
     if (nextError) {
       setErrorQueue(
         errorQueue.map((e) =>
@@ -55,10 +57,10 @@ function Error({ children }: BaseProps): ReactElement<BaseProps> {
   return (
     <ErrorContext.Provider value={{ error, setError }}>
       {children}
-      <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>错误</DialogTitle>
+      <Dialog open={open} onClose={handleClose} fullWidth>
+        <DialogTitle>提示</DialogTitle>
         <DialogContent>
-          <Typography className="word-break">
+          <Typography variant="body2" className="word-break">
             {nextError?.error?.message || ' '}
           </Typography>
         </DialogContent>
