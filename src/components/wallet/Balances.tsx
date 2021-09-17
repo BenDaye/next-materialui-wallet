@@ -78,9 +78,7 @@ function Balances({ children }: BalancesProps): ReactElement<BalancesProps> {
       {currentAccount && balance ? (
         [balance].map((b: BalanceProps, index: number) => (
           <Box mb={1} key={`balance: ${index}`}>
-            <Paper
-            // onClick={() => router.push(`/balance/${currentAccount.uuid}`)}
-            >
+            <Paper>
               <List disablePadding>
                 <ListItem>
                   <ListItemAvatar>
@@ -95,8 +93,8 @@ function Balances({ children }: BalancesProps): ReactElement<BalancesProps> {
                     secondary={b.balance}
                   />
                   <ListItemSecondaryAction>
-                    {/* <Typography variant="body2">{b.balance}</Typography> */}
                     <Button
+                      size="small"
                       variant="outlined"
                       onClick={() =>
                         router.push(`/transfer/${currentAccount.uuid}`)

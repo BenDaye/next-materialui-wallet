@@ -51,7 +51,7 @@ function AccountSelectorList({
                   />
                 </Box>
               ))
-            ) : hasAccount ? null : (
+            ) : (
               <AccountInfoSkeleton />
             )}
           </Box>

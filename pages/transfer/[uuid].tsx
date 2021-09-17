@@ -1,10 +1,4 @@
-import {
-  useNotice,
-  useAccounts,
-  useAddresses,
-  useChain,
-  useCurrentChain,
-} from '@@/hook';
+import { useNotice, useAccounts, useAddresses } from '@@/hook';
 import { AccountInfo, ConfirmPasswordDialog } from '@components/account';
 import {} from '@components/account';
 import { PageHeader } from '@components/common';
@@ -13,11 +7,8 @@ import {
   Box,
   Button,
   Container,
-  createStyles,
   InputAdornment,
-  makeStyles,
   TextField,
-  Theme,
 } from '@material-ui/core';
 import { Autocomplete } from '@material-ui/lab';
 import { useRouter } from 'next/router';
@@ -25,32 +16,20 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import useFetch from 'use-http';
 
-const useStyles = makeStyles((theme: Theme) =>
-  createStyles({
-    inline: {
-      display: 'inline',
-      wordBreak: 'break-all',
-    },
-  })
-);
-
 interface TransferForm {
   to_address: string;
   call_value: string;
 }
 
 export default function TransferPage() {
-  const classes = useStyles();
   const router = useRouter();
   const { uuid: _uuid } = router.query;
   const uuid = useMemo<string>((): string => _uuid?.toString() || '', [_uuid]);
 
   const { post, response, loading } = useFetch('/chain');
 
-  const { chains } = useChain();
-  const currentChain = useCurrentChain();
-  const { accounts, isAccount, hasAccount } = useAccounts();
-  const { addresses, isAddress, hasAddress } = useAddresses();
+  const { accounts } = useAccounts();
+  const { addresses } = useAddresses();
   const [toAddress, setToAddress] = useState<AddressProps>();
 
   const [showPasswordDialog, setShowPasswordDialog] = useState<boolean>(false);
@@ -60,7 +39,7 @@ export default function TransferPage() {
     [uuid, accounts]
   );
 
-  const { register, handleSubmit, watch, errors, getValues, reset } =
+  const { register, handleSubmit, errors, getValues, reset } =
     useForm<TransferForm>({
       mode: 'onBlur',
     });
@@ -68,7 +47,7 @@ export default function TransferPage() {
   const { showSuccess } = useNotice();
 
   const onSubmit = useCallback(
-    ({ to_address, call_value }: TransferForm) => setShowPasswordDialog(true),
+    () => setShowPasswordDialog(true),
     [uuid, currentAccount]
   );
 
@@ -85,6 +64,7 @@ export default function TransferPage() {
     if (status === 1) {
       reset();
       showSuccess(data.toString());
+      router.replace('/wallet');
     }
   };
 

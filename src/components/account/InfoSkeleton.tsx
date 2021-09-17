@@ -26,14 +26,11 @@ function AccountInfoSkeleton({
   if (chains.length) {
     return (
       <Paper>
-        <List dense>
+        <List dense disablePadding>
           <ListItem>
-            <ListItemAvatar>
-              <Avatar>N</Avatar>
-            </ListItemAvatar>
             <ListItemText
               primary={primary}
-              primaryTypographyProps={{ variant: 'body1' }}
+              primaryTypographyProps={{ variant: 'body2' }}
               secondary={secondary}
               secondaryTypographyProps={{ variant: 'caption' }}
             />
@@ -44,17 +41,12 @@ function AccountInfoSkeleton({
   }
   return (
     <Paper>
-      <List dense>
+      <List dense disablePadding>
         <ListItem>
-          <ListItemAvatar>
-            <Skeleton variant="circle">
-              <Avatar>N</Avatar>
-            </Skeleton>
-          </ListItemAvatar>
           <Skeleton>
             <ListItemText
               primary={primary}
-              primaryTypographyProps={{ variant: 'body1' }}
+              primaryTypographyProps={{ variant: 'body2' }}
               secondary={secondary}
               secondaryTypographyProps={{ variant: 'caption' }}
             />
