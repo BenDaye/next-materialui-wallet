@@ -2,11 +2,13 @@ import { Box, Container } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 import { PageHeader } from '@components/common';
-import { ExportButton } from '@components/account/ExportButton';
-import { DeleteButton } from '@components/account/DeleteButton';
-import { NameTextField } from '@components/account/NameTextField';
-import { AddressTextField } from '@components/account/AddressTextField';
-import { ChangePasswordButton } from '@components/account/ChangePassword';
+import {
+  ExportAccountButton,
+  DeleteAccountButton,
+  AddressTextField,
+  ChangePasswordButton,
+  NameTextField,
+} from '@components/account';
 
 export default function AccountByAddressPage() {
   const router = useRouter();
@@ -24,13 +26,13 @@ export default function AccountByAddressPage() {
             <ChangePasswordButton uuid={uuid} />
           </Box>
           <Box marginBottom={1}>
-            <ExportButton text="备份助记词" uuid={uuid} type={1} />
+            <ExportAccountButton text="备份助记词" uuid={uuid} type={1} />
           </Box>
           <Box marginBottom={4}>
-            <ExportButton text="备份私钥" uuid={uuid} type={2} />
+            <ExportAccountButton text="备份私钥" uuid={uuid} type={2} />
           </Box>
           <Box marginBottom={1}>
-            <DeleteButton text="删除" uuid={uuid} />
+            <DeleteAccountButton text="删除" uuid={uuid} />
           </Box>
         </Box>
       </Container>

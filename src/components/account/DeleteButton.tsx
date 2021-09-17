@@ -1,18 +1,17 @@
-import { useNotice } from '@@/hook';
+import { useNotice, useAccount, useAccounts } from '@@/hook';
 import { BaseProps } from '@@/types';
-import { useAccount, useAccounts } from '@components/php/account/hook';
 import { Button } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import React, { memo, ReactElement, useCallback, useState } from 'react';
 import useFetch from 'use-http';
-import { ConfirmPasswordDialog } from './ConfirmPassword';
+import { ConfirmPasswordDialog } from './index';
 
 interface DeleteButtonProps extends BaseProps {
   uuid: string;
   text?: string;
 }
 
-function DeleteButtonBase({
+function DeleteButton({
   children,
   uuid,
   text = '删除账号',
@@ -62,4 +61,4 @@ function DeleteButtonBase({
   );
 }
 
-export const DeleteButton = memo(DeleteButtonBase);
+export default memo(DeleteButton);

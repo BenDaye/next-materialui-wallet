@@ -9,11 +9,9 @@ import type { BaseProps } from '@@/types';
 import { useForm } from 'react-hook-form';
 import { Box, Button, Container, TextField, Toolbar } from '@material-ui/core';
 import { ButtonWithLoading, PageFooter } from '@components/common';
-import { useError, useNotice } from '@@/hook';
+import { useError, useNotice, useAccounts } from '@@/hook';
 import { useRouter } from 'next/router';
 import useFetch from 'use-http';
-import { saveAccount } from '@components/php/account/helper';
-import { useAccounts } from '@components/php/account/hook';
 import { GetAccountParams } from '@components/php/account/types';
 
 interface RestoreAccountConfirmProps extends BaseProps {

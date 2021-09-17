@@ -10,10 +10,9 @@ import {
 } from '@material-ui/core';
 import MenuIcon from 'mdi-material-ui/Menu';
 
-import { ChainList } from '@components/wallet/ChainList';
-import AccountSelectorList from './AccountSelectorList';
-import { ImportAccountButton } from './ImportButton';
-import { useChain } from '@components/php/chain/hook';
+import { Chains } from '@components/wallet';
+import { ImportAccountButton, Accounts } from './index';
+import { useChain } from '@@/hook';
 import { AccountProps } from '@components/php/account/types';
 
 interface AccountSelectorProps extends BaseProps {}
@@ -51,12 +50,8 @@ function AccountSelector({
             </Toolbar>
           </AppBar>
           <Box display="flex" flexWrap="nowrap" width={1}>
-            <ChainList />
-            <AccountSelectorList
-              onSelect={onSelectAccount}
-              toDetails={false}
-              select
-            />
+            <Chains />
+            <Accounts onSelect={onSelectAccount} toDetails={false} select />
           </Box>
         </Box>
       </Drawer>

@@ -7,7 +7,7 @@ import React, {
   useState,
 } from 'react';
 import type { BaseProps } from '@@/types';
-import { useNotice } from '@@/hook';
+import { useNotice, useAccounts, useBalance } from '@@/hook';
 import {
   Checkbox,
   Chip,
@@ -30,13 +30,10 @@ import {
 import { getShortAddress } from '@utils/getShortAddress';
 import ReactQr from 'qrcode.react';
 import useCopy from '@react-hook/copy';
-import AccountInfoSkeleton from './AccountInfoSkeleton';
+import { AccountInfoSkeleton } from './index';
 import QrcodeIcon from 'mdi-material-ui/Qrcode';
-import { useAccounts } from '@components/php/account/hook';
 import { AccountProps } from '@components/php/account/types';
-import { saveAccount } from '@components/php/account/helper';
 import { useRouter } from 'next/router';
-import { useBalance } from '@components/php/balance/hook';
 
 interface AccountInfoProps extends BaseProps {
   value?: AccountProps;

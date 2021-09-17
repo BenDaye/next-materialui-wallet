@@ -1,5 +1,5 @@
 import { BaseProps } from '@@/types';
-import { useAddresses } from '@components/php/address/hook';
+import { useAddresses } from '@@/hook';
 import { AddressProps } from '@components/php/address/types';
 import { List, ListItem, ListItemText, Paper, Theme } from '@material-ui/core';
 import { makeStyles, createStyles } from '@material-ui/styles';

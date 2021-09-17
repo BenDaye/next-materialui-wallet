@@ -1,9 +1,8 @@
-import { useIsMountedRef } from '@@/hook';
+import { useIsMountedRef, useAccounts } from '@@/hook';
 import { Box, Typography } from '@material-ui/core';
 import React, { useEffect } from 'react';
 import { useRouter } from 'next/router';
 import styles from '@styles/Layout.module.css';
-import { useAccounts } from '@components/php/account/hook';
 import { NodeIcon } from '@components/common/NodeIcon';
 
 export default function Home() {

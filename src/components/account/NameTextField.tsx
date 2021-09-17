@@ -1,6 +1,5 @@
 import { BaseProps } from '@@/types';
-import { saveAccount } from '@components/php/account/helper';
-import { useAccount } from '@components/php/account/hook';
+import { useAccount, useAccounts } from '@@/hook';
 import { TextField } from '@material-ui/core';
 import React, {
   ChangeEvent,
@@ -15,11 +14,12 @@ interface NameTextFieldProps extends BaseProps {
   uuid: string;
 }
 
-function NameTextFieldBase({
+function NameTextField({
   children,
   uuid,
 }: NameTextFieldProps): ReactElement<NameTextFieldProps> {
   const info = useAccount({ uuid });
+  const { updateAccount } = useAccounts();
   const [name, setName] = useState<string>(() => (info ? info.name : ''));
   const { post, response, loading } = useFetch('/chain');
 
@@ -33,7 +33,7 @@ function NameTextFieldBase({
     if (!response.ok) return;
     if (status === 1) {
       const { address, chain_type } = info;
-      saveAccount({ name, uuid, address, chain_type });
+      updateAccount({ name, uuid, address, chain_type });
     }
   }, [info, name]);
 
@@ -50,4 +50,4 @@ function NameTextFieldBase({
   );
 }
 
-export const NameTextField = memo(NameTextFieldBase);
+export default memo(NameTextField);

@@ -1,6 +1,5 @@
-import { useNotice } from '@@/hook';
+import { useNotice, useAccount } from '@@/hook';
 import { BaseProps } from '@@/types';
-import { useAccount } from '@components/php/account/hook';
 import {
   Button,
   Dialog,
@@ -12,7 +11,7 @@ import {
 import useCopy from '@react-hook/copy';
 import React, { memo, ReactElement, useEffect, useState } from 'react';
 import useFetch from 'use-http';
-import { ConfirmPasswordDialog } from './ConfirmPassword';
+import { ConfirmPasswordDialog } from './index';
 
 interface ExportButtonProps extends BaseProps {
   text?: string;
@@ -20,7 +19,7 @@ interface ExportButtonProps extends BaseProps {
   uuid: string;
 }
 
-function ExportButtonBase({
+function ExportButton({
   children,
   text = '导出',
   uuid,
@@ -107,4 +106,4 @@ function ExportButtonBase({
   );
 }
 
-export const ExportButton = memo(ExportButtonBase);
+export default memo(ExportButton);

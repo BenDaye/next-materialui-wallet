@@ -3,8 +3,11 @@ import { useRouter } from 'next/router';
 import React, { useMemo } from 'react';
 import Container from '@material-ui/core/Container';
 import { Box } from '@material-ui/core';
-import { AddressTextField, NameTextField } from '@components/address';
-import { DeleteButton } from '@components/address/DeleteButton';
+import {
+  AddressTextField,
+  NameTextField,
+  DeleteAddressButton,
+} from '@components/address';
 
 export default function AddressByAddressPage() {
   const router = useRouter();
@@ -19,7 +22,7 @@ export default function AddressByAddressPage() {
           <AddressTextField uuid={uuid} />
           <NameTextField uuid={uuid} />
           <Box mt={4}>
-            <DeleteButton uuid={uuid} text="删除地址" />
+            <DeleteAddressButton uuid={uuid} text="删除地址" />
           </Box>
         </Box>
       </Container>

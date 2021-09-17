@@ -1,6 +1,5 @@
-import { useNotice } from '@@/hook';
+import { useNotice, useAddress, useAddresses } from '@@/hook';
 import { BaseProps } from '@@/types';
-import { useAddress, useAddresses } from '@components/php/address/hook';
 import {
   Button,
   Dialog,
@@ -17,7 +16,7 @@ interface DeleteButtonProps extends BaseProps {
   text?: string;
 }
 
-function DeleteButtonBase({
+function DeleteButton({
   children,
   uuid,
   text = '删除账号',
@@ -67,4 +66,4 @@ function DeleteButtonBase({
   );
 }
 
-export const DeleteButton = memo(DeleteButtonBase);
+export default memo(DeleteButton);

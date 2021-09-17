@@ -23,7 +23,7 @@ interface ConfirmPasswordProps extends BaseProps {
   loading?: boolean;
 }
 
-function ConfirmPassword({
+function ConfirmPasswordDialog({
   children,
   open = false,
   onClose,
@@ -77,4 +77,4 @@ function ConfirmPassword({
   );
 }
 
-export const ConfirmPasswordDialog = memo(ConfirmPassword);
+export default memo(ConfirmPasswordDialog);

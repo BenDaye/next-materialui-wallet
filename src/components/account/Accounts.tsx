@@ -2,11 +2,10 @@ import React, { memo, ReactElement, useCallback, useMemo } from 'react';
 import type { BaseProps } from '@@/types';
 import { Box, Container } from '@material-ui/core';
 import styles from '@styles/AccountSelector.module.css';
-import AccountInfoSkeleton from './AccountInfoSkeleton';
-import AccountInfo from './AccountInfo';
+import AccountInfoSkeleton from './InfoSkeleton';
+import AccountInfo from './Info';
 import { AccountProps } from '@components/php/account/types';
-import { useAccounts, useAccountsByType } from '@components/php/account/hook';
-import { useChain } from '@components/php/chain/hook';
+import { useAccounts, useChain } from '@@/hook';
 
 interface AccountSelectorListProps extends BaseProps {
   onSelect?: (info: AccountProps) => void;

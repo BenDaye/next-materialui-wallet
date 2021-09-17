@@ -8,7 +8,7 @@ interface ImportAccountButtonProps extends BaseProps {
   edge?: 'start' | 'end' | false;
 }
 
-function ImportAccountButtonBase({
+function ImportAccountButton({
   children,
   edge = 'end',
 }: ImportAccountButtonProps): ReactElement<ImportAccountButtonProps> {
@@ -27,4 +27,4 @@ function ImportAccountButtonBase({
   );
 }
 
-export const ImportAccountButton = memo(ImportAccountButtonBase);
+export default memo(ImportAccountButton);

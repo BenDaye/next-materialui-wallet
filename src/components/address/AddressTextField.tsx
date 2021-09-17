@@ -1,6 +1,5 @@
-import { useAccounts, useNotice } from '@@/hook';
+import { useAccounts, useNotice, useAddress, useAddresses } from '@@/hook';
 import { BaseProps } from '@@/types';
-import { useAddress, useAddresses } from '@components/php/address/hook';
 import { TextField } from '@material-ui/core';
 import React, {
   ChangeEvent,

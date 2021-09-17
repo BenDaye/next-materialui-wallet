@@ -6,7 +6,7 @@ import { CreateAccountParams } from './Params';
 import { CreateAccountIntro } from './Intro';
 import { CreateAccountReminder } from './Reminder';
 import { CreateAccountConfirm } from './Confirm';
-import { useMnemonic } from '@components/php/account/hook';
+import { useMnemonic } from '@@/hook';
 import { useRouter } from 'next/router';
 
 interface CreateAccountStepperProps extends BaseProps {}

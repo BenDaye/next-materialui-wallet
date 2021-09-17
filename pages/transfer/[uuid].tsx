@@ -1,11 +1,14 @@
-import { useNotice } from '@@/hook';
-import { AccountInfo } from '@components/account';
-import { ConfirmPasswordDialog } from '@components/account/ConfirmPassword';
+import {
+  useNotice,
+  useAccounts,
+  useAddresses,
+  useChain,
+  useCurrentChain,
+} from '@@/hook';
+import { AccountInfo, ConfirmPasswordDialog } from '@components/account';
+import {} from '@components/account';
 import { PageHeader } from '@components/common';
-import { useAccounts } from '@components/php/account/hook';
-import { useAddresses } from '@components/php/address/hook';
 import { AddressProps } from '@components/php/address/types';
-import { useChain, useCurrentChain } from '@components/php/chain/hook';
 import {
   Box,
   Button,

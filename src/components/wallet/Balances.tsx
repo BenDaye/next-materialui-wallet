@@ -1,4 +1,4 @@
-import React, { memo, ReactElement, useEffect, useMemo, useState } from 'react';
+import React, { memo, ReactElement, useEffect, useState } from 'react';
 import type { BaseProps } from '@@/types';
 import {
   Avatar,
@@ -14,18 +14,15 @@ import {
   makeStyles,
   Paper,
   Theme,
-  Typography,
 } from '@material-ui/core';
 import { useRouter } from 'next/router';
 import { Skeleton } from '@material-ui/lab';
 import BitcoinIcon from 'mdi-material-ui/Bitcoin';
-import { useChain } from '@components/php/chain/hook';
-import { useAccounts, useCurrentAccount } from '@components/php/account/hook';
-import { useBalance } from '@components/php/balance/hook';
+import { useAccounts, useCurrentAccount } from '@@/hook';
 import { BalanceProps } from '@components/php/balance/types';
 import useFetch from 'use-http';
 
-interface BalanceListProps extends BaseProps {}
+interface BalancesProps extends BaseProps {}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -44,9 +41,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function BalanceList({
-  children,
-}: BalanceListProps): ReactElement<BalanceListProps> {
+function Balances({ children }: BalancesProps): ReactElement<BalancesProps> {
   const router = useRouter();
   const { get, response } = useFetch('/chain');
 
@@ -134,4 +129,4 @@ function BalanceList({
   );
 }
 
-export default memo(BalanceList);
+export default memo(Balances);

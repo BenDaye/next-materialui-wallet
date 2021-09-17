@@ -3,10 +3,9 @@ import { ImportAddressButton, AddressInfo } from '@components/address';
 import { PageHeader } from '@components/common';
 import { Toolbar, Box, Container } from '@material-ui/core';
 import React, { useMemo } from 'react';
-import { useAddresses } from '@components/php/address/hook';
-import { ChainList } from '@components/wallet/ChainList';
+import { useAddresses, useChain, useCurrentChain } from '@@/hook';
+import { Chains } from '@components/wallet';
 import styles from '@styles/AccountSelector.module.css';
-import { useChain, useCurrentChain } from '@components/php/chain/hook';
 import { AddressProps } from '@components/php/address/types';
 
 export default function AddressesPage() {
@@ -24,7 +23,7 @@ export default function AddressesPage() {
     <>
       <PageHeader title="地址管理" right={<ImportAddressButton />} />
       <Box width={1} display="flex" flexWrap="noWrap" marginTop={0}>
-        <ChainList />
+        <Chains />
         <Box
           flexGrow={1}
           bgcolor="background.default"

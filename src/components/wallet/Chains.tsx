@@ -14,10 +14,10 @@ import {
   Theme,
 } from '@material-ui/core';
 import Image from 'material-ui-image';
-import { useChain } from '@components/php/chain/hook';
+import { useChain } from '@@/hook';
 import { Chain } from '@components/php/chain/types';
 
-interface ChainListProps extends BaseProps {}
+interface ChainsProps extends BaseProps {}
 
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
@@ -39,9 +39,7 @@ const useStyles = makeStyles((theme: Theme) =>
   })
 );
 
-function ChainListBase({
-  children,
-}: ChainListProps): ReactElement<ChainListProps> {
+function Chains({ children }: ChainsProps): ReactElement<ChainsProps> {
   const classes = useStyles();
   const { chains, setChains } = useChain();
 
@@ -96,4 +94,4 @@ function ChainListBase({
   );
 }
 
-export const ChainList = memo(ChainListBase);
+export default memo(Chains);

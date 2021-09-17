@@ -1,5 +1,5 @@
 import { BaseProps } from '@@/types';
-import { useAccount } from '@components/php/account/hook';
+import { useAccount } from '@@/hook';
 import { TextField } from '@material-ui/core';
 import React, { memo, ReactElement } from 'react';
 
@@ -7,7 +7,7 @@ interface AddressTextFieldProps extends BaseProps {
   uuid: string;
 }
 
-function AddressTextFieldBase({
+function AddressTextField({
   children,
   uuid,
 }: AddressTextFieldProps): ReactElement<AddressTextFieldProps> {
@@ -25,4 +25,4 @@ function AddressTextFieldBase({
   );
 }
 
-export const AddressTextField = memo(AddressTextFieldBase);
+export default memo(AddressTextField);

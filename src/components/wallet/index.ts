@@ -1,1 +1,2 @@
-export { default as BalanceList } from './BalanceList';
+export { default as Balances } from './Balances';
+export { default as Chains } from './Chains';

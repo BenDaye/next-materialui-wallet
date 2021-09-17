@@ -1,6 +1,5 @@
-import { useNotice } from '@@/hook';
+import { useNotice, useAccount } from '@@/hook';
 import { BaseProps } from '@@/types';
-import { useAccount } from '@components/php/account/hook';
 import {
   AppBar,
   Box,
@@ -34,7 +33,7 @@ interface ChangePasswordForm {
   newPasswordConfirm: string;
 }
 
-function ChangePasswordButtonBase({
+function ChangePasswordButton({
   children,
   uuid,
 }: ChangePasswordButtonProps): ReactElement<ChangePasswordButtonProps> {
@@ -170,4 +169,4 @@ function ChangePasswordButtonBase({
   );
 }
 
-export const ChangePasswordButton = memo(ChangePasswordButtonBase);
+export default memo(ChangePasswordButton);

@@ -9,7 +9,7 @@ import {
   Paper,
 } from '@material-ui/core';
 import { Skeleton } from '@material-ui/lab';
-import { useChain } from '@components/php/chain/hook';
+import { useChain } from '@@/hook';
 
 interface AccountInfoSkeletonProps extends BaseProps {
   primary?: string;

@@ -2,7 +2,7 @@ import React, { memo, ReactElement } from 'react';
 import type { BaseProps } from '@@/types';
 import { Box, IconButton } from '@material-ui/core';
 import AccountMultiplePlusIcon from 'mdi-material-ui/AccountMultiplePlus';
-import { useAddresses } from '@components/php/address/hook';
+import { useAddresses } from '@@/hook';
 
 interface ImportAddressButtonProps extends BaseProps {}
 
