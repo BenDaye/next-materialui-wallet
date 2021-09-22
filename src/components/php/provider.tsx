@@ -12,7 +12,8 @@ function Php({ children }: PhpProviderProps): ReactElement<PhpProviderProps> {
   const { showError, showWarning } = useNotice();
   const mountedRef = useIsMountedRef();
   const url = useMemo(
-    (): string => process.env.BASE_URL || 'http://168.63.250.198:1323',
+    (): string =>
+      process.env.NEXT_PUBLIC_BASE_URL || 'http://168.63.250.198:1323',
     [mountedRef]
   );
 
