@@ -15,7 +15,7 @@ function CanaryIcon({
     <SvgIcon
       component={Canary}
       fontSize={fontSize}
-      viewBox="0 0 176 176"
+      viewBox="0 0 200 200"
     ></SvgIcon>
   );
 }
