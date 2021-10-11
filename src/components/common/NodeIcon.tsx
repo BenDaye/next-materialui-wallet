@@ -1,6 +1,6 @@
 import React, { memo, ReactElement } from 'react';
 import type { BaseProps } from '@@/types';
-import { PolkadotIcon, KusamaIcon, UeccIcon } from '@components/common';
+import { PolkadotIcon, KusamaIcon, UeccIcon, CanaryIcon } from '@components/common';
 import CatIcon from 'mdi-material-ui/Cat';
 import HelpCircleIcon from 'mdi-material-ui/HelpCircle';
 
@@ -21,6 +21,8 @@ function NodeIconBase({
       return <KusamaIcon fontSize={fontSize} />;
     case 'UECC':
       return <UeccIcon fontSize={fontSize} />;
+    case 'Canary':
+      return <CanaryIcon fontSize={fontSize} />;
     case 'Sycamore':
       return <CatIcon fontSize={fontSize} />;
     default:

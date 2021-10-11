@@ -7,7 +7,7 @@ import useFetch from 'use-http';
 import { ChainContext } from './context';
 import { ChainContextProps, Chain as ChainProps } from './types';
 
-interface ChainProviderProps extends BaseProps {}
+interface ChainProviderProps extends BaseProps { }
 
 function Chain({
   children,
@@ -60,7 +60,7 @@ function Chain({
             className="animate__animated animate__pulse animate__infinite"
           >
             <Typography variant="h1">
-              <NodeIcon name="UECC" fontSize="inherit" />
+              <NodeIcon name="Canary" fontSize="inherit" />
             </Typography>
           </Box>
         </Box>

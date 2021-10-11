@@ -47,7 +47,7 @@ export default function Home() {
           className="animate__animated animate__pulse animate__infinite"
         >
           <Typography variant="h1">
-            <NodeIcon name="UECC" fontSize="inherit" />
+            <NodeIcon name="Canary" fontSize="inherit" />
           </Typography>
         </Box>
       </Box>
