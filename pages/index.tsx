@@ -24,11 +24,12 @@ export default function Home() {
   }, [mountedRef, hasAccount]);
 
   function redirect() {
-    if (hasAccount) {
-      router.replace('/wallet');
-    } else {
-      router.replace('/explorer');
-    }
+    // if (hasAccount) {
+    //   router.replace('/wallet');
+    // } else {
+    //   router.replace('/explorer');
+    // }
+    router.replace('/wallet');
   }
 
   return (

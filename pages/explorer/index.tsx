@@ -1,69 +1,77 @@
 import {
-  AppBar,
+  Typography,
+  Container,
+  CardHeader,
+  Avatar,
+  IconButton,
+  Card,
+  List,
+  ListItem,
+  ListItemText,
   Box,
-  NoSsr,
-  Tab,
-  Tabs,
-  TextField,
-  Toolbar,
+  ListItemSecondaryAction,
+  ListItemIcon,
+  ListItemAvatar,
+  makeStyles,
+  createStyles,
+  Theme,
 } from '@material-ui/core';
-import React, { ChangeEvent, useCallback, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import React from 'react';
 import { useRouter } from 'next/router';
+import { PageHeader } from '@components/common';
+import { useChain } from '@@/hook';
+import ChevronRightIcon from 'mdi-material-ui/ChevronRight';
 
-interface SearchForm {
-  searchKey: string;
-}
+const useStyles = makeStyles((theme: Theme) =>
+  createStyles({
+    icon: {
+      width: theme.spacing(3),
+      height: theme.spacing(3),
+    },
+  })
+);
 
 export default function ExplorerPage() {
-  const [currentTabIndex, setCurrentTabIndex] = useState<number>(0);
-  const { register, handleSubmit, errors } = useForm<SearchForm>({
-    mode: 'all',
-  });
+  const classes = useStyles();
   const router = useRouter();
-
-  const searchKeyValidate = (value: string): true | string => {
-    return !Number.isNaN(Number(value)) || '无效的区块号';
-  };
-
-  const onSubmit = useCallback(({ searchKey }: SearchForm) => {
-    router.push(`/block/${searchKey}`);
-  }, []);
+  const { chains } = useChain();
   return (
     <>
-      <AppBar position="fixed">
-        <Toolbar>
-          <Box flexGrow={1}>
-            <form onSubmit={handleSubmit(onSubmit)}>
-              <TextField
-                name="searchKey"
-                label={errors.searchKey?.message || '查询区块(哈希或高度)'}
-                inputRef={register({ validate: searchKeyValidate })}
-                variant="outlined"
-                color="secondary"
-                fullWidth
-                margin="dense"
-                error={!!errors.searchKey}
-                type="search"
-              />
-            </form>
-          </Box>
-        </Toolbar>
-        <Box flexGrow={1}>
-          <Tabs
-            value={currentTabIndex}
-            onChange={(e: ChangeEvent<{}>, v: number) => setCurrentTabIndex(v)}
-            variant="fullWidth"
-            aria-label="Explorer Navigation Tabs"
-          >
-            <Tab value={0} label="信息" wrapped />
-            <Tab value={1} label="区块" wrapped />
-            <Tab value={2} label="事件" wrapped />
-          </Tabs>
+      <PageHeader
+        title={
+          <Typography variant="subtitle1" align="center">
+            区块浏览器
+          </Typography>
+        }
+        showBack={false}
+      />
+      <Container>
+        <Box mt={2}>
+          <Card>
+            <List>
+              {chains.map((chain) => (
+                <ListItem button>
+                  <ListItemAvatar>
+                    <Box p={2}>
+                      <Avatar
+                        src={`/img/${chain.name}@2x.png`}
+                        variant="circular"
+                        className={classes.icon}
+                      />
+                    </Box>
+                  </ListItemAvatar>
+                  <ListItemText primary={chain.full_name} />
+                  <ListItemSecondaryAction>
+                    <IconButton edge="end" aria-label="link">
+                      <ChevronRightIcon />
+                    </IconButton>
+                  </ListItemSecondaryAction>
+                </ListItem>
+              ))}
+            </List>
+          </Card>
         </Box>
-      </AppBar>
-      <Toolbar />
-      <Toolbar />
+      </Container>
     </>
   );
 }

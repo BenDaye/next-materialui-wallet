@@ -27,7 +27,7 @@ export default function MyApp(props: AppProps) {
   return (
     <Fragment>
       <Head>
-        <title>UECC Wallet</title>
+        <title>Canary Wallet</title>
         <meta
           name="viewport"
           content="minimum-scale=1, initial-scale=1, width=device-width"
